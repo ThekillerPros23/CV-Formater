@@ -1,4 +1,5 @@
 {
+    "type":"service_account",
     "apiKey": "AIzaSyAAhr2z1aW4K2vYnaL_rZwBvT-rCb6CCf8",
     "authDomain": "dev-portal-logistic.firebaseapp.com",
     "projectId": "dev-portal-logistic",

@@ -1,10 +1,10 @@
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials
+from firebase_admin import firestore
 
-class Firebase:
-    def firebase_data(self):
-        self.cred = credentials.Certificate("")
-        firebase_admin.initialize_app(self.cred)
-        self.db = firestore.client()
+# Use a service account.
+cred = credentials.Certificate('data.json')
 
-database = Firebase()
+app = firebase_admin.initialize_app(cred)
+
+db = firestore.client()
