@@ -7,7 +7,17 @@ class PDF(FPDF):
         # Solo agregar el encabezado en la primera página
         if self.page_no() == 1:  
             self.image("LOGISTIC-SinFondo.png", 160, 8, 33)  # Alineado a la derecha
-
+    def footer(self):
+        # Posiciona el pie de página a 15 mm desde el final
+        self.set_y(-15)
+        self.set_font('Arial', 'I', 8)
+        
+        # Añadir el código, revisión, fecha, y paginación
+        page_info = f"Código: F-PMSSA-01-E  |  Revisión: 00  |  Fecha: 17 de mayo de 2022"
+        page_number = f"Página {self.page_no()} de {{nb}}"
+        
+        # Escribir el texto alineado a la derecha
+        self.cell(0, 10, page_info + '  ' + page_number, 0, 0, 'R')
 app = Flask(__name__)
 
 @app.route('/pdf_render', methods=['GET'])
