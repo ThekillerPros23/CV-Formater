@@ -78,10 +78,11 @@ def pdf_render():
     pdf.cell(w=20, h=7, txt=str(sex), border=1, align='C')
     pdf.cell(w=45, h=7, txt='CIVIL STATUS', border=1, align='L')
     pdf.cell(w=35, h=7, txt=str(civil_status), border=1, align='C', ln=1)
-    pdf.cell(w=cell_width, h=7, txt='HEIGHY(Ft/in)', border=1, align='L')
+    pdf.set_xy(50,100)
+    pdf.cell(w=40, h=7, txt='HEIGHY(Ft/in)', border=1, align='L')
     pdf.cell(w=20, h=7, txt=str(sex), border=1, align='C')
     pdf.cell(w=45, h=7, txt='WEIGHT (Lb)', border=1, align='L')
-    pdf.cell(w=35, h=7, txt=str(civil_status), border=1, align='C', ln=1)
+    pdf.cell(w=35, h=7, txt=str(civil_status), border=1, align='C')
     pdf.cell(w=45, h=7, txt='BMI', border=1, align='L')
     pdf.cell(w=35, h=7, txt=str(civil_status), border=1, align='C', ln=1)
     # Guardar el PDF generado
