@@ -272,22 +272,22 @@ def pdf_render():
 
 # Mover a la siguiente línea después de ajustar todas las celdas anteriores
 # Supongamos que la suma de las anchuras de las columnas anteriores es 160 (ajústalo según sea necesario)
-anchura_total_filas_anterior = 160  # Ajusta este valor según las columnas anteriores
+    anchura_total_filas_anterior = 160  # Ajusta este valor según las columnas anteriores
 
 # Mover a la siguiente línea después de ajustar todas las celdas anteriores
-pdf.ln(max_height)
+    pdf.ln(max_height)
 
-# Posicionar el cursor en la posición adecuada en el eje X (alineado con la última columna)
-pdf.set_x(anchura_total_filas_anterior)
+  # Posicionar el cursor en la posición adecuada en el eje X (alineado con la última columna)
+    pdf.set_x(anchura_total_filas_anterior)
 
-# Dibujar la celda "ADDRESS" alineada con la última columna
-pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1)
+  # Dibujar la celda "ADDRESS" alineada con la última columna
+    pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1)
 
-# Dibujar la siguiente tabla de datos, asegurando que las celdas se alineen correctamente
-for fila in datos:
-    for i, (columna, valor) in enumerate(fila.items()):
-        pdf.cell(w=anchuras[i], h=8, txt=valor, border=1, align='C')
-    pdf.ln(8)  # Saltar a la siguiente línea después de cada fila
+  # Dibujar la siguiente tabla de datos, asegurando que las celdas se alineen correctamente
+    for fila in datos:
+      for i, (columna, valor) in enumerate(fila.items()):
+          pdf.cell(w=anchuras[i], h=8, txt=valor, border=1, align='C')
+      pdf.ln(8)  # Saltar a la siguiente línea después de cada fila
 
 
 # Agregar el título "3.WORK EXPERIENCE ONBOARD"
