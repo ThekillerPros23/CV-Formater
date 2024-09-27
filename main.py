@@ -278,7 +278,7 @@ def pdf_render():
     pdf.ln(max_height)
 
   # Posicionar el cursor en la posición adecuada en el eje X (alineado con la última columna)
-    pdf.set_x(anchura_total_filas_anterior)
+    pdf.set_xy(anchura_total_filas_anterior, 184)
 
   # Dibujar la celda "ADDRESS" alineada con la última columna
     pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1)
@@ -314,7 +314,7 @@ def pdf_render():
     y_inicial = pdf.get_y()
     align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
     pdf.set_xy(x_inicial, y_inicial)
-    pdf.set_font('calibri','', 8)
+    pdf.set_font('calibri','', 12)
     for i in range(len(titulos_columnas)):
         pdf.multi_cell(w=anchuras_columnas[i], h=altura_fila[i], txt=titulos_columnas[i], align=align_type[i], border=1)
         x_inicial += anchuras_columnas[i]
@@ -371,26 +371,125 @@ def pdf_render():
 
 
     pdf.cell(w=0, h=7, txt='PERSONAL DOCUMENTATION / SEAFARER DOCUMENTATION', align='C', border=1, ln=1)
-    pdf.set_font('Calibri', '', 8)
-
+    pdf.set_font('Calibri', '', 6)
 
     pdf.multi_cell(w=30, h=7, txt='TYPE OF DOCUMENT / ID', align='C', border=1)
+    pdf.set_xy(40, 27)
     pdf.multi_cell(w=30, h=7, txt='COUNTRY OF ISSUE', align='C', border=1)
+    pdf.set_xy(70, 27)
     pdf.cell(w=30, h=7, txt='NO.', align='C', border=1)
     pdf.multi_cell(w=30, h=7, txt='ISSUED AT (PLACE)', align='C', border=1)
-    pdf.multi_cell(w=30, h=7, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1)
+    pdf.set_xy(130,27)
+    pdf.multi_cell(w=40, h=7, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1)
+    pdf.set_xy(170,27)
     pdf.multi_cell(w=30, h=7, txt='VALID UNTIL (MM / DD / YYYY)', align='C', border=1)
-    pdf.ln(5)
-    pdf.cell(0,10, txt='5. TRAINING AND CERTIFICATION.', align='L')
+   
+    data_rows = [
+    {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+     {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+     {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
+  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
+
+]
+
+# Fill in the data for each row
+    for row in data_rows:
+        pdf.set_font('Calibri', '', 12)  # Reset font size for the data rows
+        pdf.multi_cell(w=30, h=7, txt=row['document_type'], align='C', border=1)
+        pdf.set_xy(40, pdf.get_y() - 7)  # Move to the correct position after the first multi_cell
+        pdf.multi_cell(w=30, h=7, txt=row['country'], align='C', border=1)
+        pdf.set_xy(70, pdf.get_y() - 7)  # Adjust Y position for the next cell
+        pdf.cell(w=30, h=7, txt=row['number'], align='C', border=1)
+        pdf.multi_cell(w=30, h=7, txt=row['issued_at'], align='C', border=1)
+        pdf.set_xy(130, pdf.get_y() - 7)  # Adjust Y position for the next cell
+        pdf.multi_cell(w=40, h=7, txt=row['date_of_issue'], align='C', border=1)
+        pdf.set_xy(170, pdf.get_y() - 7)  # Adjust Y position for the next cell
+        pdf.multi_cell(w=30, h=7, txt=row['valid_until'], align='C', border=1)
+      
+    pdf.ln(10) 
+    pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')
     pdf.ln(10)
-    pdf.cell(w=0, h=7,txt='STCW CERTIFICATES', align='C', border=1)
-    pdf.ln(8)
-    pdf.multi_cell(w=30,h=7,txt='DESCRIPTION OF CERT / COURSE', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='NUMBER', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='DATE OF ISSUE (MM/DD/YYYY)', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='DATE OF EXPIRY(MM/DD/YYYY)', align='C', border=1)
-    pdf.ln(5)
+    pdf.cell(w=0, h=7, txt='STCW CERTIFICATES', align='C', border=1, ln=1)
+
+    column_widths = [40, 30, 20, 50, 50]
+    cell_height = 7
+
+    # Crear las cabeceras de las columnas
+    pdf.set_font('Calibri', '', 10)
+    pdf.cell(w=column_widths[0], h=cell_height, txt='DESCRIPTION OF CERT / COURSE', align='C', border=1)
+    pdf.cell(w=column_widths[1], h=cell_height, txt='COUNTRY OF ISSUE', align='C', border=1)
+    pdf.cell(w=column_widths[2], h=cell_height, txt='NUMBER', align='C', border=1)
+    pdf.cell(w=column_widths[3], h=cell_height, txt='DATE OF ISSUE (MM/DD/YYYY)', align='C', border=1)
+    pdf.cell(w=column_widths[4], h=cell_height, txt='DATE OF EXPIRY (MM/DD/YYYY)', align='C', border=1)
+    pdf.ln(cell_height)  # Mover a la siguiente línea para las celdas de contenido
+
+    courses = [
+    "Basic Safety Maritime Training Course (BST)",
+    "Proficiency in Personal Survival Techniques 1.19",
+    "Fire Prevention and Firefighting 1.20",
+    "Elementary First Aid 1.13",
+    "Personal Safety and Social Responsibilities 1.21",
+    "Security Awareness Training for All Seafarers Course 3.27",
+    "Security Awareness Training for All Seafarers with Designated Security Duties Course 3.26",
+    "Safety Training for Personnel Providing Direct Services to Passengers in Passenger Spaces 1.44",
+    "Passenger Ship Crowd Management Training 1.41",
+    "Passenger Ship Crisis Management Training 1.42",
+    "Passenger Safety, Cargo Safety and Hull Integrity Training 1.29",
+    "Proficiency in the Management of Survival Crafts and Rescue Boats Course 1.23",
+    "Basic Cargo Training Operations for Oil and Chemical Tanker Course 1.01",
+    "Advanced Fire Fighting 2.03",
+    "Engine Rating Course / WER",
+    "Able Engine Course",
+    
+]
+# Agregar las celdas con los cursos
+    
+    pdf.set_font("calibri","",11)
+    column_widths = [40, 30, 20, 50, 50]
+    cell_height = 7 
+    for course in courses:
+    # Dividir el texto del curso en múltiples líneas
+        lines = pdf.multi_cell(column_widths[0], cell_height, course, border=0, align='L', split_only=True)
+        num_lines = len(lines)
+
+        # Ajustar la altura de la celda de acuerdo al número de líneas
+        adjusted_height = max(cell_height * num_lines, cell_height)
+
+        # Verificar si se necesita un salto de página
+        if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+            pdf.add_page()
+
+        # Imprimir la celda del curso
+        pdf.multi_cell(column_widths[0], cell_height, course, border=1, align='L')
+
+        # Rellenar las otras columnas con los datos estáticos, ajustando la altura
+        pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
+        pdf.cell(w=column_widths[1], h=adjusted_height, txt="", border=1, align='C', ln=0)
+        pdf.cell(w=column_widths[2], h=adjusted_height, txt="", border=1, align='C', ln=0)
+        pdf.cell(w=column_widths[3], h=adjusted_height, txt="", border=1, align='C', ln=0)
+        pdf.cell(w=column_widths[4], h=adjusted_height, txt="", border=1, align='C', ln=1)
+
     pdf.set_font('calibri', '', 8)
     pdf.cell(0,10, txt='6. WORK EXPERIENCE ONSHORE', align='L')
     pdf.ln(10)
@@ -404,8 +503,7 @@ def pdf_render():
     pdf.ln(10)
     pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
     pdf.ln(10)
-    pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1)
-    pdf.ln(10)
+    pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1)
     pdf.multi_cell(w=30,h=7,txt='NAME OF EDUCATION INSTITUTION / TECHNICAL INSTITUTE / UNIVERSITY', align='C', border=1)
     pdf.multi_cell(w=30,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1)
     pdf.multi_cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1)
