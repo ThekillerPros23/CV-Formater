@@ -268,17 +268,20 @@ def pdf_render():
     pdf.cell(w=50,h=7,txt="COMPLETE NAME", border=1, align='C')
     pdf.multi_cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C')
    # Posicionamos el inicio del contenido
-    pdf.set_xy(160, 184)
+# Después de tus celdas anteriores, ajustamos la posición y alineamos la celda ADDRESS correctamente.
 
-# Dibujar la celda con "ADDRESS"
+# Mover a la siguiente línea después de ajustar todas las celdas anteriores
+    pdf.ln(max_height)
+
+    # Dibujar la celda con "ADDRESS" correctamente centrada
     pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1)
-    
-# Recorrer las filas de datos y dibujar cada celda
+
+    # Dibujar la siguiente tabla de datos, asegurando que las celdas se alineen correctamente
     for fila in datos:
-    # Recorrer cada columna y valor de la fila
         for i, (columna, valor) in enumerate(fila.items()):
             pdf.cell(w=anchuras[i], h=8, txt=valor, border=1, align='C')
         pdf.ln(8)  # Saltar a la siguiente línea después de cada fila
+
 
 # Agregar el título "3.WORK EXPERIENCE ONBOARD"
    
