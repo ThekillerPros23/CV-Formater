@@ -624,13 +624,7 @@ def pdf_render():
             pdf.ln() 
     pdf.cell(w=30, h=7 )
 
-    x_start = 10  # Posición X de inicio
-    y_position = 50  # Posición Y donde se dibujará la línea
-    line_length = 190  # Longitud de la línea (en mm)
-
-    # Dibujar la línea
-    pdf.set_line_width(0.5)  # Ancho de la línea
-    pdf.line(x_start, y_position, x_start + line_length, y_position)
+   
     pdf.ln(20)
     pdf.set_font("calibri", "", 10)
     pdf.cell(0, 10, txt="for office use only.", align = "L")
