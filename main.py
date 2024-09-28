@@ -29,6 +29,26 @@ class PDF(FPDF):
         self.set_x(-30)
         page_text = f'Página {self.page_no()} de {{nb}}'
         self.cell(0, 3, page_text, ln=True, align='R')
+def dividir_texto(texto, pdf, ancho_celda):
+    # Dividir el texto en palabras
+    palabras = texto.split(' ')
+    lineas = []
+    linea_actual = ''
+    
+    for palabra in palabras:
+        # Probar si la palabra cabe en la línea actual
+        if pdf.get_string_width(linea_actual + palabra) < ancho_celda:
+            linea_actual += palabra + ' '
+        else:
+            # Si no cabe, agregar la línea actual a la lista y comenzar una nueva
+            lineas.append(linea_actual.strip())
+            linea_actual = palabra + ' '
+    
+    # Agregar la última línea
+    if linea_actual:
+        lineas.append(linea_actual.strip())
+    
+    return lineas
 app = Flask(__name__)
 
 @app.route('/pdf_render', methods=['GET'])
@@ -260,7 +280,7 @@ def pdf_render():
     pdf.cell(w=70, h=7, txt="", border=1, align="C",ln=1)
     
     pdf.ln(5)
-    pdf.set_font('calibri','',8)
+    pdf.set_font('calibri','',10)
     pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN0", border=0, align='L')
     pdf.ln(15)
     pdf.cell(w=0,h=7,txt="EMERGENCY CONTACT / NEXT OF KIN", border=1, align='C',ln=1)
@@ -436,7 +456,7 @@ def pdf_render():
     cell_height = 7
 
     # Crear las cabeceras de las columnas
-    pdf.set_font('Calibri', '', 10)
+    pdf.set_font('Calibri', '', 8)
     pdf.cell(w=column_widths[0], h=cell_height, txt='DESCRIPTION OF CERT / COURSE', align='C', border=1)
     pdf.cell(w=column_widths[1], h=cell_height, txt='COUNTRY OF ISSUE', align='C', border=1)
     pdf.cell(w=column_widths[2], h=cell_height, txt='NUMBER', align='C', border=1)
@@ -493,39 +513,145 @@ def pdf_render():
     pdf.set_font('calibri', '', 8)
     pdf.cell(0,10, txt='6. WORK EXPERIENCE ONSHORE', align='L')
     pdf.ln(10)
-    pdf.multi_cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='COMPANY NAME / SHIP-OWNER', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='DUTIES OR RESPONSABILITIES', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='RANK/POSITION', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='REASON FOR LEAVING', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='NAME OF CONTACT PERSON & TELEPHONE NUMBER', align='C', border=1)
+    encabezados = ['DATE ON (MM/DD/YYYY)', 'DATE OFF (MM/DD/YYYY)', 'COMPANY NAME / SHIP-OWNER', 
+               'DUTIES OR RESPONSABILITIES', 'RANK/POSITION', 'REASON FOR LEAVING', 
+               'NAME OF CONTACT \nPERSON & TELEPHONE NUMBER']
+
+# Ancho de las celdas, ajusta según necesites
+    ancho_celdas = [30, 30, 30, 20, 30, 30, 60]
+
+# Crear las celdas de la tabla
+    for i, encabezado in enumerate(encabezados):
+      pdf.cell(w=ancho_celdas[i], h=7, txt=encabezado, align='C', border=1)
     pdf.ln(10)
     pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
     pdf.ln(10)
     pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1)
-    pdf.multi_cell(w=30,h=7,txt='NAME OF EDUCATION INSTITUTION / TECHNICAL INSTITUTE / UNIVERSITY', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1)
-    pdf.multi_cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1)
-    pdf.ln(10)
+    pdf.cell(w=90,h=7,txt='NAME OF EDUCATION INSTITUTION/TECHNICAL INSTITUTE/UNIVERSITY', align='C', border=1)
+    pdf.cell(w=40,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1)
+    pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1)
+    pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1)
+    datos_educacion = [
+    ["Harvard University", "Bachelor of Science", "08/15/2015", "05/20/2019"],
+    ["MIT", "Master of Engineering", "09/01/2019", "06/10/2021"],
+    ["Stanford University", "PhD in Computer Science", "09/15/2021", "06/20/2024"],
+    ["Harvard University", "Bachelor of Science", "08/15/2015", "05/20/2019"],
+
+
+
+]
+    pdf.ln(7)
+# Añadir los datos
+    for fila in datos_educacion:
+      pdf.cell(w=90, h=7, txt=fila[0], align='C', border=1)
+      pdf.cell(w=40, h=7, txt=fila[1], align='C', border=1)
+      pdf.cell(w=30, h=7, txt=fila[2], align='C', border=1)
+      pdf.cell(w=30, h=7, txt=fila[3], align='C', border=1)
+      pdf.ln(7)
+      
+    
+    pdf.ln(5)
+    
     pdf.cell(0,10, txt='8. VACCINATION BOOK', align='L')
     pdf.ln(10)
-    pdf.cell(w=0, h=6,txt='VACCINATION BOOK', align='C', border=1)
-    pdf.ln(10)
+    pdf.cell(w=0, h=6,txt='VACCINATION BOOK', align='C', border=1,ln=1)
+    
     pdf.set_font('calibri','',8)
     pdf.cell(w=40,h=6,txt="TYPE OF VACCINE", border=1, align='C')
     pdf.cell(w=40,h=6,txt="COUNTRY", border=1, align='C')
     pdf.cell(w=40,h=6,txt="DOZE", border=1, align='C')
-    pdf.multi_cell(w=40,h=3,txt='DATE OF ISSUE\n(MM / DD / YYYY)', align='C', border=1)
-    pdf.multi_cell(w=30,h=6,txt='VACCINATION MARK', align='C', border=1)
-    pdf.ln(10)
+    pdf.cell(w=40,h=6,txt='DATE OF ISSUE(MM / DD / YYYY)', align='C', border=1)
+    pdf.cell(w=30,h=6,txt='VACCINATION MARK', align='C', border=1,ln=1)
+    
+    pdf.cell(w=40,h=24,txt='COVID BOOK', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='FIRST DOZE', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+
+    pdf.cell(w=40,h=6,txt='', align='C', )
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='SECOND DOZE', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+
+    pdf.cell(w=40,h=6,txt='', align='C', )
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+
+    pdf.cell(w=40,h=6,txt='', align='C')
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+
+    pdf.cell(w=40,h=6,txt='YELLOW FEVER', align='C',border=1)
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='UNLIMITED', align='C', border=1)
+    pdf.cell(w=40,h=6,txt='', align='C', border=1)
+    pdf.cell(w=30,h=6,txt='OTHER', align='C', border=1,ln=1)
+    
+
+    pdf.ln(5)
     pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
     pdf.ln(10)
     pdf.cell(w=110,h=6,txt="SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS", border=1, align='L')
     pdf.cell(w=40,h=6,txt="YES", border=1, align='C')
-    pdf.cell(w=40,h=6,txt="NO", border=1, align='C')
-   
+    pdf.cell(w=40,h=6,txt="NO", border=1, align='C',ln=1)
+    data_storage=[
+            "Hard worked",
+            "Well Organized and effective support skills, being able to take the initiative with jobs at hand. Proper cleaning techniques and chemical handling",
+            "Ability to work positively and cooperatively in a diverse team environment to meet the entire housekeeping operation.",
+            "Demonstrated aptitude and monitors at all times companys OPP procedures for sanitation and cleanliness. ",
+            "Always in compliance with the companys environmental policies and be committed to safeguarding the environment and performed all related duties and worn the proper PPE as required at all times.",
+            "Active worker and responsible Seaman able to adjust to a variety of activities such as: cleaning and sanitizing cabins, uploading and downloading provision, manipulate laundry equipment, handle cleaning machines, such as: Scrubbing machine, suction machine, shampooing machine, steaming machine, dealing with chemicals, doing the fogging, delivering food in quarantine areas, etc. ",
+            "So friendly, open minded, organized and effective support skills, being able to take the initiative with jobs at hand. Proper cleaning techniques and chemical handling. ",
+            "Ability to work every day cooperatively by using too much common sense in a multicultural environment to meet the entire housekeeping operation.",
+            "Demonstrated aptitude and monitors at all times companys OPP procedures for sanitation and cleanliness. ",
+        ]
+    title_w = 110  # Ancho del título
+    title_h = 6    # Alto del título
+    yes_w = 40     # Ancho de la columna "YES"
+    yes_h = 6      # Alto de la columna "YES"
+    no_w = 40      # Ancho de la columna "NO"
+    no_h = 6   
+    for line in data_storage:
+            pdf.cell(w=title_w, h=title_h, txt=line, border=1, align='L')
+            pdf.cell(w=yes_w, h=yes_h, txt="", border=1, align='C')  # Celda "YES"
+            pdf.cell(w=no_w, h=no_h, txt="", border=1, align='C')   # Celda "NO"
+            pdf.ln() 
+    pdf.cell(w=30, h=7 )
+
+    x_start = 10  # Posición X de inicio
+    y_position = 50  # Posición Y donde se dibujará la línea
+    line_length = 190  # Longitud de la línea (en mm)
+
+    # Dibujar la línea
+    pdf.set_line_width(0.5)  # Ancho de la línea
+    pdf.line(x_start, y_position, x_start + line_length, y_position)
+    pdf.ln(20)
+    pdf.set_font("calibri", "", 10)
+    pdf.cell(0, 10, txt="for office use only.", align = "L")
+    pdf.ln(10)
+    pdf.cell(w=30, h=7, txt="DATE", align="L", border=1)
+    pdf.cell(w=130, h=7, txt="COMMENTS", align="C", border=1)
+    pdf.cell(w=30, h=7, txt="VALIDATED BY:", align="L", border=1,ln=1)
+    
+    pdf.cell(w=30, h=7, txt="", align="L", border=1)
+    pdf.cell(w=130, h=7, txt="", align="C", border=1)
+    pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
+    
+    pdf.cell(w=30, h=7, txt="", align="L", border=1)
+    pdf.cell(w=130, h=7, txt="", align="C", border=1)
+    pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
+    
+    pdf.cell(w=30, h=7, txt="", align="L", border=1)
+    pdf.cell(w=130, h=7, txt="", align="C", border=1)
+    pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
+    
+
     pdf.output('hoja.pdf')
 
     return jsonify({"message": "PDF generated successfully!"})
