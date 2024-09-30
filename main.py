@@ -49,6 +49,8 @@ def dividir_texto(texto, pdf, ancho_celda):
         lineas.append(linea_actual.strip())
     
     return lineas
+
+
 app = Flask(__name__)
 
 @app.route('/pdf_render', methods=['GET'])
@@ -58,51 +60,9 @@ def pdf_render():
     {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
     {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
       {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"},
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"},  
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-       {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-   {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-   {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-   {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-   {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-   {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-       {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-       {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-   {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-
+  
 ]
+    
 
     anchuras = [40, 50, 60, 40]
     # Obtener datos de la solicitud
@@ -210,7 +170,7 @@ def pdf_render():
 
     # Segunda celda "BARRIADA EL ALBA..."
     pdf.set_xy(x_inicial + 40, y_inicial)
-    pdf.multi_cell(w=50, h=7, txt="BARRIADA EL ALBA ENTRANDO POR EL CHINO NUEVO MUNDO", border=1, align="C")
+    pdf.multi_cell(w=50, h=7, txt="", border=1, align="C")
     height_barrio = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
     # Tercera celda "NEARLY AIRPORT"
@@ -286,20 +246,9 @@ def pdf_render():
     pdf.cell(w=0,h=7,txt="EMERGENCY CONTACT / NEXT OF KIN", border=1, align='C',ln=1)
     pdf.cell(w=40,h=7,txt="RELATIONSHIP", border=1, align='C')
     pdf.cell(w=50,h=7,txt="COMPLETE NAME", border=1, align='C')
-    pdf.multi_cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C')
-   # Posicionamos el inicio del contenido
-# Después de tus celdas anteriores, ajustamos la posición y alineamos la celda ADDRESS correctamente.
-
+    pdf.cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C')
 # Mover a la siguiente línea después de ajustar todas las celdas anteriores
-# Supongamos que la suma de las anchuras de las columnas anteriores es 160 (ajústalo según sea necesario)
-    anchura_total_filas_anterior = 160  # Ajusta este valor según las columnas anteriores
-
-# Mover a la siguiente línea después de ajustar todas las celdas anteriores
-    pdf.ln(max_height)
-
-  # Posicionar el cursor en la posición adecuada en el eje X (alineado con la última columna)
-    pdf.set_xy(anchura_total_filas_anterior, 184)
-
+  
   # Dibujar la celda "ADDRESS" alineada con la última columna
     pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1)
 
@@ -318,17 +267,17 @@ def pdf_render():
     
     
     anchuras_columnas = [28, 28, 24, 21, 18, 18, 23, 30]  
-    altura_fila = [7,7,7,7,14,14,7,7]
+    altura_fila = [14,14,14,14,14,14,14,14]
     
     titulos_columnas = [
-    'DATE ON\n(MM/DD/YYYY)',
-    'DATE OFF\n(MM/DD/YYYY)',
-    'COMPANY\nNAME',
-    'VESSEL\nNAME',
+    'DATE ON(MM/DD/YYYY)',
+    'DATE OFF(MM/DD/YYYY)',
+    'COMPANY NAME',
+    'VESSELNAME',
     'IMO #',
     'GT / HP',
-    'TYPE OF\nVESSEL',
-    'RANK/\nPOSITION'
+    'TYPE OF VESSEL',
+    'RANK/POSITION'
 ]
     x_inicial = pdf.get_x()
     y_inicial = pdf.get_y()
@@ -336,101 +285,60 @@ def pdf_render():
     pdf.set_xy(x_inicial, y_inicial)
     pdf.set_font('calibri','', 12)
     for i in range(len(titulos_columnas)):
-        pdf.multi_cell(w=anchuras_columnas[i], h=altura_fila[i], txt=titulos_columnas[i], align=align_type[i], border=1)
+        pdf.cell(w=anchuras_columnas[i], h=altura_fila[i], txt=titulos_columnas[i], align=align_type[i], border=1)
         x_inicial += anchuras_columnas[i]
         pdf.set_xy(x_inicial, y_inicial)
     pdf.ln(14)
 
     datosNuevos = [
-    ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-      ['01/01/2023', '01/02/2023', 'Company A', 'Vessel A', '1234567', '5000 / 3000', 'Type A', 'Captain'],
-    ['02/01/2023', '02/02/2023', 'Company B', 'Vessel B', '2345678', '6000 / 3500', 'Type B', 'First Officer'],
-    
+  
     # Agrega más filas según sea necesario
 ]
 
+    nuevaaltura_fila = 7  # Altura uniforme para todas las filas
+
 # Dibujar los datos
-    nuevaaltura_fila = [7,7,7,7,7,7,7,7]
     for fila in datosNuevos:
         x_inicial = pdf.get_x()
         y_inicial = pdf.get_y()
+
+        # Mantener la altura máxima de la fila
+        max_height = nuevaaltura_fila
+
         for i in range(len(fila)):
-            pdf.multi_cell(w=anchuras_columnas[i], h=nuevaaltura_fila[i], txt=fila[i], align=align_type[i], border=1)
+            # Usar cell para cada dato de la fila
+            # Colocar el texto en la celda
+            pdf.cell(w=anchuras_columnas[i], h=max_height, txt=fila[i], align=align_type[i], border=1)
+
+            # Actualizar la posición x para la siguiente celda
             x_inicial += anchuras_columnas[i]
-            pdf.set_xy(x_inicial, y_inicial)
-        pdf.ln(nuevaaltura_fila[0]) 
+            pdf.set_x(x_inicial)
+
+        # Saltar a la siguiente línea después de imprimir la fila
+        pdf.ln(max_height)
+
+    # Salto de línea adicional después de cada grupo de filas
     pdf.ln(5)
     pdf.cell(0, 10, txt='4. Personal Documentation / Seafarer Documentation', align='L')
     pdf.ln(10)  
 
 
     pdf.cell(w=0, h=7, txt='PERSONAL DOCUMENTATION / SEAFARER DOCUMENTATION', align='C', border=1, ln=1)
-    pdf.set_font('Calibri', '', 6)
+    pdf.set_font('Calibri', '', 10)
 
-    pdf.multi_cell(w=30, h=7, txt='TYPE OF DOCUMENT / ID', align='C', border=1)
-    pdf.set_xy(40, 27)
-    pdf.multi_cell(w=30, h=7, txt='COUNTRY OF ISSUE', align='C', border=1)
-    pdf.set_xy(70, 27)
+    pdf.cell(w=30, h=7, txt='TYPE OF DOCUMENT / ID', align='C', border=1)
+    
+    pdf.cell(w=30, h=7, txt='COUNTRY OF ISSUE', align='C', border=1)
     pdf.cell(w=30, h=7, txt='NO.', align='C', border=1)
-    pdf.multi_cell(w=30, h=7, txt='ISSUED AT (PLACE)', align='C', border=1)
-    pdf.set_xy(130,27)
-    pdf.multi_cell(w=40, h=7, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1)
-    pdf.set_xy(170,27)
-    pdf.multi_cell(w=30, h=7, txt='VALID UNTIL (MM / DD / YYYY)', align='C', border=1)
+    pdf.cell(w=30, h=7, txt='ISSUED AT (PLACE)', align='C', border=1)
+    
+    pdf.cell(w=40, h=7, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1)
+    
+    pdf.cell(w=30, h=7, txt='VALID UNTIL (MM / DD / YYYY)', align='C', border=1,ln=1)
    
     data_rows = [
     {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-     {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-     {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    {'document_type': 'Seafarer ID', 'country': 'UK', 'number': '987654321', 'issued_at': 'London', 'date_of_issue': '05/05/2021', 'valid_until': '05/05/2026'},
-  {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-
+    
 ]
 
 # Fill in the data for each row
@@ -611,19 +519,28 @@ def pdf_render():
             "Ability to work every day cooperatively by using too much common sense in a multicultural environment to meet the entire housekeeping operation.",
             "Demonstrated aptitude and monitors at all times companys OPP procedures for sanitation and cleanliness. ",
         ]
-    title_w = 110  # Ancho del título
-    title_h = 6    # Alto del título
-    yes_w = 40     # Ancho de la columna "YES"
-    yes_h = 6      # Alto de la columna "YES"
-    no_w = 40      # Ancho de la columna "NO"
-    no_h = 6   
-    for line in data_storage:
-            pdf.cell(w=title_w, h=title_h, txt=line, border=1, align='L')
-            pdf.cell(w=yes_w, h=yes_h, txt="", border=1, align='C')  # Celda "YES"
-            pdf.cell(w=no_w, h=no_h, txt="", border=1, align='C')   # Celda "NO"
-            pdf.ln() 
-    pdf.cell(w=30, h=7 )
+    column_widths = [110, 40, 40]  # Ancho de cada columna (Título, YES, NO)
+    cell_height = 7  # Altura estándar de la celda
 
+    for line in data_storage:
+        # Dividimos el texto en varias líneas si es necesario
+        lines = pdf.multi_cell(column_widths[0], cell_height, line, border=0, align='L', split_only=True)
+        num_lines = len(lines)
+
+        # Ajustamos la altura de la celda según el número de líneas
+        adjusted_height = max(cell_height * num_lines, cell_height)
+
+        # Verificamos si se necesita un salto de página
+        if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+            pdf.add_page()
+
+        # Imprimimos la celda del título (texto del data_storage)
+        pdf.multi_cell(column_widths[0], cell_height, line, border=1, align='L')
+
+        # Ajustamos la posición de las celdas "YES" y "NO" de acuerdo a la altura ajustada
+        pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
+        pdf.cell(w=column_widths[1], h=adjusted_height, txt="", border=1, align='C', ln=0)  # Celda "YES"
+        pdf.cell(w=column_widths[2], h=adjusted_height, txt="", border=1, align='C', ln=1) 
    
     pdf.ln(20)
     pdf.set_font("calibri", "", 10)
