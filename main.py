@@ -247,6 +247,7 @@ def pdf_render():
     pdf.cell(w=40,h=7,txt="RELATIONSHIP", border=1, align='C')
     pdf.cell(w=50,h=7,txt="COMPLETE NAME", border=1, align='C')
     pdf.cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C')
+
 # Mover a la siguiente línea después de ajustar todas las celdas anteriores
   
   # Dibujar la celda "ADDRESS" alineada con la última columna
@@ -266,14 +267,14 @@ def pdf_render():
     pdf.ln(10)
     
     
-    anchuras_columnas = [28, 28, 24, 21, 18, 18, 23, 30]  
-    altura_fila = [14,14,14,14,14,14,14,14]
+    anchuras_columnas = [30, 30, 24, 17, 18, 18, 23, 30]  
+    altura_fila = [7,7,7,7,14,14,7,14]
     
     titulos_columnas = [
-    'DATE ON(MM/DD/YYYY)',
-    'DATE OFF(MM/DD/YYYY)',
+    'DATE ON  (MM/DD/YYYY)',
+    'DATE OFF (MM/DD/YYYY)',
     'COMPANY NAME',
-    'VESSELNAME',
+    'VESSEL NAME',
     'IMO #',
     'GT / HP',
     'TYPE OF VESSEL',
@@ -285,13 +286,46 @@ def pdf_render():
     pdf.set_xy(x_inicial, y_inicial)
     pdf.set_font('calibri','', 12)
     for i in range(len(titulos_columnas)):
-        pdf.cell(w=anchuras_columnas[i], h=altura_fila[i], txt=titulos_columnas[i], align=align_type[i], border=1)
-        x_inicial += anchuras_columnas[i]
         pdf.set_xy(x_inicial, y_inicial)
-    pdf.ln(14)
+        
+        # Si estás usando una lista para la altura de fila, usa el índice i para acceder a cada altura
+        if isinstance(altura_fila, list):
+            altura_actual = altura_fila[i]
+        else:
+            altura_actual = altura_fila
+
+        # Dividir el texto del título si es necesario
+        lines = pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=0, align=align_type[i], split_only=True)
+        num_lines = len(lines)
+
+        # Ajustar la altura de la celda según el número de líneas
+        adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
+        
+        # Verificar si se necesita un salto de página
+        if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+            pdf.add_page()
+            pdf.set_xy(x_inicial, y_inicial)
+
+        # Imprimir la celda del título
+        pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=1, align=align_type[i])
+
+        # Actualizar la posición x para la siguiente celda
+        x_inicial += anchuras_columnas[i]
+   
 
     datosNuevos = [
-  
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
     # Agrega más filas según sea necesario
 ]
 
@@ -356,6 +390,7 @@ def pdf_render():
         pdf.multi_cell(w=30, h=7, txt=row['valid_until'], align='C', border=1)
       
     pdf.ln(10) 
+    pdf.set_font('calibri', '',10)
     pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')
     pdf.ln(10)
     pdf.cell(w=0, h=7, txt='STCW CERTIFICATES', align='C', border=1, ln=1)
@@ -364,7 +399,7 @@ def pdf_render():
     cell_height = 7
 
     # Crear las cabeceras de las columnas
-    pdf.set_font('Calibri', '', 8)
+    pdf.set_font('Calibri', '', 10)
     pdf.cell(w=column_widths[0], h=cell_height, txt='DESCRIPTION OF CERT / COURSE', align='C', border=1)
     pdf.cell(w=column_widths[1], h=cell_height, txt='COUNTRY OF ISSUE', align='C', border=1)
     pdf.cell(w=column_widths[2], h=cell_height, txt='NUMBER', align='C', border=1)
@@ -426,11 +461,27 @@ def pdf_render():
                'NAME OF CONTACT \nPERSON & TELEPHONE NUMBER']
 
 # Ancho de las celdas, ajusta según necesites
-    ancho_celdas = [30, 30, 30, 20, 30, 30, 60]
-
-# Crear las celdas de la tabla
+    ancho_celdas = [30, 30, 40, 40, 30, 40, 50]
+    alto_celdas = [2,2,7,7,7,7,7,7]
+    start_x = pdf.get_x()
+    start_y = pdf.get_y()
     for i, encabezado in enumerate(encabezados):
-      pdf.cell(w=ancho_celdas[i], h=7, txt=encabezado, align='C', border=1)
+        # Dividir el texto en múltiples líneas si es necesario
+        lines = pdf.multi_cell(ancho_celdas[i], cell_height, encabezado, border=0, align='C', split_only=True)
+        num_lines = len(lines)
+
+        # Ajustar la altura de la celda en función del número de líneas
+        adjusted_height = max(cell_height * num_lines, cell_height)
+
+        # Guardar la posición actual de Y para mantener la altura de todas las celdas en la misma fila
+        current_y = pdf.get_y()
+
+        # Imprimir la celda del encabezado
+        pdf.multi_cell(ancho_celdas[i], cell_height, encabezado, border=1, align='C')
+
+        # Volver a la posición X después de imprimir la celda, para continuar en la misma fila
+        pdf.set_xy(start_x + sum(ancho_celdas[:i+1]), start_y)
+   
     pdf.ln(10)
     pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
     pdf.ln(10)
@@ -568,4 +619,4 @@ def pdf_render():
     return jsonify({"message": "PDF generated successfully!"})
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=4000)
+    app.run(host='0.0.0.0', port=4000)
