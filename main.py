@@ -11,7 +11,7 @@ class PDF(FPDF):
             self.image("LOGISTIC-SinFondo.png", 160, 8, 33)  # Alineado a la derecha
     def footer(self):
         self.set_y(-20)
-        self.set_font('calibri', 'I', 8)
+        self.set_font('calibri', 'I', 9)
 
         # Código
         self.set_x(-60)
@@ -94,38 +94,38 @@ def pdf_render():
     pdf.cell(0, 10, 'SEAFARER APPLICATION FORM', align='C')
 
     pdf.set_xy(55, 30)  # Ajustar la posición para el siguiente texto
-    pdf.set_font('calibri', '', 11)
+    pdf.set_font('calibri', '', 9)
     pdf.cell(30, 10, 'POSITION APPLYING FOR RANK: ')
     
     pdf.set_xy(116, 30)
-    pdf.set_font('calibri', 'BU', 11)
+    pdf.set_font('calibri', 'BU', 9)
     pdf.cell(60, 10, 'MESSMAN')
 
     pdf.set_xy(55, 40)
-    pdf.set_font('calibri', '', 11)
+    pdf.set_font('calibri', '', 9)
     pdf.cell(55, 10, '1. PERSONAL INFORMATION')
 
 
-    pdf.set_font('calibri', '', 10) 
+    pdf.set_font('calibri', '', 9) 
     pdf.set_xy(50, 50)
 
     # Definir anchos para alineación
     cell_width = 50
     big_cell_width = 100
     height = 7
-    pdf.set_font('calibri', '', 8) 
+    pdf.set_font('calibri', '', 9) 
     # Encabezado para Nombres
     
     pdf.cell(w=40, h=height, txt='NAME', border=1, align='L')
     pdf.cell(w=40, h=height, txt=str(name), border=1, align='C')
     pdf.cell(w=40, h=height, txt=str(second_name), border=1, align='C', ln=1)
-    pdf.set_font('calibri', '', 8) 
+    pdf.set_font('calibri', '', 9) 
     # Encabezado para Apellidos
     pdf.set_xy(50, 57)  
     pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L')
     pdf.cell(w=40, h=height, txt=str(lastname), border=1, align='C')
     pdf.cell(w=40, h=height, txt=str(second_lastname), border=1, align='C', ln=1)
-    pdf.set_font('calibri', '', 8) 
+    pdf.set_font('calibri', '', 9) 
     # Fecha de nacimiento
     pdf.set_xy(50, 64)  
     pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='C')
@@ -157,7 +157,7 @@ def pdf_render():
 
    # Configuración inicial
     pdf.ln(5)
-    pdf.set_font('calibri', '', 8)
+    pdf.set_font('calibri', '', 9)
 
     # Guardar posición inicial
     x_inicial = pdf.get_x()
@@ -230,7 +230,7 @@ def pdf_render():
     pdf.cell(w=30, h=7, txt="50%", border=1, align="R", ln=1)
 
     pdf.ln(5)
-    pdf.set_font('calibri','',8)
+    pdf.set_font('calibri','',9)
     pdf.cell(w=0, h=7, txt="MARLINS / LANGUAGE -TEST", border=1, align="C",ln=1)
     pdf.cell(w=60, h=7, txt="TOTAL %", border=1, align="C")
     pdf.cell(w=60, h=7, txt="ISSUE DATE", border=1, align="C")
@@ -240,7 +240,7 @@ def pdf_render():
     pdf.cell(w=70, h=7, txt="", border=1, align="C",ln=1)
     
     pdf.ln(5)
-    pdf.set_font('calibri','',10)
+    pdf.set_font('calibri','',9)
     pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN0", border=0, align='L')
     pdf.ln(15)
     pdf.cell(w=0,h=7,txt="EMERGENCY CONTACT / NEXT OF KIN", border=1, align='C',ln=1)
@@ -268,7 +268,7 @@ def pdf_render():
     
     
     anchuras_columnas = [30, 30, 24, 17, 18, 18, 23, 30]  
-    altura_fila = [7,7,7,7,14,14,7,14]
+    altura_fila = [7,7,7,7,14,14,14,14]
     
     titulos_columnas = [
     'DATE ON  (MM/DD/YYYY)',
@@ -284,7 +284,7 @@ def pdf_render():
     y_inicial = pdf.get_y()
     align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
     pdf.set_xy(x_inicial, y_inicial)
-    pdf.set_font('calibri','', 12)
+    pdf.set_font('calibri','', 9)
     for i in range(len(titulos_columnas)):
         pdf.set_xy(x_inicial, y_inicial)
         
@@ -358,55 +358,165 @@ def pdf_render():
 
 
     pdf.cell(w=0, h=7, txt='PERSONAL DOCUMENTATION / SEAFARER DOCUMENTATION', align='C', border=1, ln=1)
-    pdf.set_font('Calibri', '', 10)
+    pdf.set_font('Calibri', '', 9)
 
-    pdf.cell(w=30, h=7, txt='TYPE OF DOCUMENT / ID', align='C', border=1)
+# Definir los títulos de las columnas
+    titulos_columnas = [
+        "TYPE OF DOCUMENT / ID",
+        "COUNTRY OF ISSUE",
+        "NO.",
+        "ISSUED AT (PLACE)",
+        "DATE OF ISSUE (MM / DD / YYYY)",
+        "VALID UNTIL (MM / DD / YYYY)"
+    ]
+
+    # Definir las anchuras de las columnas
+    anchuras_columnas = [40, 30, 30, 30, 30, 30]
+
+    # Definir la altura de la fila
+    altura_fila = [14,14,14,14,7,7]  # O podría ser una lista si varía por fila
+
+    # Alineación por columna (en este caso se alinean al centro, puedes modificar si es necesario)
+    align_type = ['C', 'C', 'C', 'C', 'C', 'C']
+
+    # Coordenadas iniciales para comenzar a escribir
+    x_inicial = pdf.get_x()
+    y_inicial = pdf.get_y()
+
+    # Imprimir los encabezados
+    for i in range(len(titulos_columnas)):
+        pdf.set_xy(x_inicial, y_inicial)
+
+        # Si la altura de la fila es una lista, selecciona la altura específica
+        if isinstance(altura_fila, list):
+            altura_actual = altura_fila[i]
+        else:
+            altura_actual = altura_fila
+
+        # Dividir el texto del encabezado si es necesario (sin imprimir aún)
+        lines = pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=0, align='C', split_only=True)
+        num_lines = len(lines)
+
+        # Ajustar la altura de la celda según el número de líneas
+        adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
+
+        # Verificar si se necesita un salto de página
+        if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+            pdf.add_page()
+            pdf.set_xy(x_inicial, y_inicial)
+
+        # Imprimir la celda del encabezado con el ajuste de altura
+        pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=1, align='C')
+
+        # Actualizar la posición x para la siguiente celda
+        x_inicial += anchuras_columnas[i]
+        # Mover a la siguiente línea después de completar la fila de encabezados
     
-    pdf.cell(w=30, h=7, txt='COUNTRY OF ISSUE', align='C', border=1)
-    pdf.cell(w=30, h=7, txt='NO.', align='C', border=1)
-    pdf.cell(w=30, h=7, txt='ISSUED AT (PLACE)', align='C', border=1)
-    
-    pdf.cell(w=40, h=7, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1)
-    
-    pdf.cell(w=30, h=7, txt='VALID UNTIL (MM / DD / YYYY)', align='C', border=1,ln=1)
-   
+
     data_rows = [
-    {'document_type': 'Passport', 'country': 'USA', 'number': '123456789', 'issued_at': 'New York', 'date_of_issue': '01/01/2020', 'valid_until': '01/01/2030'},
-    
+
 ]
 
-# Fill in the data for each row
+# Llenar los datos para cada fila
     for row in data_rows:
-        pdf.set_font('Calibri', '', 12)  # Reset font size for the data rows
-        pdf.multi_cell(w=30, h=7, txt=row['document_type'], align='C', border=1)
-        pdf.set_xy(40, pdf.get_y() - 7)  # Move to the correct position after the first multi_cell
+        pdf.set_font('Calibri', '', 9)  # Restablecer el tamaño de la fuente para las filas de datos
+
+        # Guardar la posición inicial para restablecer el cursor en cada celda
+        x_inicial = pdf.get_x()
+        y_inicial = pdf.get_y()
+
+        # Imprimir la celda del "document_type" (con salto de línea si es necesario)
+        pdf.multi_cell(w=40, h=7, txt=row['document_type'], align='C', border=1)
+        
+        # Mover el cursor a la siguiente celda en la misma línea
+        pdf.set_xy(x_inicial + 40, y_inicial)
+
+        # Imprimir la celda del "country"
         pdf.multi_cell(w=30, h=7, txt=row['country'], align='C', border=1)
-        pdf.set_xy(70, pdf.get_y() - 7)  # Adjust Y position for the next cell
-        pdf.cell(w=30, h=7, txt=row['number'], align='C', border=1)
+        
+        # Actualizar la posición x e y para la siguiente celda
+        pdf.set_xy(x_inicial + 40 + 30, y_inicial)
+
+        # Imprimir la celda del "number"
+        pdf.multi_cell(w=30, h=7, txt=row['number'], align='C', border=1)
+        
+        # Actualizar la posición para la siguiente celda
+        pdf.set_xy(x_inicial + 40 + 30 + 30, y_inicial)
+
+        # Imprimir la celda del "issued_at"
         pdf.multi_cell(w=30, h=7, txt=row['issued_at'], align='C', border=1)
-        pdf.set_xy(130, pdf.get_y() - 7)  # Adjust Y position for the next cell
-        pdf.multi_cell(w=40, h=7, txt=row['date_of_issue'], align='C', border=1)
-        pdf.set_xy(170, pdf.get_y() - 7)  # Adjust Y position for the next cell
+
+        # Actualizar la posición para la siguiente celda
+        pdf.set_xy(x_inicial + 40 + 30 + 30 + 30, y_inicial)
+
+        # Imprimir la celda del "date_of_issue"
+        pdf.multi_cell(w=30, h=7, txt=row['date_of_issue'], align='C', border=1)
+
+        # Actualizar la posición para la siguiente celda
+        pdf.set_xy(x_inicial + 40 + 30 + 30 + 30 + 30, y_inicial)
+
+        # Imprimir la celda del "valid_until"
         pdf.multi_cell(w=30, h=7, txt=row['valid_until'], align='C', border=1)
+
       
     pdf.ln(10) 
-    pdf.set_font('calibri', '',10)
+    pdf.set_font('calibri', '',9)
     pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')
     pdf.ln(10)
     pdf.cell(w=0, h=7, txt='STCW CERTIFICATES', align='C', border=1, ln=1)
 
-    column_widths = [40, 30, 20, 50, 50]
-    cell_height = 7
+    # Definir los títulos de las columnas
+    titulos_columnas = [
+        "DESCRIPTION OF CERT / COURSE",
+        "COUNTRY OF ISSUE",
+        "NUMBER",
+        "DATE OF ISSUE (MM/DD/YYYY)",
+        "DATE OF EXPIRY (MM/DD/YYYY)"
+    ]
 
-    # Crear las cabeceras de las columnas
-    pdf.set_font('Calibri', '', 10)
-    pdf.cell(w=column_widths[0], h=cell_height, txt='DESCRIPTION OF CERT / COURSE', align='C', border=1)
-    pdf.cell(w=column_widths[1], h=cell_height, txt='COUNTRY OF ISSUE', align='C', border=1)
-    pdf.cell(w=column_widths[2], h=cell_height, txt='NUMBER', align='C', border=1)
-    pdf.cell(w=column_widths[3], h=cell_height, txt='DATE OF ISSUE (MM/DD/YYYY)', align='C', border=1)
-    pdf.cell(w=column_widths[4], h=cell_height, txt='DATE OF EXPIRY (MM/DD/YYYY)', align='C', border=1)
-    pdf.ln(cell_height)  # Mover a la siguiente línea para las celdas de contenido
+    # Definir las anchuras de las columnas
+    anchuras_columnas = [40, 30, 20, 50, 50]
 
+    # Definir la altura de la fila
+    altura_fila = [7,14,14,14,14,14]  # Si tienes diferentes alturas, podrías cambiar esto a una lista
+
+    # Alineación por columna (en este caso se alinean al centro, puedes modificar si es necesario)
+    align_type = ['C', 'C', 'C', 'C', 'C']
+
+    # Coordenadas iniciales para comenzar a escribir
+    x_inicial = pdf.get_x()
+    y_inicial = pdf.get_y()
+
+    # Imprimir los encabezados
+    for i in range(len(titulos_columnas)):
+        pdf.set_xy(x_inicial, y_inicial)
+        
+        # Si la altura de la fila es una lista, selecciona la altura específica
+        if isinstance(altura_fila, list):
+            altura_actual = altura_fila[i]
+        else:
+            altura_actual = altura_fila
+
+        # Dividir el texto del título si es necesario (sin imprimir aún)
+        lines = pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=0, align=align_type[i], split_only=True)
+        num_lines = len(lines)
+
+        # Ajustar la altura de la celda según el número de líneas
+        adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
+
+        # Verificar si se necesita un salto de página
+        if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+            pdf.add_page()
+            pdf.set_xy(x_inicial, y_inicial)
+
+        # Imprimir la celda del título con el ajuste de altura
+        pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=1, align=align_type[i])
+
+        # Actualizar la posición x para la siguiente celda
+        x_inicial += anchuras_columnas[i]
+
+    # Mover a la siguiente línea después de completar la fila de encabezados
+    
     courses = [
     "Basic Safety Maritime Training Course (BST)",
     "Proficiency in Personal Survival Techniques 1.19",
@@ -428,7 +538,7 @@ def pdf_render():
 ]
 # Agregar las celdas con los cursos
     
-    pdf.set_font("calibri","",11)
+    pdf.set_font("calibri","",9)
     column_widths = [40, 30, 20, 50, 50]
     cell_height = 7 
     for course in courses:
@@ -453,35 +563,55 @@ def pdf_render():
         pdf.cell(w=column_widths[3], h=adjusted_height, txt="", border=1, align='C', ln=0)
         pdf.cell(w=column_widths[4], h=adjusted_height, txt="", border=1, align='C', ln=1)
 
-    pdf.set_font('calibri', '', 8)
+    pdf.set_font('calibri', '', 9)
     pdf.cell(0,10, txt='6. WORK EXPERIENCE ONSHORE', align='L')
     pdf.ln(10)
-    encabezados = ['DATE ON (MM/DD/YYYY)', 'DATE OFF (MM/DD/YYYY)', 'COMPANY NAME / SHIP-OWNER', 
-               'DUTIES OR RESPONSABILITIES', 'RANK/POSITION', 'REASON FOR LEAVING', 
-               'NAME OF CONTACT \nPERSON & TELEPHONE NUMBER']
+    encabezados = [
+    'DATE ON (MM/DD/YYYY)', 'DATE OFF (MM/DD/YYYY)', 'COMPANY NAME / SHIP-OWNER', 
+    'DUTIES OR RESPONSABILITIES', 'RANK/POSITION', 'REASON FOR LEAVING', 
+    'NAME OF CONTACT \nPERSON & TELEPHONE NUMBER'
+]
+ # Definir las anchuras de las celdas
+    ancho_celdas = [22, 22, 27, 27, 27, 25, 40]
 
-# Ancho de las celdas, ajusta según necesites
-    ancho_celdas = [30, 30, 40, 40, 30, 40, 50]
-    alto_celdas = [2,2,7,7,7,7,7,7]
-    start_x = pdf.get_x()
-    start_y = pdf.get_y()
-    for i, encabezado in enumerate(encabezados):
-        # Dividir el texto en múltiples líneas si es necesario
-        lines = pdf.multi_cell(ancho_celdas[i], cell_height, encabezado, border=0, align='C', split_only=True)
+    # Definir la altura de las celdas
+    altura_fila = [14, 14, 14, 14, 28, 14,9.3]
+
+    # Definir la alineación de cada columna (esto faltaba)
+    align_type = ['C', 'C', 'C', 'C', 'C', 'C', 'C']
+
+    # Coordenadas iniciales para comenzar a escribir
+    x_inicial = pdf.get_x()
+    y_inicial = pdf.get_y()
+
+    # Verificar que todas las listas tienen la misma longitud
+    if not (len(encabezados) == len(ancho_celdas) == len(altura_fila) == len(align_type)):
+        raise ValueError("Las listas encabezados, ancho_celdas, altura_fila y align_type deben tener la misma longitud.")
+
+    # Imprimir los encabezados
+    for i in range(len(encabezados)):
+        pdf.set_xy(x_inicial, y_inicial)
+        
+        # Si la altura de la fila es una lista, selecciona la altura específica
+        altura_actual = altura_fila[i]
+
+        # Dividir el texto del encabezado si es necesario (sin imprimir aún)
+        lines = pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=0, align=align_type[i], split_only=True)
         num_lines = len(lines)
 
-        # Ajustar la altura de la celda en función del número de líneas
-        adjusted_height = max(cell_height * num_lines, cell_height)
+        # Ajustar la altura de la celda según el número de líneas
+        adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
 
-        # Guardar la posición actual de Y para mantener la altura de todas las celdas en la misma fila
-        current_y = pdf.get_y()
+        # Verificar si se necesita un salto de página
+        if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+            pdf.add_page()
+            pdf.set_xy(x_inicial, y_inicial)
 
-        # Imprimir la celda del encabezado
-        pdf.multi_cell(ancho_celdas[i], cell_height, encabezado, border=1, align='C')
+        # Imprimir la celda del encabezado con el ajuste de altura
+        pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=1, align=align_type[i])
 
-        # Volver a la posición X después de imprimir la celda, para continuar en la misma fila
-        pdf.set_xy(start_x + sum(ancho_celdas[:i+1]), start_y)
-   
+        # Actualizar la posición x para la siguiente celda
+        x_inicial += ancho_celdas[i]
     pdf.ln(10)
     pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
     pdf.ln(10)
@@ -491,11 +621,6 @@ def pdf_render():
     pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1)
     pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1)
     datos_educacion = [
-    ["Harvard University", "Bachelor of Science", "08/15/2015", "05/20/2019"],
-    ["MIT", "Master of Engineering", "09/01/2019", "06/10/2021"],
-    ["Stanford University", "PhD in Computer Science", "09/15/2021", "06/20/2024"],
-    ["Harvard University", "Bachelor of Science", "08/15/2015", "05/20/2019"],
-
 
 
 ]
@@ -515,7 +640,7 @@ def pdf_render():
     pdf.ln(10)
     pdf.cell(w=0, h=6,txt='VACCINATION BOOK', align='C', border=1,ln=1)
     
-    pdf.set_font('calibri','',8)
+    pdf.set_font('calibri','',9)
     pdf.cell(w=40,h=6,txt="TYPE OF VACCINE", border=1, align='C')
     pdf.cell(w=40,h=6,txt="COUNTRY", border=1, align='C')
     pdf.cell(w=40,h=6,txt="DOZE", border=1, align='C')
@@ -594,7 +719,7 @@ def pdf_render():
         pdf.cell(w=column_widths[2], h=adjusted_height, txt="", border=1, align='C', ln=1) 
    
     pdf.ln(20)
-    pdf.set_font("calibri", "", 10)
+    pdf.set_font("calibri", "", 9)
     pdf.cell(0, 10, txt="for office use only.", align = "L")
     pdf.ln(10)
     pdf.cell(w=30, h=7, txt="DATE", align="L", border=1)
