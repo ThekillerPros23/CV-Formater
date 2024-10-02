@@ -115,38 +115,52 @@ def pdf_render():
     height = 7
     pdf.set_font('calibri', '', 9) 
     # Encabezado para Nombres
-    #name = database.marine_name()
-    #second_name = database.marine_secondName()
+    name = database.marine_name()
+    second_name = database.marine_secondName()
   
     pdf.cell(w=40, h=height, txt='NAME', border=1, align='L')
-    pdf.cell(w=40, h=height, txt='', border=1, align='C')
-    pdf.cell(w=40, h=height, txt='', border=1, align='C', ln=1)
+    pdf.cell(w=40, h=height, txt=name, border=1, align='C')
+    pdf.cell(w=40, h=height, txt=second_name, border=1, align='C', ln=1)
     pdf.set_font('calibri', '', 9) 
-    # Encabezado para Apellidos
+    
+    lastname = database.marine_lastname()
+    second_lastname = database.marine_secondLastname()
+
+
     pdf.set_xy(50, 57)  
     pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L')
-    pdf.cell(w=40, h=height, txt='', border=1, align='C')
-    pdf.cell(w=40, h=height, txt=str(second_lastname), border=1, align='C', ln=1)
+    pdf.cell(w=40, h=height, txt=lastname, border=1, align='C')
+    pdf.cell(w=40, h=height, txt=second_lastname, border=1, align='C', ln=1)
     pdf.set_font('calibri', '', 9) 
-    # Fecha de nacimiento
+    
+    
+
     pdf.set_xy(50, 64)  
     pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='C')
 
-    # Llenar la fecha de nacimiento
+    date = database.marine_dateOfBirth()
+
     pdf.set_xy(90, 64) 
-    pdf.cell(w=80, h=13, txt=str(formatted_timestamp), border=1, align='C', ln=1)
+    pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
 
     # Nacionalidad
+    nationality = database.marine_nationality()
     pdf.set_xy(50, 77)  
     pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L')
-    pdf.cell(w=80, h=height, txt=str(nationality), border=1, align='C', ln=1)
+    pdf.cell(w=80, h=height, txt=nationality, border=1, align='C', ln=1)
 
     # Sexo y Estado Civil
+
+    gender = database.marine_gender()
+
     pdf.set_xy(50, 84)  
     pdf.cell(w=40, h=7, txt='SEX', border=1, align='L')
-    pdf.cell(w=20, h=7, txt=str(sex), border=1, align='C')
+    pdf.cell(w=20, h=7, txt=gender, border=1, align='C')
+    
+    
+    marital = database.marine_marital()
     pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L')
-    pdf.cell(w=30, h=7, txt=str(civil_status), border=1, align='C', ln=1)
+    pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
     
     # Espaciado y otras celdas
     pdf.set_xy(50, 91)
