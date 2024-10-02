@@ -115,15 +115,17 @@ def pdf_render():
     height = 7
     pdf.set_font('calibri', '', 9) 
     # Encabezado para Nombres
-    
+    #name = database.marine_name()
+    #second_name = database.marine_secondName()
+  
     pdf.cell(w=40, h=height, txt='NAME', border=1, align='L')
-    pdf.cell(w=40, h=height, txt=str(name), border=1, align='C')
-    pdf.cell(w=40, h=height, txt=str(second_name), border=1, align='C', ln=1)
+    pdf.cell(w=40, h=height, txt='', border=1, align='C')
+    pdf.cell(w=40, h=height, txt='', border=1, align='C', ln=1)
     pdf.set_font('calibri', '', 9) 
     # Encabezado para Apellidos
     pdf.set_xy(50, 57)  
     pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L')
-    pdf.cell(w=40, h=height, txt=str(lastname), border=1, align='C')
+    pdf.cell(w=40, h=height, txt='', border=1, align='C')
     pdf.cell(w=40, h=height, txt=str(second_lastname), border=1, align='C', ln=1)
     pdf.set_font('calibri', '', 9) 
     # Fecha de nacimiento

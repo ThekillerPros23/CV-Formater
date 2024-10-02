@@ -1,7 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-import json
+
 
 # Usar una cuenta de servicio.
 class FirebaseData():
@@ -10,26 +10,28 @@ class FirebaseData():
         self.cred = credentials.Certificate('dev-portal-logistic-firebase-adminsdk-mtvp2-bbadfb4ad5.json')
         firebase_admin.initialize_app(self.cred)
         self.db = firestore.client()
-
-    def export_collection_to_json(self, collection_name):
-        users_ref = self.db.collection(collection_name)
-        docs = users_ref.stream()
+        users_ref = self.db.collection('applications')
+        self.docs = users_ref.stream()
         
-        # Crear una lista para almacenar los datos
-        data_list = []
-        
-        # Recuperar datos de cada documento
-        for doc in docs:
+    def marine_name(self):   
+        name = []
+        for doc in self.docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            doc_data['id'] = doc.id  # Añadir el ID del documento al diccionario
-            data_list.append(doc_data)  # Agregar los datos a la lista
+            #nombre de los aplicantes
+            for datos in doc_data['versions']:
+                  name.append(datos['applicationProfile']['profile']['firstName'])
+        new_name = name[0].split()
+        print(new_name)
 
-        # Guardar la lista en un archivo JSON
-        with open(f'{collection_name}.json', 'w') as json_file:
-            json.dump(data_list, json_file, indent=4)  # Guardar con formato legible
-
-        print(f'Documentos exportados a {collection_name}.json')
-
-# Crear una instancia y llamar a la función de exportación
-data = FirebaseData()
-data.export_collection_to_json('applications')
+    def marine_name(self):   
+        name = []
+        for doc in self.docs:
+            doc_data = doc.to_dict()  # Convertir el documento a un diccionario
+            #nombre de los aplicantes
+            for datos in doc_data['versions']:
+                  name.append(datos['applicationProfile']['profile']['firstName'])
+        new_name = name[0].split()
+        print(new_name)
+data = FirebaseData
+data.marine_name()
+data.marine_name()
