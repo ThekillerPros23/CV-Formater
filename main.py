@@ -56,7 +56,7 @@ app = Flask(__name__)
 @app.route('/pdf_render', methods=['GET','POST'])
 def pdf_render():
     anchuras = [40, 50, 60, 40]
-    req.args.get()
+    uid = request.args.get('uid')
     pdf = PDF(orientation='P', unit='mm', format='A4')
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
