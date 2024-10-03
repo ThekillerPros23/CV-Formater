@@ -53,28 +53,10 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 app = Flask(__name__)
 
-@app.route('/pdf_render', methods=['GET'])
+@app.route('/pdf_render', methods=['GET','POST'])
 def pdf_render():
-   
-
-    datos={}
-
     anchuras = [40, 50, 60, 40]
-    # Obtener datos de la solicitud
-    name = request.args.get('name')
-    second_name = request.args.get('second_name')
-    lastname = request.args.get('lastname')
-    second_lastname = request.args.get('second_lastname')
-    date = request.args.get('date')
-    nationality = request.args.get('nationality')
-    sex = request.args.get('sex')
-    civil_status = request.args.get('civil_status')
-    
-    # Formatear la fecha
-    timestamp_obj = datetime.fromtimestamp(int(date))
-    formatted_timestamp = timestamp_obj.strftime("%Y-%b-%d")
-
-    # Crear PDF
+    req.args.get()
     pdf = PDF(orientation='P', unit='mm', format='A4')
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
