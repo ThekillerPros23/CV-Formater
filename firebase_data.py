@@ -108,10 +108,17 @@ class FirebaseData():
         return contact
     def marine_onboard(self):
         onboard = []
-        docs = self.get_documents()  # Obtén un nuevo stream cada vez que llames a la función
+        docs = self.get_documents()  
         for doc in docs:
-            doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            # nombre de los aplicantes
+            doc_data = doc.to_dict()  
             for datos in doc_data['versions']:
                 onboard.append(datos['skills']['onboard'])
         return onboard
+    def marine_onland(self):
+        onland = []
+        docs = self.get_documents()  
+        for doc in docs:
+            doc_data = doc.to_dict()  
+            for datos in doc_data['versions']:
+                onland.append(datos['skills']['onland'])
+        return onland
