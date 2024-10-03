@@ -56,13 +56,8 @@ app = Flask(__name__)
 @app.route('/pdf_render', methods=['GET'])
 def pdf_render():
    
-    datos = [
-    {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-    {"col1": "Dato5", "col2": "Dato6", "col3": "Dato7", "col4": "Dato8"}, 
-      {"col1": "Dato1", "col2": "Dato2", "col3": "Dato3", "col4": "Dato4"},
-  
-]
-    
+
+    datos={}
 
     anchuras = [40, 50, 60, 40]
     # Obtener datos de la solicitud
@@ -115,24 +110,36 @@ def pdf_render():
     height = 7
     pdf.set_font('calibri', '', 9) 
     # Encabezado para Nombres
-    name = database.marine_name()
-    second_name = database.marine_secondName()
-  
-    pdf.cell(w=40, h=height, txt='NAME', border=1, align='L')
-    pdf.cell(w=40, h=height, txt=name, border=1, align='C')
-    pdf.cell(w=40, h=height, txt=second_name, border=1, align='C', ln=1)
-    pdf.set_font('calibri', '', 9) 
-    
-    lastname = database.marine_lastname()
-    second_lastname = database.marine_secondLastname()
+    fullnames = database.marine_name()[0]
+    fullLastname = database.marine_lastname()[0]
+    # Obtener un solo nombre y apellido de la base de datos
 
+    # Altura de la celda
+    height = 7
 
-    pdf.set_xy(50, 57)  
-    pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L')
-    pdf.cell(w=40, h=height, txt=lastname, border=1, align='C')
-    pdf.cell(w=40, h=height, txt=second_lastname, border=1, align='C', ln=1)
-    pdf.set_font('calibri', '', 9) 
-    
+    # Dividir el nombre en primer y segundo nombre si existe
+    nombres = fullnames.split(' ', 1)  # Divide en el primer espacio
+    primer_nombre = nombres[0]  # Primer nombre
+    segundo_nombre = nombres[1] if len(nombres) > 1 else ''  # Segundo nombre (si existe)
+
+    # Dividir los apellidos en primer y segundo apellido si existe
+    apellidos = fullLastname.split(' ', 1)  # Divide en el primer espacio
+    primer_apellido = apellidos[0]  # Primer apellido
+    segundo_apellido = apellidos[1] if len(apellidos) > 1 else ''  # Segundo apellido (si existe)
+
+    # Dibujar la celda de "NAME" con primer y segundo nombre
+    pdf.cell(w=40, h=height, txt='NAME', border=1, align='L')  # Etiqueta de "NAME"
+    pdf.cell(w=40, h=height, txt=primer_nombre, border=1, align='C')  # Primer nombre
+    pdf.cell(w=40, h=height, txt=segundo_nombre, border=1, align='C', ln=1)  # Segundo nombre (si existe)
+    pdf.set_font('calibri', '', 9)
+
+    # Dibujar la celda de "SURNAMES" con primer y segundo apellido
+    pdf.set_xy(50, 57)  # Ajustar la posición para los apellidos
+    pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L')  # Etiqueta de "SURNAMES"
+    pdf.cell(w=40, h=height, txt=primer_apellido, border=1, align='C')  # Primer apellido
+    pdf.cell(w=40, h=height, txt=segundo_apellido, border=1, align='C', ln=1)  # Segundo apellido (si existe)
+    pdf.set_font('calibri', '', 9)
+        
     
 
     pdf.set_xy(50, 64)  
@@ -165,11 +172,11 @@ def pdf_render():
     # Espaciado y otras celdas
     pdf.set_xy(50, 91)
     pdf.cell(w=25, h=7, txt='HEIGHT (Ft/in)', border=1, align='L')
-    pdf.cell(w=20, h=7, txt=str(sex), border=1, align='C')
+    pdf.cell(w=20, h=7, txt='', border=1, align='C')
     pdf.cell(w=22, h=7, txt='WEIGHT (Lb)', border=1, align='L')
-    pdf.cell(w=18, h=7, txt=str(civil_status), border=1, align='C')
+    pdf.cell(w=18, h=7, txt='', border=1, align='C')
     pdf.cell(w=15, h=7, txt='BMI', border=1, align='L')
-    pdf.cell(w=20, h=7, txt=str(civil_status), border=1, align='C', ln=1)
+    pdf.cell(w=20, h=7, txt='', border=1, align='C', ln=1)
 
    # Configuración inicial
     pdf.ln(5)
@@ -189,14 +196,14 @@ def pdf_render():
     pdf.multi_cell(w=50, h=7, txt="", border=1, align="C")
     height_barrio = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
-    # Tercera celda "NEARLY AIRPORT"
+    
     pdf.set_xy(x_inicial + 90, y_inicial)
     pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L")
     height_airport = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
-    # Cuarta celda vacía
+    airport = database.marine_airport()
     pdf.set_xy(x_inicial + 140, y_inicial)
-    pdf.multi_cell(w=50, h=7, txt="", border=1, align="C")
+    pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
     height_empty = pdf.get_y() - y_inicial  # Altura ocupada por esta celda (debería ser 7)
 
     # Obtener la altura máxima de la fila
@@ -268,13 +275,18 @@ def pdf_render():
   
   # Dibujar la celda "ADDRESS" alineada con la última columna
     pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1)
+    datos = database.marine_contact()[1]
 
-  # Dibujar la siguiente tabla de datos, asegurando que las celdas se alineen correctamente
+    # Dibujar la tabla con las celdas alineadas correctamente
     for fila in datos:
-      for i, (columna, valor) in enumerate(fila.items()):
-          pdf.cell(w=anchuras[i], h=8, txt=valor, border=1, align='C')
-      pdf.ln(8)  # Saltar a la siguiente línea después de cada fila
+        nombre_completo = f"{fila['firstNames']} {fila['lastNames']}"
+        telefono = fila['phone'].get('value', '') if fila['phone']['value'] else ''
+        columnas = [fila['relationship'], nombre_completo, telefono, fila['address']]
 
+        for i, valor in enumerate(columnas):
+            pdf.cell(w=anchuras[i], h=8, txt=valor, border=1, align='C')
+        
+        pdf.ln(8)  # Saltar a la siguiente línea después de cada fil
 
 # Agregar el título "3.WORK EXPERIENCE ONBOARD"
    
@@ -344,28 +356,39 @@ def pdf_render():
       ['','','','','','','',''],
     # Agrega más filas según sea necesario
 ]
-
+    onboard = database.marine_onboard()[1]  # Obtener los datos de la base de datos
     nuevaaltura_fila = 7  # Altura uniforme para todas las filas
 
-# Dibujar los datos
-    for fila in datosNuevos:
-        x_inicial = pdf.get_x()
-        y_inicial = pdf.get_y()
+    for fila in onboard:
+        # Obtener el nombre del tipo de buque o cadena vacía si no está disponible
+        tipo_vessel = fila['typeOfVessel'][0]['name'] if fila['typeOfVessel'] else ''
+        
+        # Crear la lista de datos de cada columna en el orden correcto
+        columnas = [
+            fila['dateOn'],         # Fecha de inicio
+            fila['dateOff'],        # Fecha de finalización
+            fila['companyName'],    # Nombre de la compañía
+            fila['vesselName'],     # Nombre del buque
+            fila['imo#'],           # Número IMO
+            fila['gt/hp'] if fila['gt/hp'] else '',  # GT/HP (vacío si no está disponible)
+            tipo_vessel,            # Tipo de buque
+            fila['rank/position']   # Rango/posición
+        ]
 
-        # Mantener la altura máxima de la fila
-        max_height = nuevaaltura_fila
+        x_inicial = pdf.get_x()  # Posición X inicial antes de imprimir la fila
+        max_height = nuevaaltura_fila  # Altura predeterminada para la fila
 
-        for i in range(len(fila)):
-            # Usar cell para cada dato de la fila
-            # Colocar el texto en la celda
-            pdf.cell(w=anchuras_columnas[i], h=max_height, txt=fila[i], align=align_type[i], border=1)
-
-            # Actualizar la posición x para la siguiente celda
+        # Dibujar cada celda de la fila
+        for i in range(len(columnas)):
+            # Imprimir una celda para cada valor en la columna
+            pdf.cell(w=anchuras_columnas[i], h=max_height, txt=columnas[i], align='C', border=1)
+            
+            # Actualizar la posición X para la siguiente celda
             x_inicial += anchuras_columnas[i]
             pdf.set_x(x_inicial)
 
-        # Saltar a la siguiente línea después de imprimir la fila
-        pdf.ln(max_height)
+    # Saltar a la siguiente línea después de imprimir la fila completa
+    pdf.ln(max_height)
 
     # Salto de línea adicional después de cada grupo de filas
     pdf.ln(5)
