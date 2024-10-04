@@ -136,4 +136,5 @@ class FirebaseData():
                     if 'skills' in version and 'onland' in version['skills']:
                         onland = version['skills'].get('onland', None)
         return onland
-    
+    def marine_personaldocumention(self):
+        pass
