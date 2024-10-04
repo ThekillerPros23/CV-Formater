@@ -93,8 +93,8 @@ def pdf_render():
     height = 7
     pdf.set_font('calibri', '', 9) 
     # Encabezado para Nombres
-    fullnames = database.marine_name()[0]
-    fullLastname = database.marine_lastname()[0]
+    fullnames = database.marine_name(uid)
+    fullLastname = database.marine_lastname(uid)
     # Obtener un solo nombre y apellido de la base de datos
 
     # Altura de la celda
@@ -128,27 +128,27 @@ def pdf_render():
     pdf.set_xy(50, 64)  
     pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='C')
 
-    date = database.marine_dateOfBirth()
+    date = database.marine_dateOfBirth(uid)
 
     pdf.set_xy(90, 64) 
     pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
 
     # Nacionalidad
-    nationality = database.marine_nationality()
+    nationality = database.marine_nationality(uid)
     pdf.set_xy(50, 77)  
     pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L')
     pdf.cell(w=80, h=height, txt=nationality, border=1, align='C', ln=1)
 
     # Sexo y Estado Civil
 
-    gender = database.marine_gender()
+    gender = database.marine_gender(uid)
 
     pdf.set_xy(50, 84)  
     pdf.cell(w=40, h=7, txt='SEX', border=1, align='L')
     pdf.cell(w=20, h=7, txt=gender, border=1, align='C')
     
     
-    marital = database.marine_marital()
+    marital = database.marine_marital(uid)
     pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L')
     pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
     
@@ -184,7 +184,7 @@ def pdf_render():
     pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L")
     height_airport = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
-    airport = database.marine_airport()
+    airport = database.marine_airport(uid)
     pdf.set_xy(x_inicial + 140, y_inicial)
     pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
     height_empty = pdf.get_y() - y_inicial  # Altura ocupada por esta celda (debería ser 7)
@@ -258,7 +258,7 @@ def pdf_render():
   
   # Dibujar la celda "ADDRESS" alineada con la última columna
     pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1)
-    datos = database.marine_contact()[1]
+    datos = database.marine_contact(uid)
 
     # Dibujar la tabla con las celdas alineadas correctamente
     for fila in datos:
@@ -339,7 +339,7 @@ def pdf_render():
       ['','','','','','','',''],
     # Agrega más filas según sea necesario
 ]
-    onboard = database.marine_onboard()[1]  # Obtener los datos de la base de datos
+    onboard = database.marine_onboard(uid)  # Obtener los datos de la base de datos
     nuevaaltura_fila = 7  # Altura uniforme para todas las filas
 
     for fila in onboard:
@@ -481,7 +481,7 @@ def pdf_render():
         pdf.multi_cell(w=30, h=7, txt=row['valid_until'], align='C', border=1)
 
       
-    pdf.ln(10) 
+    pdf.ln(20)
     pdf.set_font('calibri', '',9)
     pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')
     pdf.ln(10)

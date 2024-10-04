@@ -23,70 +23,71 @@ class FirebaseData():
         user_ref = self.db.collection("userdata")
         return user_ref.stream()
     
-    def marine_name(self):   
+    def marine_name(self,id):   
         name = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                name.append(datos['applicationProfile']['profile']['firstName'])
-        new_name = name
-        return new_name
+            
+            # Verificar si el uid coincide con el id proporcionado
+            if doc_data.get('uid') == id:
+                for version in doc_data['versions']:
+                    # Extraer el nombre del perfil dentro de la versión
+                    if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                        first_name = version['applicationProfile']['profile'].get('firstName', None)
+                        
+        return first_name
         
 
-        return new_name
-    def marine_lastname(self):  # He cambiado el nombre de esta segunda función para evitar conflicto
-        name = []
+        
+    def marine_lastname(self,id):  # He cambiado el nombre de esta segunda función para evitar conflicto
+        
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
             # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                name.append(datos['applicationProfile']['profile']['lastName'])
-        new_name = name
-        return new_name
-
-    def marine_dateOfBirth(self):
-        dates = []
+            if doc_data.get('uid') == id:
+                for version in doc_data['versions']:
+                    if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                        lastname = version['applicationProfile']['profile'].get('lastName', None)
+        return lastname
+    def marine_dateOfBirth(self,id):
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                dates.append(datos['applicationProfile']['profile']['dateBirth'])
-
-        return dates[1]
-    def marine_nationality(self):
-        nationality = []
+            if doc_data.get('uid') == id:
+                for version in doc_data['versions']:
+                    if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                        birth = version['applicationProfile']['profile'].get('dateBirth', None)
+        return birth
+    def marine_nationality(self,id):
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                nationality.append(datos['applicationProfile']['profile']["countryResidency"]["CountryName"])
-
-        return nationality[1]
-    def marine_gender(self):
-        gender = []
+            if doc_data.get('uid') == id:
+                for version in doc_data['versions']:
+                    if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                        nationality = version['applicationProfile']['profile']['countryBirth'].get('CountryName', None)
+        return nationality
+    def marine_gender(self,id):
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                gender.append(datos['applicationProfile']['profile']["gender"]["name"])
-
-        return gender[1][0]
-    def marine_marital(self):
+            if doc_data.get('uid') == id:
+                    for version in doc_data['versions']:
+                        if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                            gender = version['applicationProfile']['profile']['gender'].get('name', None)
+        return gender[0]
+    def marine_marital(self,id):
         marital = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                marital.append(datos['applicationProfile']['profile']["maritalStatus"]["name"])
-
-        return marital[1]
+            if doc_data.get('uid') == id:
+                    for version in doc_data['versions']:
+                        if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                            marital = version['applicationProfile']['profile']['maritalStatus'].get('name', None)
+        return marital
     def marine_home_address(self):
         marital = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
@@ -95,31 +96,35 @@ class FirebaseData():
             # nombre de los aplicantes
             for datos in doc_data['versions']:
                 marital.append(datos['applicationProfile']['profile']["maritalStatus"]["name"])
-    def marine_airport(self):
+    def marine_airport(self,id):
         airport = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
-            # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                airport.append(datos['applicationProfile']['profile']["airport"])
-        return airport[1]
-    def marine_contact(self):   
+            if doc_data.get('uid') == id:
+                    for version in doc_data['versions']:
+                        if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                            airport = version['applicationProfile']['profile'].get('airport', None)
+        return airport
+    def marine_contact(self,id):   
         contact = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
             # nombre de los aplicantes
-            for datos in doc_data['versions']:
-                contact.append(datos['applicationProfile']['contacts']["contact"])
+            if doc_data.get('uid') == id:
+                    for version in doc_data['versions']:
+                        if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
+                            contact = version['applicationProfile']['contacts'].get('contact', None)
         return contact
-    def marine_onboard(self):
-        onboard = []
+    def marine_onboard(self,id):
         docs = self.get_documents_applications()  
         for doc in docs:
             doc_data = doc.to_dict()  
-            for datos in doc_data['versions']:
-                onboard.append(datos['skills']['onboard'])
+            if doc_data.get('uid') == id:
+                    for version in doc_data['versions']:
+                        if 'skills' in version and 'onboard' in version['skills']:
+                            onboard = version['skills'].get('onboard', None)
         return onboard
     def marine_onland(self):
         onland = []
