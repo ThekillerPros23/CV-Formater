@@ -634,6 +634,43 @@ def pdf_render():
 
         # Actualizar la posición x para la siguiente celda
         x_inicial += ancho_celdas[i]
+    
+    onland = database.marine_onland(uid)
+    for data in onland:
+        # Reinicia las coordenadas x e y iniciales para cada nueva fila
+        x_inicial = pdf.get_x()
+        y_inicial = pdf.get_y()
+        
+        # Imprimir cada dato de la fila
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(ancho_celdas[0], altura_fila[0], txt=data.get('dateOn', ''), border=1, align='C')
+        
+        x_inicial += ancho_celdas[0]
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(ancho_celdas[1], altura_fila[1], txt=data.get('dateOff', ''), border=1, align='C')
+
+        x_inicial += ancho_celdas[1]
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(ancho_celdas[2], altura_fila[2], txt=data.get('companyName', ''), border=1, align='C')
+
+        x_inicial += ancho_celdas[2]
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(ancho_celdas[3], altura_fila[3], txt=data.get('dutiesOrResponsibilities', ''), border=1, align='C')
+
+        x_inicial += ancho_celdas[3]
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(ancho_celdas[4], altura_fila[4], txt=data.get('rank/position', ''), border=1, align='C')
+
+        x_inicial += ancho_celdas[4]
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(ancho_celdas[5], altura_fila[5], txt=data.get('reasonForLeaving', ''), border=1, align='C')
+
+        x_inicial += ancho_celdas[5]
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
+        
+        pdf.ln(adjusted_height)  # Moverse 
+        
     pdf.ln(10)
     pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
     pdf.ln(10)

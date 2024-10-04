@@ -126,11 +126,14 @@ class FirebaseData():
                         if 'skills' in version and 'onboard' in version['skills']:
                             onboard = version['skills'].get('onboard', None)
         return onboard
-    def marine_onland(self):
-        onland = []
+    def marine_onland(self,id):
+     
         docs = self.get_documents_applications()  
         for doc in docs:
             doc_data = doc.to_dict()  
-            for datos in doc_data['versions']:
-                onland.append(datos['skills']['onland'])
+            if doc_data.get('uid') == id:
+                for version in doc_data['versions']:
+                    if 'skills' in version and 'onland' in version['skills']:
+                        onland = version['skills'].get('onland', None)
         return onland
+    
