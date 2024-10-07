@@ -53,7 +53,7 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 app = Flask(__name__)
 
-@app.route('/pdf_render', methods=['GET','POST'])
+@app.route('/pdf_render/applications', methods=['GET','POST'])
 def pdf_render():
     anchuras = [40, 50, 60, 40]
     uid = request.args.get('id')
@@ -219,12 +219,13 @@ def pdf_render():
     pdf.set_xy(x_inicial, y_inicial + max_height)
 
     # Segunda fila con "PHONE/CELL" y demás datos
+    email = database.marine_email(uid)
     pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C")
     pdf.cell(w=30, h=7, txt="", border=1, align="L")
     pdf.cell(w=30, h=7, txt="WHATSAPP", border=1, align="C")
     pdf.cell(w=30, h=7, txt="", border=1, align="C")
     pdf.cell(w=20, h=7, txt="E-MAIL", border=1, align="L")
-    pdf.cell(w=50, h=7, txt="", border=1, align="C", ln=1)
+    pdf.cell(w=50, h=7, txt=email, border=1, align="C", ln=1)
 
     # Tercera fila con "LANGUAGES"
     pdf.cell(w=30, h=7, txt="LANGUAGES", border=1, align="C")
@@ -736,7 +737,7 @@ def pdf_render():
     pdf.cell(w=40,h=6,txt='', align='C', border=1)
     pdf.cell(w=30,h=6,txt='OTHER', align='C', border=1,ln=1)
     
-    print(database.marine_land())
+    
     pdf.ln(5)
     pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
     pdf.ln(10)
@@ -801,6 +802,8 @@ def pdf_render():
     pdf.output('hoja.pdf')
 
     return jsonify({"message": "PDF generated successfully!"})
-
+@app.route('/pdf_render/seafarer')
+def render_data():
+    pass
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=4000)

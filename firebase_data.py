@@ -104,6 +104,18 @@ class FirebaseData():
                         if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
                             airport = version['applicationProfile']['profile'].get('airport', None)
         return airport
+    def marine_email(self, id):
+        docs = self.get_documents_seafarer()  # Obtiene un nuevo stream de documentos
+        email = None  # Inicializa la variable email
+
+        for doc in docs:
+            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
+            if doc_data.get('uid') == id:  # Verifica si el UID coincide
+                email = doc_data.get('email', None)  # Extrae el email si existe
+                break  # Sale del bucle una vez que encuentra el email
+
+        return email  # Retorna el email encontrado o None si no existe
+        
     def marine_contact(self,id):   
         contact = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
@@ -136,8 +148,4 @@ class FirebaseData():
         return onland
     def marine_personaldocumention(self):
         pass
-    def marine_land(self):
-        docs = self.get_documents_seafarer()
-        for doc in docs:
-            doc_data = doc.to_dict()
-            return doc_data
+  
