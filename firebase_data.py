@@ -162,15 +162,12 @@ class FirebaseData():
                 if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
                     seafarer_documents = doc_data['seafarerData']['seafarerDocument']
                     
-                    # Itera sobre cada documento dentro de 'seafarerDocument'
-                    for document in seafarer_documents:
-                        # Aquí puedes trabajar con cada documento individualmente
-                        print(document)  # O procesa el documento de la forma que desees
-                else:
-                    print("No se encontró seafarerData o seafarerDocument en los datos.")
-                break  # Sale del bucle una vez que encuentra el documento correcto
-
+                
         # Retorna el contenido de seafarerDocument, o None si no se encuentra
         return seafarer_documents
     def marine_certificates(self,uid):
-        
+        docs = self.get_documents_seafarer()
+
+        for doc in docs:
+            doc_data = doc.to_dict()
+            print(doc_data['seafarerData']['seafarerCertificates'])

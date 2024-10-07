@@ -57,7 +57,7 @@ app = Flask(__name__)
 def pdf_render():
     anchuras = [40, 50, 60, 40]
     uid = request.args.get('id')
-    print(uid)
+   
     pdf = PDF(orientation='P', unit='mm', format='A4')
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
@@ -590,6 +590,7 @@ def pdf_render():
     pdf.set_font("calibri","",9)
     column_widths = [40, 30, 20, 50, 50]
     cell_height = 7 
+    print(database.marine_certificates(uid))
     for course in courses:
     # Dividir el texto del curso en múltiples líneas
         lines = pdf.multi_cell(column_widths[0], cell_height, course, border=0, align='L', split_only=True)
