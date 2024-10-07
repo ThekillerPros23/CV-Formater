@@ -245,7 +245,11 @@ def pdf_render():
     pdf.cell(w=60, h=7, txt="", border=1, align="C")
     pdf.cell(w=60, h=7, txt="", border=1, align="C")
     pdf.cell(w=70, h=7, txt="", border=1, align="C",ln=1)
-    
+    pdf.cell(w=30, h=7, txt='LISTENING', border=1, align='L')
+    pdf.cell(w=40, h=7, txt='GRAMMAR', border=1, align='L')
+    pdf.cell(w=40, h=7, txt='VOCABULARY', border=1, align='L')
+    pdf.cell(w=40, h=7, txt='TIME AND NUMBERS', border=1, align='C')
+    pdf.cell(w=40, h=7, txt='READING', border=1, align='L')
     pdf.ln(5)
     pdf.set_font('calibri','',9)
     pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN0", border=0, align='L')

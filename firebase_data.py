@@ -7,13 +7,13 @@ from firebase_admin import firestore
 class FirebaseData():
     
     def __init__(self):
-        # Inicializa la app de Firebase con las credenciales
+        
         self.cred = credentials.Certificate('dev-portal-logistic-firebase-adminsdk-mtvp2-bbadfb4ad5.json')
         firebase_admin.initialize_app(self.cred)
         self.db = firestore.client()
 
     def get_documents_applications(self):
-        # Cada vez que se llame a esta función, se crea un nuevo stream de documentos
+        
         users_ref = self.db.collection('applications')
         return users_ref.stream()
     
@@ -22,7 +22,6 @@ class FirebaseData():
         return users_ref.stream()
     
     def marine_name(self,id):   
-        name = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
@@ -148,4 +147,4 @@ class FirebaseData():
         return onland
     def marine_personaldocumention(self):
         pass
-  
+    
