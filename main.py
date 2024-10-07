@@ -736,7 +736,7 @@ def pdf_render():
     pdf.cell(w=40,h=6,txt='', align='C', border=1)
     pdf.cell(w=30,h=6,txt='OTHER', align='C', border=1,ln=1)
     
-
+    print(database.marine_land())
     pdf.ln(5)
     pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
     pdf.ln(10)

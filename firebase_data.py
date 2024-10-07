@@ -17,11 +17,9 @@ class FirebaseData():
         users_ref = self.db.collection('applications')
         return users_ref.stream()
     
-    
-    
-    def get_documents_email(self):
-        user_ref = self.db.collection("userdata")
-        return user_ref.stream()
+    def get_documents_seafarer(self):
+        users_ref = self.db.collection('usersData')
+        return users_ref.stream()
     
     def marine_name(self,id):   
         name = []
@@ -138,3 +136,8 @@ class FirebaseData():
         return onland
     def marine_personaldocumention(self):
         pass
+    def marine_land(self):
+        docs = self.get_documents_seafarer()
+        for doc in docs:
+            doc_data = doc.to_dict()
+            return doc_data
