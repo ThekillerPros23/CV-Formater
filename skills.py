@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import json
 
-# Inicializa Firebase
+# Inicializa Firebase con las credenciales
 cred = credentials.Certificate('dev-portal-logistic-firebase-adminsdk-mtvp2-bbadfb4ad5.json')
 firebase_admin.initialize_app(cred)
 
@@ -14,15 +14,14 @@ db = firestore.client()
 users_references = db.collection('usersData')
 docs = users_references.stream()
 
-# Crea un diccionario para almacenar los datos
-users_data = {}
-
-# Recorre los documentos y agrégales el ID del documento
-for doc in docs:
-    users_data[doc.id] = doc.to_dict()
-
-# Guarda los datos en un archivo .json
-with open('users_data.json', 'w') as json_file:
-    json.dump(users_data, json_file, indent=4)
-
-print("Datos guardados en users_data.json")
+# Iterar sobre cada documento y recuperar solo el campo 'seafarerDocument'
+for docs_data in docs:
+    data = docs_data.to_dict()
+    
+    # Navegar al campo 'seafarerDocument' dentro de 'seafarerData'
+    if 'seafarerData' in data and 'seafarerDocument' in data['seafarerData']:
+        seafarer_document = data['seafarerData']['seafarerDocument']
+        
+        # Convertir a formato JSON para imprimirlo más legible
+        seafarer_document_json = json.dumps(seafarer_document, indent=4)
+        print(seafarer_document_json)

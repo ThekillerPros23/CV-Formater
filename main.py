@@ -230,11 +230,11 @@ def pdf_render():
     # Tercera fila con "LANGUAGES"
     pdf.cell(w=30, h=7, txt="LANGUAGES", border=1, align="C")
     pdf.cell(w=30, h=7, txt="SPANISH", border=1, align="L")
-    pdf.cell(w=30, h=7, txt="100%", border=1, align="R")
+    pdf.cell(w=30, h=7, txt="", border=1, align="R")
     pdf.cell(w=30, h=7, txt="ENGLISH", border=1, align="L")
-    pdf.cell(w=20, h=7, txt="80%", border=1, align="R")
+    pdf.cell(w=20, h=7, txt="", border=1, align="R")
     pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L")
-    pdf.cell(w=30, h=7, txt="50%", border=1, align="R", ln=1)
+    pdf.cell(w=30, h=7, txt="", border=1, align="R", ln=1)
 
     pdf.ln(5)
     pdf.set_font('calibri','',9)
@@ -249,7 +249,14 @@ def pdf_render():
     pdf.cell(w=40, h=7, txt='GRAMMAR', border=1, align='L')
     pdf.cell(w=40, h=7, txt='VOCABULARY', border=1, align='L')
     pdf.cell(w=40, h=7, txt='TIME AND NUMBERS', border=1, align='C')
-    pdf.cell(w=40, h=7, txt='READING', border=1, align='L')
+    pdf.cell(w=40, h=7, txt='READING', border=1, align='L', ln=1)
+    pdf.cell(w=30, h=7, txt='', border=1, align='L')
+    pdf.cell(w=40, h=7, txt='', border=1, align='L')
+    pdf.cell(w=40, h=7, txt='', border=1, align='L')
+    pdf.cell(w=40, h=7, txt='', border=1, align='C')
+    pdf.cell(w=40, h=7, txt='', border=1, align='L')    
+    
+    
     pdf.ln(5)
     pdf.set_font('calibri','',9)
     pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN0", border=0, align='L')
@@ -383,7 +390,7 @@ def pdf_render():
     pdf.cell(0, 10, txt='4. Personal Documentation / Seafarer Documentation', align='L')
     pdf.ln(10)  
 
-
+    
     pdf.cell(w=0, h=7, txt='PERSONAL DOCUMENTATION / SEAFARER DOCUMENTATION', align='C', border=1, ln=1)
     pdf.set_font('Calibri', '', 9)
 
@@ -443,49 +450,64 @@ def pdf_render():
     data_rows = [
 
 ]
-
+    personalDocuments = database.marine_personaldocumention(uid)
 # Llenar los datos para cada fila
-    for row in data_rows:
+    # Asegúrate de que la altura de la fila sea un valor numérico
+    altura_fila = 7  # O cualquier valor adecuado
+
+    # Si necesitas manejar diferentes alturas para diferentes celdas
+    # Define una lista de alturas y usa el valor adecuado para cada celda
+    altura_fila_por_celda = [7, 7, 7, 7, 7, 7]  # Si es necesario, define diferentes alturas aquí
+
+    # Bucle para imprimir los documentos personales
+    for document in personalDocuments:
         pdf.set_font('Calibri', '', 9)  # Restablecer el tamaño de la fuente para las filas de datos
 
         # Guardar la posición inicial para restablecer el cursor en cada celda
         x_inicial = pdf.get_x()
         y_inicial = pdf.get_y()
 
-        # Imprimir la celda del "document_type" (con salto de línea si es necesario)
-        pdf.multi_cell(w=40, h=7, txt=row['document_type'], align='C', border=1)
+        # Obtener los datos del documento
+        document_type = document['documentName']['name'] if 'documentName' in document else ''
+        country = document['data']['country']['value'] if 'country' in document['data'] else ''
+        document_number = document['data']['documentNumber'] if 'documentNumber' in document['data'] else ''
+        issued_at = document['data']['placeIssue'] if 'placeIssue' in document['data'] else ''
+        date_of_issue = document['data']['issueDate'] if 'issueDate' in document['data'] else ''
+        valid_until = document['data']['expirationDate'] if 'expirationDate' in document['data'] else ''
+
+        # Imprimir la celda del "document_type"
+        pdf.multi_cell(w=40, h=altura_fila, txt=document_type, align='C', border=1)
         
         # Mover el cursor a la siguiente celda en la misma línea
         pdf.set_xy(x_inicial + 40, y_inicial)
 
         # Imprimir la celda del "country"
-        pdf.multi_cell(w=30, h=7, txt=row['country'], align='C', border=1)
+        pdf.multi_cell(w=30, h=altura_fila, txt=country, align='C', border=1)
         
         # Actualizar la posición x e y para la siguiente celda
         pdf.set_xy(x_inicial + 40 + 30, y_inicial)
 
-        # Imprimir la celda del "number"
-        pdf.multi_cell(w=30, h=7, txt=row['number'], align='C', border=1)
+        # Imprimir la celda del "document_number"
+        pdf.multi_cell(w=30, h=altura_fila, txt=document_number, align='C', border=1)
         
         # Actualizar la posición para la siguiente celda
         pdf.set_xy(x_inicial + 40 + 30 + 30, y_inicial)
 
         # Imprimir la celda del "issued_at"
-        pdf.multi_cell(w=30, h=7, txt=row['issued_at'], align='C', border=1)
+        pdf.multi_cell(w=30, h=altura_fila, txt=issued_at, align='C', border=1)
 
         # Actualizar la posición para la siguiente celda
         pdf.set_xy(x_inicial + 40 + 30 + 30 + 30, y_inicial)
 
         # Imprimir la celda del "date_of_issue"
-        pdf.multi_cell(w=30, h=7, txt=row['date_of_issue'], align='C', border=1)
+        pdf.multi_cell(w=30, h=altura_fila, txt=date_of_issue, align='C', border=1)
 
         # Actualizar la posición para la siguiente celda
         pdf.set_xy(x_inicial + 40 + 30 + 30 + 30 + 30, y_inicial)
 
         # Imprimir la celda del "valid_until"
-        pdf.multi_cell(w=30, h=7, txt=row['valid_until'], align='C', border=1)
+        pdf.multi_cell(w=30, h=altura_fila, txt=valid_until, align='C', border=1)
 
-      
     pdf.ln(20)
     pdf.set_font('calibri', '',9)
     pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')

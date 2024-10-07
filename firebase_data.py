@@ -145,6 +145,32 @@ class FirebaseData():
                     if 'skills' in version and 'onland' in version['skills']:
                         onland = version['skills'].get('onland', None)
         return onland
-    def marine_personaldocumention(self):
-        pass
-    
+    def marine_personaldocumention(self, id):
+        # Obtiene un nuevo stream de documentos
+        docs = self.get_documents_seafarer()
+
+        # Inicializa una variable para almacenar los documentos encontrados
+        seafarer_documents = None
+
+        # Itera sobre los documentos para encontrar el ID coincidente
+        for doc in docs:
+            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
+
+            # Verifica si el UID del documento coincide con el ID proporcionado
+            if doc_data.get('uid') == id:
+                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
+                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
+                    seafarer_documents = doc_data['seafarerData']['seafarerDocument']
+                    
+                    # Itera sobre cada documento dentro de 'seafarerDocument'
+                    for document in seafarer_documents:
+                        # Aquí puedes trabajar con cada documento individualmente
+                        print(document)  # O procesa el documento de la forma que desees
+                else:
+                    print("No se encontró seafarerData o seafarerDocument en los datos.")
+                break  # Sale del bucle una vez que encuentra el documento correcto
+
+        # Retorna el contenido de seafarerDocument, o None si no se encuentra
+        return seafarer_documents
+    def marine_certificates(self,uid):
+        
