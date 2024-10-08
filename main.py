@@ -459,54 +459,80 @@ def pdf_render():
     # Define una lista de alturas y usa el valor adecuado para cada celda
     altura_fila_por_celda = [7, 7, 7, 7, 7, 7]  # Si es necesario, define diferentes alturas aquí
 
-    # Bucle para imprimir los documentos personales
-    for document in personalDocuments:
-        pdf.set_font('Calibri', '', 9)  # Restablecer el tamaño de la fuente para las filas de datos
+   # Verificar si personalDocuments es None o una lista vacía
+    if personalDocuments:
+        for document in personalDocuments:
+            pdf.set_font('Calibri', '', 9)  # Restablecer el tamaño de la fuente para las filas de datos
 
-        # Guardar la posición inicial para restablecer el cursor en cada celda
+            # Guardar la posición inicial para restablecer el cursor en cada celda
+            x_inicial = pdf.get_x()
+            y_inicial = pdf.get_y()
+
+            # Obtener los datos del documento (Si no existen, dejar las celdas vacías)
+            document_type = document['documentName']['name'] if 'documentName' in document else ''
+            country = document['data']['country']['value'] if 'country' in document['data'] else ''
+            document_number = document['data']['documentNumber'] if 'documentNumber' in document['data'] else ''
+            issued_at = document['data']['placeIssue'] if 'placeIssue' in document['data'] else ''
+            date_of_issue = document['data']['issueDate'] if 'issueDate' in document['data'] else ''
+            valid_until = document['data']['expirationDate'] if 'expirationDate' in document['data'] else ''
+
+            # Imprimir la celda del "document_type"
+            pdf.multi_cell(w=40, h=altura_fila, txt=document_type, align='C', border=1)
+
+            # Mover el cursor a la siguiente celda en la misma línea
+            pdf.set_xy(x_inicial + 40, y_inicial)
+
+            # Imprimir la celda del "country"
+            pdf.multi_cell(w=30, h=altura_fila, txt=country, align='C', border=1)
+
+            # Actualizar la posición x e y para la siguiente celda
+            pdf.set_xy(x_inicial + 40 + 30, y_inicial)
+
+            # Imprimir la celda del "document_number"
+            pdf.multi_cell(w=30, h=altura_fila, txt=document_number, align='C', border=1)
+
+            # Actualizar la posición para la siguiente celda
+            pdf.set_xy(x_inicial + 40 + 30 + 30, y_inicial)
+
+            # Imprimir la celda del "issued_at"
+            pdf.multi_cell(w=30, h=altura_fila, txt=issued_at, align='C', border=1)
+
+            # Actualizar la posición para la siguiente celda
+            pdf.set_xy(x_inicial + 40 + 30 + 30 + 30, y_inicial)
+
+            # Imprimir la celda del "date_of_issue"
+            pdf.multi_cell(w=30, h=altura_fila, txt=date_of_issue, align='C', border=1)
+
+            # Actualizar la posición para la siguiente celda
+            pdf.set_xy(x_inicial + 40 + 30 + 30 + 30 + 30, y_inicial)
+
+            # Imprimir la celda del "valid_until"
+            pdf.multi_cell(w=30, h=altura_fila, txt=valid_until, align='C', border=1)
+    else:
+        # Si no hay documentos, imprimir una fila vacía
+        pdf.set_font('Calibri', '', 9)
+
+        # Guardar la posición inicial
         x_inicial = pdf.get_x()
         y_inicial = pdf.get_y()
 
-        # Obtener los datos del documento
-        document_type = document['documentName']['name'] if 'documentName' in document else ''
-        country = document['data']['country']['value'] if 'country' in document['data'] else ''
-        document_number = document['data']['documentNumber'] if 'documentNumber' in document['data'] else ''
-        issued_at = document['data']['placeIssue'] if 'placeIssue' in document['data'] else ''
-        date_of_issue = document['data']['issueDate'] if 'issueDate' in document['data'] else ''
-        valid_until = document['data']['expirationDate'] if 'expirationDate' in document['data'] else ''
-
-        # Imprimir la celda del "document_type"
-        pdf.multi_cell(w=40, h=altura_fila, txt=document_type, align='C', border=1)
-        
-        # Mover el cursor a la siguiente celda en la misma línea
+        # Imprimir celdas vacías
+        pdf.multi_cell(w=40, h=altura_fila, txt='', align='C', border=1)
         pdf.set_xy(x_inicial + 40, y_inicial)
 
-        # Imprimir la celda del "country"
-        pdf.multi_cell(w=30, h=altura_fila, txt=country, align='C', border=1)
-        
-        # Actualizar la posición x e y para la siguiente celda
+        pdf.multi_cell(w=30, h=altura_fila, txt='', align='C', border=1)
         pdf.set_xy(x_inicial + 40 + 30, y_inicial)
 
-        # Imprimir la celda del "document_number"
-        pdf.multi_cell(w=30, h=altura_fila, txt=document_number, align='C', border=1)
-        
-        # Actualizar la posición para la siguiente celda
+        pdf.multi_cell(w=30, h=altura_fila, txt='', align='C', border=1)
         pdf.set_xy(x_inicial + 40 + 30 + 30, y_inicial)
 
-        # Imprimir la celda del "issued_at"
-        pdf.multi_cell(w=30, h=altura_fila, txt=issued_at, align='C', border=1)
-
-        # Actualizar la posición para la siguiente celda
+        pdf.multi_cell(w=30, h=altura_fila, txt='', align='C', border=1)
         pdf.set_xy(x_inicial + 40 + 30 + 30 + 30, y_inicial)
 
-        # Imprimir la celda del "date_of_issue"
-        pdf.multi_cell(w=30, h=altura_fila, txt=date_of_issue, align='C', border=1)
-
-        # Actualizar la posición para la siguiente celda
+        pdf.multi_cell(w=30, h=altura_fila, txt='', align='C', border=1)
         pdf.set_xy(x_inicial + 40 + 30 + 30 + 30 + 30, y_inicial)
 
-        # Imprimir la celda del "valid_until"
-        pdf.multi_cell(w=30, h=altura_fila, txt=valid_until, align='C', border=1)
+        pdf.multi_cell(w=30, h=altura_fila, txt='', align='C', border=1)
 
     pdf.ln(20)
     pdf.set_font('calibri', '',9)

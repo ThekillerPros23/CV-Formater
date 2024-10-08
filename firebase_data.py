@@ -165,9 +165,19 @@ class FirebaseData():
                 
         # Retorna el contenido de seafarerDocument, o None si no se encuentra
         return seafarer_documents
-    def marine_certificates(self,uid):
+    def marine_certificates(self, id):
+        # Get all seafarer documents
         docs = self.get_documents_seafarer()
 
+        # Loop through each document
         for doc in docs:
             doc_data = doc.to_dict()
-            print(doc_data['seafarerData']['seafarerCertificates'])
+
+            # Check if the UID matches the provided ID
+            if doc_data.get('uid') == id:
+                # Check if 'seafarerData' and 'seafarerCertificates' exist
+                if 'seafarerData' in doc_data and 'seafarerCertificates' in doc_data['seafarerData']:
+                    return doc_data['seafarerData']['seafarerCertificates']
+        
+        # Return an empty list if no matching certificate is found
+        return []
