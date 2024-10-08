@@ -181,5 +181,14 @@ class FirebaseData():
         
         # Return an empty list if no matching certificate is found
         return []
-    def marine_vaccines(self):
-        
+    def marine_vaccines(self,id):
+        contact = []
+        docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
+        for doc in docs:
+            doc_data = doc.to_dict()  # Convertir el documento a un diccionario
+            # nombre de los aplicantes
+            if doc_data.get('uid') == id:
+                    for version in doc_data['versions']:
+                        if 'applicationProfile' in version and 'vaccines' in version['applicationProfile']:
+                            vaccines = version['applicationProfile'].get('vaccines', None)
+        return vaccines

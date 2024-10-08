@@ -616,7 +616,7 @@ def pdf_render():
     pdf.set_font("calibri","",9)
     column_widths = [40, 30, 20, 50, 50]
     cell_height = 7 
-    print(database.marine_certificates(uid))
+    #print(database.marine_certificates(uid))
     for course in courses:
     # Dividir el texto del curso en múltiples líneas
         lines = pdf.multi_cell(column_widths[0], cell_height, course, border=0, align='L', split_only=True)
@@ -754,42 +754,46 @@ def pdf_render():
     pdf.cell(w=0, h=6,txt='VACCINATION BOOK', align='C', border=1,ln=1)
     
     pdf.set_font('calibri','',9)
+    
+    data =  database.marine_vaccines(uid)
+    
     pdf.cell(w=40,h=6,txt="TYPE OF VACCINE", border=1, align='C')
     pdf.cell(w=40,h=6,txt="COUNTRY", border=1, align='C')
     pdf.cell(w=40,h=6,txt="DOZE", border=1, align='C')
     pdf.cell(w=40,h=6,txt='DATE OF ISSUE(MM / DD / YYYY)', align='C', border=1)
     pdf.cell(w=30,h=6,txt='VACCINATION MARK', align='C', border=1,ln=1)
-    
-    pdf.cell(w=40,h=24,txt='COVID BOOK', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='FIRST DOZE', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+    for card in data["covid"]["cards"]:
+        
+        pdf.cell(w=40,h=24,txt='COVID BOOK', align='C', border=1)
+        pdf.cell(w=40,h=6,txt=card["CountryIssue"]["CountryName"], align='C', border=1)
+        pdf.cell(w=40,h=6,txt='FIRST DOZE', align='C', border=1)
+        pdf.cell(w=40,h=6,txt=card["IssueDate"], align='C', border=1)
+        pdf.cell(w=30,h=6,txt=card["VaccineBrand"]["name"], align='C', border=1,ln=1)
 
-    pdf.cell(w=40,h=6,txt='', align='C', )
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='SECOND DOZE', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+        pdf.cell(w=40,h=6,txt='', align='C', )
+        pdf.cell(w=40,h=6,txt=card["CountryIssue"]["CountryName"], align='C', border=1)
+        pdf.cell(w=40,h=6,txt='SECOND DOZE', align='C', border=1)
+        pdf.cell(w=40,h=6,txt=card["IssueDate"], align='C', border=1)
+        pdf.cell(w=30,h=6,txt=card["VaccineBrand"]["name"], align='C', border=1,ln=1)
 
-    pdf.cell(w=40,h=6,txt='', align='C', )
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+        pdf.cell(w=40,h=6,txt='', align='C', )
+        pdf.cell(w=40,h=6,txt='', align='C', border=1)
+        pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
+        pdf.cell(w=40,h=6,txt='', align='C', border=1)
+        pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
 
-    pdf.cell(w=40,h=6,txt='', align='C')
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
+        pdf.cell(w=40,h=6,txt='', align='C')
+        pdf.cell(w=40,h=6,txt='', align='C', border=1)
+        pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
+        pdf.cell(w=40,h=6,txt='', align='C', border=1)
+        pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
 
-    pdf.cell(w=40,h=6,txt='YELLOW FEVER', align='C',border=1)
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='UNLIMITED', align='C', border=1)
-    pdf.cell(w=40,h=6,txt='', align='C', border=1)
-    pdf.cell(w=30,h=6,txt='OTHER', align='C', border=1,ln=1)
-    
+        pdf.cell(w=40,h=6,txt='YELLOW FEVER', align='C',border=1)
+        pdf.cell(w=40,h=6,txt='', align='C', border=1)
+        pdf.cell(w=40,h=6,txt='UNLIMITED', align='C', border=1)
+        pdf.cell(w=40,h=6,txt='', align='C', border=1)
+        pdf.cell(w=30,h=6,txt='OTHER', align='C', border=1,ln=1)
+
     
     pdf.ln(5)
     pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
