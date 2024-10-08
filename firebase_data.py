@@ -181,3 +181,5 @@ class FirebaseData():
         
         # Return an empty list if no matching certificate is found
         return []
+    def marine_vaccines(self):
+        
