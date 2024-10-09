@@ -1,7 +1,0 @@
--Traer los datos de la base de datos de firestore para 
-manipularla en el CV 
-
--Verificar la empresa para poder iniciar con el api de WHATSAPP
-para el chat inteligente 
-
--

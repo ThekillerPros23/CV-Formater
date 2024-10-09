@@ -1,8 +1,8 @@
 from fpdf import FPDF
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify,Response, request
 from datetime import datetime
-from firebase_data import *
-
+from applications import *
+import io
 database = FirebaseData()
 class PDF(FPDF):
     def header(self):
@@ -93,6 +93,7 @@ def pdf_render():
     height = 7
     pdf.set_font('calibri', '', 9) 
     # Encabezado para Nombres
+
     fullnames = database.marine_name(uid)
     fullLastname = database.marine_lastname(uid)
     # Obtener un solo nombre y apellido de la base de datos
@@ -688,7 +689,7 @@ def pdf_render():
 
         # Actualizar la posición x para la siguiente celda
         x_inicial += ancho_celdas[i]
-    
+    altura_fila = [14, 14, 7, 14, 14, 14,14]
     onland = database.marine_onland(uid)
     for data in onland:
         # Reinicia las coordenadas x e y iniciales para cada nueva fila
@@ -762,39 +763,22 @@ def pdf_render():
     pdf.cell(w=40,h=6,txt="DOZE", border=1, align='C')
     pdf.cell(w=40,h=6,txt='DATE OF ISSUE(MM / DD / YYYY)', align='C', border=1)
     pdf.cell(w=30,h=6,txt='VACCINATION MARK', align='C', border=1,ln=1)
+    pdf.cell(w=40, h=24, txt='COVID BOOK', align='C', border=1)
     for card in data["covid"]["cards"]:
+        pdf.cell(w=40, h=6, txt=card["CountryIssue"]["CountryName"], align='C', border=1)
+        pdf.cell(w=40, h=6, txt=card["Doze"], align='C', border=1)
+        pdf.cell(w=40, h=6, txt=card["IssueDate"], align='C', border=1)
+        pdf.cell(w=30, h=6, txt=card["VaccineBrand"]["name"], align='C', border=1, ln=1)
+        pdf.cell(w=40, h=6, txt='')
+    pdf.ln()
+# Imprimir la fila para fiebre amarilla solo una vez
+    for card in data["yellowFever"]["cards"]:
+        pdf.cell(w=40, h=6, txt='YELLOW FEVER', align='C', border=1)
+        pdf.cell(w=40, h=6, txt=card["CountryIssue"]["CountryName"], align='C', border=1)
+        pdf.cell(w=40, h=6, txt='UNLIMITED', align='C', border=1)
+        pdf.cell(w=40, h=6, txt=card["IssueDate"], align='C', border=1)
+        pdf.cell(w=30, h=6, txt='OTHER', align='C', border=1, ln=1)
         
-        pdf.cell(w=40,h=24,txt='COVID BOOK', align='C', border=1)
-        pdf.cell(w=40,h=6,txt=card["CountryIssue"]["CountryName"], align='C', border=1)
-        pdf.cell(w=40,h=6,txt='FIRST DOZE', align='C', border=1)
-        pdf.cell(w=40,h=6,txt=card["IssueDate"], align='C', border=1)
-        pdf.cell(w=30,h=6,txt=card["VaccineBrand"]["name"], align='C', border=1,ln=1)
-
-        pdf.cell(w=40,h=6,txt='', align='C', )
-        pdf.cell(w=40,h=6,txt=card["CountryIssue"]["CountryName"], align='C', border=1)
-        pdf.cell(w=40,h=6,txt='SECOND DOZE', align='C', border=1)
-        pdf.cell(w=40,h=6,txt=card["IssueDate"], align='C', border=1)
-        pdf.cell(w=30,h=6,txt=card["VaccineBrand"]["name"], align='C', border=1,ln=1)
-
-        pdf.cell(w=40,h=6,txt='', align='C', )
-        pdf.cell(w=40,h=6,txt='', align='C', border=1)
-        pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
-        pdf.cell(w=40,h=6,txt='', align='C', border=1)
-        pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
-
-        pdf.cell(w=40,h=6,txt='', align='C')
-        pdf.cell(w=40,h=6,txt='', align='C', border=1)
-        pdf.cell(w=40,h=6,txt='BOOSTER', align='C', border=1)
-        pdf.cell(w=40,h=6,txt='', align='C', border=1)
-        pdf.cell(w=30,h=6,txt='', align='C', border=1,ln=1)
-
-        pdf.cell(w=40,h=6,txt='YELLOW FEVER', align='C',border=1)
-        pdf.cell(w=40,h=6,txt='', align='C', border=1)
-        pdf.cell(w=40,h=6,txt='UNLIMITED', align='C', border=1)
-        pdf.cell(w=40,h=6,txt='', align='C', border=1)
-        pdf.cell(w=30,h=6,txt='OTHER', align='C', border=1,ln=1)
-
-    
     pdf.ln(5)
     pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
     pdf.ln(10)
@@ -837,7 +821,10 @@ def pdf_render():
    
     pdf.ln(20)
     pdf.set_font("calibri", "", 9)
+    
     pdf.cell(0, 10, txt="for office use only.", align = "L")
+    pdf.ln(10)
+    pdf.cell(0, 10, txt='10. OBSERVATIONS:', align= 'L')
     pdf.ln(10)
     pdf.cell(w=30, h=7, txt="DATE", align="L", border=1)
     pdf.cell(w=130, h=7, txt="COMMENTS", align="C", border=1)
@@ -855,11 +842,21 @@ def pdf_render():
     pdf.cell(w=130, h=7, txt="", align="C", border=1)
     pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
     
+    pdf_buffer = io.BytesIO()
 
-    pdf.output('hoja.pdf')
+    # Generar el contenido del PDF como cadena
+    pdf_output = pdf.output(dest='S').encode('latin1')  # 'S' significa 'return as string'
+    
+    # Escribir el contenido en el buffer
+    pdf_buffer.write(pdf_output)
+    
+    # Colocamos el cursor al inicio del buffer para que se pueda leer
+    pdf_buffer.seek(0)
 
-    return jsonify({"message": "PDF generated successfully!"})
-@app.route('/pdf_render/seafarer')
+    # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
+    return Response(pdf_buffer, mimetype='application/pdf', headers={
+        'Content-Disposition': 'inline'  # Mostrar el PDF en el navegador en lugar de descargarlo
+    })
 def render_data():
     pass
 if __name__ == "__main__":

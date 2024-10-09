@@ -150,7 +150,7 @@ class FirebaseData():
         docs = self.get_documents_seafarer()
 
         # Inicializa una variable para almacenar los documentos encontrados
-        seafarer_documents = None
+        seafarer_documents = []
 
         # Itera sobre los documentos para encontrar el ID coincidente
         for doc in docs:
@@ -161,9 +161,9 @@ class FirebaseData():
                 # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
                 if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
                     seafarer_documents = doc_data['seafarerData']['seafarerDocument']
-                    
-                
-        # Retorna el contenido de seafarerDocument, o None si no se encuentra
+                    break  # Deja de iterar una vez que se encuentra el documento
+
+        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
         return seafarer_documents
     def marine_certificates(self, id):
         # Get all seafarer documents
@@ -192,3 +192,4 @@ class FirebaseData():
                         if 'applicationProfile' in version and 'vaccines' in version['applicationProfile']:
                             vaccines = version['applicationProfile'].get('vaccines', None)
         return vaccines
+  
