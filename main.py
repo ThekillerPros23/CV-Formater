@@ -880,7 +880,7 @@ def pdf_render():
         pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
         pdf.cell(w=column_widths[1], h=adjusted_height, txt="", border=1, align='C', ln=0)  # Celda "YES"
         pdf.cell(w=column_widths[2], h=adjusted_height, txt="", border=1, align='C', ln=1) 
-   
+
     pdf.ln(20)
     pdf.set_font("calibri", "", 9)
     

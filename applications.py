@@ -192,4 +192,3 @@ class FirebaseData():
                         if 'applicationProfile' in version and 'vaccines' in version['applicationProfile']:
                             vaccines = version['applicationProfile'].get('vaccines', None)
         return vaccines
-  
