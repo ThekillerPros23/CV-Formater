@@ -21,7 +21,7 @@ class FirebaseData():
         users_ref = self.db.collection('usersData')
         return users_ref.stream()
     
-    def marine_name(self,id):   
+    def marine_name(self,id, version):   
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
@@ -37,7 +37,7 @@ class FirebaseData():
         
 
         
-    def marine_lastname(self,id):  # He cambiado el nombre de esta segunda función para evitar conflicto
+    def marine_lastname(self,id, version):  # He cambiado el nombre de esta segunda función para evitar conflicto
         
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
@@ -48,7 +48,7 @@ class FirebaseData():
                     if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
                         lastname = version['applicationProfile']['profile'].get('lastName', None)
         return lastname
-    def marine_dateOfBirth(self,id):
+    def marine_dateOfBirth(self,id,version):
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
@@ -57,7 +57,7 @@ class FirebaseData():
                     if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
                         birth = version['applicationProfile']['profile'].get('dateBirth', None)
         return birth
-    def marine_nationality(self,id):
+    def marine_nationality(self,id, version):
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
@@ -66,7 +66,7 @@ class FirebaseData():
                     if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
                         nationality = version['applicationProfile']['profile']['countryBirth'].get('CountryName', None)
         return nationality
-    def marine_gender(self,id):
+    def marine_gender(self,id, version):
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
             doc_data = doc.to_dict()  # Convertir el documento a un diccionario
@@ -75,7 +75,7 @@ class FirebaseData():
                         if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
                             gender = version['applicationProfile']['profile']['gender'].get('name', None)
         return gender[0]
-    def marine_marital(self,id):
+    def marine_marital(self,id, version):
         marital = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
@@ -93,7 +93,7 @@ class FirebaseData():
             # nombre de los aplicantes
             for datos in doc_data['versions']:
                 marital.append(datos['applicationProfile']['profile']["maritalStatus"]["name"])
-    def marine_airport(self,id):
+    def marine_airport(self,id, version):
         airport = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
@@ -103,7 +103,7 @@ class FirebaseData():
                         if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
                             airport = version['applicationProfile']['profile'].get('airport', None)
         return airport
-    def marine_email(self, id):
+    def marine_email(self, id, version):
         docs = self.get_documents_seafarer()  # Obtiene un nuevo stream de documentos
         email = None  # Inicializa la variable email
 
@@ -115,7 +115,7 @@ class FirebaseData():
 
         return email  # Retorna el email encontrado o None si no existe
         
-    def marine_contact(self,id):   
+    def marine_contact(self,id, version):   
         contact = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
@@ -126,7 +126,7 @@ class FirebaseData():
                         if 'applicationProfile' in version and 'profile' in version['applicationProfile']:
                             contact = version['applicationProfile']['contacts'].get('contact', None)
         return contact
-    def marine_onboard(self,id):
+    def marine_onboard(self,id, version):
         docs = self.get_documents_applications()  
         for doc in docs:
             doc_data = doc.to_dict()  
@@ -135,7 +135,7 @@ class FirebaseData():
                         if 'skills' in version and 'onboard' in version['skills']:
                             onboard = version['skills'].get('onboard', None)
         return onboard
-    def marine_onland(self,id):
+    def marine_onland(self,id, version):
      
         docs = self.get_documents_applications()  
         for doc in docs:
@@ -145,7 +145,7 @@ class FirebaseData():
                     if 'skills' in version and 'onland' in version['skills']:
                         onland = version['skills'].get('onland', None)
         return onland
-    def marine_personaldocumention(self, id):
+    def marine_personaldocumention(self, id, version):
         # Obtiene un nuevo stream de documentos
         docs = self.get_documents_seafarer()
 
@@ -165,7 +165,7 @@ class FirebaseData():
 
         # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
         return seafarer_documents
-    def marine_certificates(self, id):
+    def marine_certificates(self, id, version):
         # Get all seafarer documents
         docs = self.get_documents_seafarer()
 
@@ -181,7 +181,7 @@ class FirebaseData():
         
         # Return an empty list if no matching certificate is found
         return []
-    def marine_vaccines(self,id):
+    def marine_vaccines(self,id, version):
         contact = []
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
