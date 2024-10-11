@@ -3,6 +3,7 @@ from flask import Flask, jsonify,Response, request
 from datetime import datetime
 from applications import *
 import io
+from skills import *
 database = FirebaseData()
 class PDF(FPDF):
     def header(self):
@@ -66,7 +67,7 @@ def pdf_render():
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
     pdf.add_font('calibri', 'BU','calibri.ttf',uni=True)
     pdf.add_font('calibri', 'B','calibrib.ttf',uni=True)
-    pdf.set_fill_color(59,70,89)
+    pdf.set_fill_color(59,70,86)
     
     pdf.add_page()
     pdf.alias_nb_pages()
@@ -75,21 +76,22 @@ def pdf_render():
     pdf.set_font('calibri', '', 22)
     pdf.cell(0, 10, 'SEAFARER APPLICATION FORM', align='C')
 
-    pdf.set_xy(55, 30)  # Ajustar la posición para el siguiente texto
+    pdf.set_xy(80, 30)  # Ajustar la posición para el siguiente texto
     pdf.set_font('calibri', '', 9)
-    pdf.cell(30, 10, 'POSITION APPLYING FOR RANK: ')
-    
-    pdf.set_xy(116, 30)
+    pdf.cell(30, 10, 'POSITION APPLYING FOR RANK: ' )
     pdf.set_font('calibri', 'BU', 9)
-    pdf.cell(60, 10, 'MESSMAN')
+    pdf.set_xy(123, 30)
+    pdf.cell(6,10, 'MESSMAN')
+    
 
-    pdf.set_xy(55, 40)
+
+    pdf.set_xy(80, 40)
     pdf.set_font('calibri', '', 9)
     pdf.cell(55, 10, '1. PERSONAL INFORMATION')
 
 
     pdf.set_font('calibri', '', 9) 
-    pdf.set_xy(50, 50)
+    pdf.set_xy(80, 50)
 
     # Definir anchos para alineación
     cell_width = 50
@@ -123,7 +125,7 @@ def pdf_render():
     pdf.set_font('calibri', '', 9)
 
     # Dibujar la celda de "SURNAMES" con primer y segundo apellido
-    pdf.set_xy(50, 57)  # Ajustar la posición para los apellidos
+    pdf.set_xy(80, 57)  # Ajustar la posición para los apellidos
     
     pdf.set_text_color(255,255,255)
     pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L', fill=True)  # Etiqueta de "SURNAMES"
@@ -134,18 +136,18 @@ def pdf_render():
         
     
 
-    pdf.set_xy(50, 64) 
+    pdf.set_xy(80, 64) 
     pdf.set_text_color(255,255,255) 
     pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='L', fill=True)
 
     date = database.marine_dateOfBirth(uid, version)
     pdf.set_text_color(0,0,0)
-    pdf.set_xy(90, 64) 
+    pdf.set_xy(120, 64) 
     pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
 
     # Nacionalidad
     nationality = database.marine_nationality(uid, version)
-    pdf.set_xy(50, 77)  
+    pdf.set_xy(80, 77)  
     pdf.set_text_color(255,255,255)
     pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
     pdf.set_text_color(0,0,0)
@@ -155,7 +157,7 @@ def pdf_render():
 
     gender = database.marine_gender(uid,version)
 
-    pdf.set_xy(50, 84)  
+    pdf.set_xy(80, 84)  
     pdf.set_text_color(255,255,255)
     pdf.cell(w=40, h=7, txt='SEX', border=1, align='L', fill=True)
     pdf.set_text_color(0,0,0)
@@ -169,7 +171,7 @@ def pdf_render():
     pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
     
     # Espaciado y otras celdas
-    pdf.set_xy(50, 91)
+    pdf.set_xy(80, 91)
 
     pdf.set_text_color(255,255,255)
     pdf.cell(w=25, h=7, txt='HEIGHT (Ft/in)', border=1, align='L', fill=True)
@@ -298,10 +300,10 @@ def pdf_render():
     pdf.cell(w=40, h=7, txt='', border=1, align='L')    
     
     
-    pdf.ln(5)
+    pdf.ln(10)
     pdf.set_font('calibri','',9)
     pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN0", border=0, align='L')
-    pdf.ln(15)
+    pdf.ln(10)
     pdf.set_text_color(255,255,255)
     pdf.cell(w=0,h=7,txt="EMERGENCY CONTACT / NEXT OF KIN", border=1, align='C',ln=1,fill=True)
     pdf.cell(w=40,h=7,txt="RELATIONSHIP", border=1, align='C', fill=True)
@@ -759,6 +761,7 @@ def pdf_render():
     pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
     pdf.cell(w=90,h=7,txt='NAME OF EDUCATION INSTITUTION/TECHNICAL INSTITUTE/UNIVERSITY', align='C', border=1, fill=True)
     pdf.cell(w=40,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1, fill=True)
+    pdf.cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1, fill=True)
     pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1, fill=True)
     pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1, fill=True)
     pdf.set_text_color(0,0,0)
@@ -842,11 +845,13 @@ def pdf_render():
         pdf.cell(w=30, h=6, txt='OTHER', align='C', border=1, ln=1)
 
     pdf.ln(5)
-    pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
+    skills = Skills()
+    skills.messman(pdf)
+    """pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
     pdf.ln(10)
-    pdf.cell(w=110,h=6,txt="SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS", border=1, align='L')
-    pdf.cell(w=40,h=6,txt="YES", border=1, align='C')
-    pdf.cell(w=40,h=6,txt="NO", border=1, align='C',ln=1)
+    pdf.cell(w=110,h=6,txt="SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS", border=1, align='L', fill=True)
+    pdf.cell(w=30,h=6,txt="YES", border=1, align='C', fill=True)
+    pdf.cell(w=30,h=6,txt="NO", border=1, align='C',ln=1, fill=True)
     data_storage=[
             "Hard worked",
             "Well Organized and effective support skills, being able to take the initiative with jobs at hand. Proper cleaning techniques and chemical handling",
@@ -858,12 +863,12 @@ def pdf_render():
             "Ability to work every day cooperatively by using too much common sense in a multicultural environment to meet the entire housekeeping operation.",
             "Demonstrated aptitude and monitors at all times companys OPP procedures for sanitation and cleanliness. ",
         ]
-    column_widths = [110, 40, 40]  # Ancho de cada columna (Título, YES, NO)
+    column_widths = [110, 30, 30]  # Ancho de cada columna (Título, YES, NO)
     cell_height = 7  # Altura estándar de la celda
 
     for line in data_storage:
         # Dividimos el texto en varias líneas si es necesario
-        lines = pdf.multi_cell(column_widths[0], cell_height, line, border=0, align='L', split_only=True)
+        lines = pdf.multi_cell(column_widths[0], cell_height, line, border=0, align='L', split_only=True )
         num_lines = len(lines)
 
         # Ajustamos la altura de la celda según el número de líneas
@@ -880,18 +885,19 @@ def pdf_render():
         pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
         pdf.cell(w=column_widths[1], h=adjusted_height, txt="", border=1, align='C', ln=0)  # Celda "YES"
         pdf.cell(w=column_widths[2], h=adjusted_height, txt="", border=1, align='C', ln=1) 
-
+"""
     pdf.ln(20)
-    pdf.set_font("calibri", "", 9)
-    
+    pdf.set_font("calibri", "B", 9)
+    pdf.cell(0,10,txt='-'*200,  ln =1)
     pdf.cell(0, 10, txt="for office use only.", align = "L")
     pdf.ln(10)
     pdf.cell(0, 10, txt='10. OBSERVATIONS:', align= 'L')
     pdf.ln(10)
-    pdf.cell(w=30, h=7, txt="DATE", align="L", border=1)
-    pdf.cell(w=130, h=7, txt="COMMENTS", align="C", border=1)
-    pdf.cell(w=30, h=7, txt="VALIDATED BY:", align="L", border=1,ln=1)
-    
+    pdf.set_text_color(255,255,255)
+    pdf.cell(w=30, h=7, txt="DATE", align="L", border=1, fill=True)
+    pdf.cell(w=130, h=7, txt="COMMENTS", align="C", border=1,fill=True)
+    pdf.cell(w=30, h=7, txt="VALIDATED BY:", align="L", border=1,ln=1, fill=True)
+    pdf.set_text_color(0,0,0)
     pdf.cell(w=30, h=7, txt="", align="L", border=1)
     pdf.cell(w=130, h=7, txt="", align="C", border=1)
     pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
@@ -917,7 +923,7 @@ def pdf_render():
 
     # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
     return Response(pdf_buffer, mimetype='application/pdf', headers={
-        'Content-Disposition': 'inline'  # Mostrar el PDF en el navegador en lugar de descargarlo
+        'Content-Disposition': 'inline'  
     })
 def render_data():
     pass
