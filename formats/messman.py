@@ -4,7 +4,9 @@ class PDF(FPDF):
     def header(self):
         # Solo agregar el encabezado en la primera página
         if self.page_no() == 1:  
-            self.image("LOGISTIC-SinFondo.png", 160, 8, 33)  # Alineado a la derecha
+            self.image("LOGISTIC-SinFondo.png", 160, 8, 33)
+            self.ln(10)  # Alineado a la derecha
+            self.image('imagen_descargada.png', 160,8,33)
     def footer(self):
         self.set_y(-20)
         self.set_font('calibri', 'I', 9)
@@ -46,6 +48,16 @@ def dividir_texto(texto, pdf, ancho_celda):
     
     return lineas
 
+def descargar_imagen_firebase(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return Image.open(BytesIO(response.content))
+    else:
+        raise Exception(f"Error al descargar la imagen: {response.status_code}")
+
+# Guardar la imagen localmente
+def guardar_imagen_para_fpdf(imagen, nombre_archivo):
+    imagen.save(nombre_archivo, format='PNG')  # O 'JPEG' si prefieres JPG
 
 
 class Messman():
@@ -67,7 +79,12 @@ class Messman():
         pdf.set_xy(123, 30)
         pdf.cell(6,10, 'MESSMAN')
 
-
+        image = database.marine_image_application(uid,version)
+        imagen = descargar_imagen_firebase(image)
+        guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
+       # Agregar imagen al PDF con tamaño ajustado
+        pdf.set_xy(30, 50)
+     
 
         pdf.set_xy(80, 40)
         pdf.set_font('calibri', '', 9)
@@ -854,3 +871,4 @@ class Messman():
         pdf.cell(w=30, h=7, txt="", align="L", border=1)
         pdf.cell(w=130, h=7, txt="", align="C", border=1)
         pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
+        pdf.image("imagen_descargada.png", 10, 10, 100, 100)

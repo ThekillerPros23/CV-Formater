@@ -1,51 +1,20 @@
 from fpdf import FPDF
 from skills import *
-class PDF(FPDF):
-    def header(self):
-        # Solo agregar el encabezado en la primera página
-        if self.page_no() == 1:  
-            self.image("LOGISTIC-SinFondo.png", 160, 8, 33)  # Alineado a la derecha
-    def footer(self):
-        self.set_y(-20)
-        self.set_font('calibri', 'I', 9)
+import requests
+from io import BytesIO
+from PIL import Image
 
-        # Código
-        self.set_x(-60)
-        self.cell(0, 3.5, 'F-PMSSA-01', ln=True, align='R')
 
-        # Revisión
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Revisión: 03', ln=True, align='R')
+def descargar_imagen_firebase(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return Image.open(BytesIO(response.content))
+    else:
+        raise Exception(f"Error al descargar la imagen: {response.status_code}")
 
-        # Fecha
-        self.set_x(-60)
-        self.cell(0, 3, 'Fecha: 17 de mayo de 2022', ln=True, align='R')
-
-        # Número de página
-        self.set_x(-30)
-        page_text = f'Página {self.page_no()} de {{nb}}'
-        self.cell(0, 3, page_text, ln=True, align='R')
-def dividir_texto(texto, pdf, ancho_celda):
-    # Dividir el texto en palabras
-    palabras = texto.split(' ')
-    lineas = []
-    linea_actual = ''
-    
-    for palabra in palabras:
-        # Probar si la palabra cabe en la línea actual
-        if pdf.get_string_width(linea_actual + palabra) < ancho_celda:
-            linea_actual += palabra + ' '
-        else:
-            # Si no cabe, agregar la línea actual a la lista y comenzar una nueva
-            lineas.append(linea_actual.strip())
-            linea_actual = palabra + ' '
-    
-    # Agregar la última línea
-    if linea_actual:
-        lineas.append(linea_actual.strip())
-    
-    return lineas
-
+# Guardar la imagen localmente
+def guardar_imagen_para_fpdf(imagen, nombre_archivo):
+    imagen.save(nombre_archivo, format='PNG')  # O 'JPEG' si prefieres JPG
 
 
 class HotelStaff():
@@ -67,8 +36,10 @@ class HotelStaff():
         pdf.set_xy(123, 30)
         pdf.cell(6,10, 'HOTEL STAFF')
 
-
-
+        image = database.marine_image_application(uid,version)
+        imagen = descargar_imagen_firebase(image)
+        guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
+        pdf.image("imagen_descargada.png", x=20, y=50, w=50, h=50)
         pdf.set_xy(80, 40)
         pdf.set_font('calibri', '', 9)
         pdf.cell(55, 10, '1. PERSONAL INFORMATION')
@@ -76,7 +47,7 @@ class HotelStaff():
 
         pdf.set_font('calibri', '', 9) 
         pdf.set_xy(80, 50)
-
+    
         # Definir anchos para alineación
         cell_width = 50
         big_cell_width = 100
@@ -186,7 +157,9 @@ class HotelStaff():
         pdf.set_text_color(0,0,0)
         # Segunda celda "BARRIADA EL ALBA..."
         pdf.set_xy(x_inicial + 40, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt="", border=1, align="C")
+        address = database.marine_home_address(uid,version)
+        print(address)
+        pdf.multi_cell(w=50, h=7, txt=address, border=1, align="C")
         height_barrio = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
 
@@ -332,7 +305,7 @@ class HotelStaff():
             pdf.cell(w=40, h=7, txt=fila[1], align='C', border=1)
             pdf.cell(w=30, h=7, txt=fila[2], align='C', border=1)
             pdf.cell(w=30, h=7, txt=fila[3], align='C', border=1)
-        pdf.ln(7)
+        pdf.ln(10)
         pdf.set_font('calibri', '', 9)
         pdf.cell(0,10, txt='4. WORK EXPERIENCE ONSHORE', align='L')
         pdf.ln(10)
@@ -419,7 +392,9 @@ class HotelStaff():
             pdf.set_xy(x_inicial, y_inicial)
             pdf.multi_cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
             
-            pdf.ln(adjusted_height)  # Moverse             
+            pdf.ln(adjusted_height) 
+         # Moverse             
+        pdf.ln(20)
         pdf.cell(0, 10, txt='5.WORK EXPERIENCE ONBOARD', align="L",)
         pdf.ln(10)
 
