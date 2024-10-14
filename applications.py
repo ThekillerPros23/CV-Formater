@@ -21,6 +21,24 @@ class FirebaseData():
         users_ref = self.db.collection('usersData')
         return users_ref.stream()
     
+    def marine_position(self, id):
+        docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
+        position = None  # Inicializar la variable position como None por defecto
+        for doc in docs:
+            doc_data = doc.to_dict()  # Convertir el documento a un diccionario
+            
+            # Verificar si el uid coincide con el id proporcionado
+            if doc_data.get('uid') == id:
+                for version in doc_data['versions']:
+                    # Extraer el nombre del perfil dentro de la versión
+                    if 'startApplication' in version and 'position' in version['startApplication']:
+                        # 'position' es una lista, así que debes iterar sobre ella
+                        for pos in version['startApplication']['position']:
+                            position = pos.get('id', None)  # Acceder al id dentro de cada posición
+                            break  # Si solo necesitas la primera posición, puedes romper el bucle aquí
+        
+        return position
+
     def marine_name(self,id, version):   
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
         for doc in docs:
@@ -35,7 +53,7 @@ class FirebaseData():
                         
         return first_name
         
-
+    
         
     def marine_lastname(self,id, version):  # He cambiado el nombre de esta segunda función para evitar conflicto
         
