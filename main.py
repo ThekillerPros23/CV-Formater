@@ -5,6 +5,7 @@ from applications import *
 import io
 from skills import *
 database = FirebaseData()
+
 class PDF(FPDF):
     def header(self):
         # Solo agregar el encabezado en la primera página

@@ -1,7 +1,9 @@
 from fpdf import FPDF
 class Skills():
     def ab_os(self,pdf):
+      
         pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L', ln=1)
+
         pdf.cell(w=130,h=6,txt="SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS", border=1, align='L')
         pdf.cell(w=30,h=6,txt="YES", border=1, align='C')
         pdf.cell(w=30,h=6,txt="NO", border=1, align='C',ln=1)
@@ -55,11 +57,75 @@ class Skills():
         pdf.cell(w=130,h=6, txt="Outer deck railings, wires, superstructures, deck hull, fire lockers, life raft stations, paint locker, hazmat, and chemicals.", align="C", border=1, )
         pdf.cell(w=30,h=6,txt="", border=1, align='C')
         pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
 
+        pdf.multi_cell(0,7, txt = "Always followed all working routines and procedures associated with entering and working in confined spaces, and donning hard helmets, safety belts and other PPE.", border=1, align="L", fill = True)
+        
+        pdf.cell(w=130,h=6, txt="Deck Maintenance", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+       
+        pdf.cell(w=130,h=6, txt="Cut surface engrave", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Loading and unloading", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Painting", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Fast Rescue boats Handling", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 
+        pdf.cell(w=130,h=6, txt="Survival Craft Boat handling", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 
+        pdf.cell(w=130,h=6, txt="Deck Inventory / Storing", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 
+        pdf.cell(0,7, txt = "Exceptional quality of work with outstanding results", border=1, align="L", fill = True, ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Time management", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+       
+        pdf.cell(w=130,h=6, txt="Team worker", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Good leader", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Honest and hardworking", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Can work effectively on team or independently", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 
+        pdf.cell(w=130,h=6, txt="Neat and well organized", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+
+        pdf.cell(w=130,h=6, txt="Respect and good treatment towards to my other colleagues.", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+
+        pdf.cell(w=130,h=6, txt="Have your ever been nominated employee of the month", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Can effectively perform with less or without supervision", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 
     def cook():
         pass
