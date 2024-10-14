@@ -6,6 +6,7 @@ import io
 import requests
 from skills import *
 from formats.hotel_staff import *
+from formats.messman import * 
 database = FirebaseData()
 
 class PDF(FPDF):
@@ -60,6 +61,7 @@ app = Flask(__name__)
 @app.route('/pdf_render/applications', methods=['GET','POST'])
 def pdf_render():
     pdf = PDF(orientation='P', unit='mm', format='A4')
+    pdf.add_font("NotoEmoji", "", "NotoColorEmoji-Regular.ttf", uni=True)
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
     pdf.add_font('calibri', 'BU','calibri.ttf',uni=True)
@@ -74,8 +76,10 @@ def pdf_render():
     for data_enchange in datos:
         if int(data_enchange["Id"]) == int(database.marine_position(uid)):
             if int(data_enchange["CVFormatId"]) == 1:
-                hotel = HotelStaff()
-                hotel.format_hotel(pdf, database, uid, version) 
+               # hotel = HotelStaff()
+               # hotel.format_hotel(pdf, database, uid, version) 
+                messman = Messman()
+                messman.format_messman(pdf,database,uid,version)
             elif int(data_enchange["CVFormatId"]) == 2:
                 pass
 

@@ -150,11 +150,16 @@ class Skills():
                 "Ability to work every day cooperatively by using too much common sense in a multicultural environment to meet the entire housekeeping operation.",
                 "Demonstrated aptitude and monitors at all times companys OPP procedures for sanitation and cleanliness. ",
             ]
+        other_data = [
+            "✔️",
+            "❌"
+        ]
         column_widths = [110, 30, 30]  # Ancho de cada columna (Título, YES, NO)
         cell_height = 7  # Altura estándar de la celda
 
         for line in data_storage:
             # Dividimos el texto en varias líneas si es necesario
+            pdf.set_font("calibri", "", 9)
             lines = pdf.multi_cell(column_widths[0], cell_height, line, border=0, align='L', split_only=True )
             num_lines = len(lines)
 
@@ -170,8 +175,9 @@ class Skills():
 
             # Ajustamos la posición de las celdas "YES" y "NO" de acuerdo a la altura ajustada
             pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
-            pdf.cell(w=column_widths[1], h=adjusted_height, txt="", border=1, align='C', ln=0)  # Celda "YES"
-            pdf.cell(w=column_widths[2], h=adjusted_height, txt="", border=1, align='C', ln=1) 
+            pdf.set_font("NotoEmoji", size=16)
+            pdf.cell(w=column_widths[1], h=adjusted_height, txt="✔️", border=1, align='C', ln=0)  # Celda "YES"
+            pdf.cell(w=column_widths[2], h=adjusted_height, txt="❌", border=1, align='C', ln=1) 
 
     def fitter():
         pass

@@ -48,8 +48,8 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 
 
-class HotelStaff():
-    def format_hotel(self, pdf, database, uid,version):
+class Messman():
+    def format_messman(self, pdf, database, uid,version):
 
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]
@@ -829,7 +829,7 @@ class HotelStaff():
 
         pdf.ln(5)
         skills = Skills()
-        skills.ab_os(pdf)
+        skills.messman(pdf)
         #skills.messman(pdf)
         pdf.ln(10)
         pdf.set_font("calibri", "B", 9)
