@@ -1,10 +1,65 @@
 from fpdf import FPDF
 class Skills():
     def ab_os(self,pdf):
-        pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
-        pdf.cell(w=110,h=6,txt="SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS", border=1, align='L', fill=True)
-        pdf.cell(w=30,h=6,txt="YES", border=1, align='C', fill=True)
-        pdf.cell(w=30,h=6,txt="NO", border=1, align='C',ln=1, fill=True)
+        pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L', ln=1)
+        pdf.cell(w=130,h=6,txt="SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS", border=1, align='L')
+        pdf.cell(w=30,h=6,txt="YES", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="NO", border=1, align='C',ln=1)
+        pdf.cell(w=130,h=6, txt="FOR: ABLE SEAMAN (AB) / ORDINARY SEAMAN (OS)", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        pdf.cell(0,7, txt = "Mark the follow skills/ responsibilities/ learning experience / achievements if you have knowledge, competence, and experience about:", border=1, align="C", ln=1, fill = True)
+        
+        pdf.cell(w=130,h=6, txt="Skill professional sailor, responsible, reliable, proactive and well organized with good managerial and organizational skills on the maintenance and conservation of the vessel´s decks and superstructures.", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+       
+        pdf.cell(w=130,h=6, txt="Perform operations relevant to port cargo.", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Performed a safe lookout.", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Stood wheel duty when required and followed helm orders from the master, watchkeeping officer or the pilot", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Stood duties at port by the gangway following company´s security policy.", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+       
+        pdf.cell(0,7, txt = "I have procedures of the supported and carried out in all deck-planned maintenance including", border=1, align="C", ln=1, fill = True)
+        
+        pdf.cell(w=130,h=6, txt="Anchor windlass, chains, and anchors", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+       
+        pdf.cell(w=130,h=6, txt="Mooring winches, ropes, and springs", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Cranes, derricks and associated auxiliary equipment", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Lifeboats, davits and associated auxiliary equipment", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+        
+        pdf.cell(w=130,h=6, txt="Cleaning and maintaining other lifesaving appliances", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+
+        pdf.cell(w=130,h=6, txt="Outer deck railings, wires, superstructures, deck hull, fire lockers, life raft stations, paint locker, hazmat, and chemicals.", align="C", border=1, )
+        pdf.cell(w=30,h=6,txt="", border=1, align='C')
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
+
+
+
+
+
 
     def cook():
         pass

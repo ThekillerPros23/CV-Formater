@@ -845,7 +845,8 @@ def pdf_render():
 
     pdf.ln(5)
     skills = Skills()
-    skills.messman(pdf)
+    skills.ab_os(pdf)
+    #skills.messman(pdf)
     pdf.ln(10)
     pdf.set_font("calibri", "B", 9)
     pdf.cell(0,10,txt='-'*200,  ln =1)
