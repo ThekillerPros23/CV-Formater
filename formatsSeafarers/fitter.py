@@ -48,8 +48,8 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 
 
-class Bosun():
-    def format_bosun(self, pdf, database, uid,version):
+class FitterSeafarers():
+    def format_fitter(self, pdf, database, uid,version):
 
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]

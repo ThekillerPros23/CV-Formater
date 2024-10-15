@@ -1,54 +1,9 @@
 from fpdf import FPDF
 from skills import *
-class PDF(FPDF):
-    def header(self):
-        # Solo agregar el encabezado en la primera página
-        if self.page_no() == 1:  
-            self.image("LOGISTIC-SinFondo.png", 160, 8, 33)  # Alineado a la derecha
-    def footer(self):
-        self.set_y(-20)
-        self.set_font('calibri', 'I', 9)
-
-        # Código
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Código: F-PMSSA-01-E', ln=True, align='R')
-
-        # Revisión
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Revisión: 00', ln=True, align='R')
-
-        # Fecha
-        self.set_x(-60)
-        self.cell(0, 3, 'Fecha: 17 de mayo de 2022', ln=True, align='R')
-
-        # Número de página
-        self.set_x(-30)
-        page_text = f'Página {self.page_no()} de {{nb}}'
-        self.cell(0, 3, page_text, ln=True, align='R')
-def dividir_texto(texto, pdf, ancho_celda):
-    # Dividir el texto en palabras
-    palabras = texto.split(' ')
-    lineas = []
-    linea_actual = ''
-    
-    for palabra in palabras:
-        # Probar si la palabra cabe en la línea actual
-        if pdf.get_string_width(linea_actual + palabra) < ancho_celda:
-            linea_actual += palabra + ' '
-        else:
-            # Si no cabe, agregar la línea actual a la lista y comenzar una nueva
-            lineas.append(linea_actual.strip())
-            linea_actual = palabra + ' '
-    
-    # Agregar la última línea
-    if linea_actual:
-        lineas.append(linea_actual.strip())
-    
-    return lineas
 
 
 
-class Fitter():
+class FitterApplication():
     def format_fitter(self, pdf, database, uid,version):
 
         pdf.set_fill_color(59,70,86)

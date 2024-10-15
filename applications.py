@@ -4,13 +4,13 @@ from firebase_admin import firestore
 
 
 # Usar una cuenta de servicio.
-class FirebaseData():
+class FirebaseDataApplication():
     
     def __init__(self):
         
         self.cred = credentials.Certificate('dev-portal-logistic-firebase-adminsdk-mtvp2-bbadfb4ad5.json')
-        firebase_admin.initialize_app(self.cred)
-        self.db = firestore.client()
+        self.app = firebase_admin.initialize_app(self.cred, name= 'application')
+        self.db = firestore.client(self.app)
 
     def get_documents_applications(self):
         
@@ -191,39 +191,7 @@ class FirebaseData():
                     if 'skills' in version and 'onland' in version['skills']:
                         onland = version['skills'].get('onland', None)
         return onland
-    def marine_personaldocumention(self, id, version):
-        # Obtiene un nuevo stream de documentos
-        docs = self.get_documents_seafarer()
-
-        # Inicializa una variable para almacenar los documentos encontrados
-        seafarer_documents = []
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerDocument']
-                    break  # Deja de iterar una vez que se encuentra el documento
-
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
-    def marine_certificates(self, id):
-        # Get all seafarer documents
-        docs = self.get_documents_seafarer()
-
-        # Loop through each document
-        for doc in docs:
-            doc_data = doc.to_dict()
-
-            # Check if the UID matches the provided ID
-            if doc_data.get('uid') == id:
-                # Check if 'seafarerData' and 'seafarerCertificates' exist
-                if 'seafarerData' in doc_data and 'seafarerCertificates' in doc_data['seafarerData']:
-                    return doc_data['seafarerData']['seafarerCertificates']
+    
         
         # Return an empty list if no matching certificate is found
         return []

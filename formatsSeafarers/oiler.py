@@ -48,8 +48,8 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 
 
-class Ab_Os():
-    def format_ab_os(self, pdf, database, uid,version):
+class OilerSeafarers():
+    def format_oiler(self, pdf, database, uid):
 
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]

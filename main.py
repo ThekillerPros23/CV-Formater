@@ -5,17 +5,30 @@ from applications import *
 import io
 import requests
 from skills import *
-from formats.hotel_staff import *
-from formats.messman import * 
-from formats.ab_os import *
-from formats.bosun import *
-from formats.cook import *
+from formatsApplication.hotel_staff import *
+from formatsApplication.messman import * 
+from formatsApplication.ab_os import *
+from formatsApplication.bosun import *
+from formatsApplication.cook import *
 import json
-from formats.oiler import *
-from formats.fitter import *
-from formats.officer import *
-database = FirebaseData()
+from formatsApplication.oiler import *
+from formatsApplication.fitter import *
+from formatsApplication.officer import *
 
+from formatsSeafarers.hotel_staff import *
+from formatsSeafarers.messman import * 
+from formatsSeafarers.ab_os import *
+from formatsSeafarers.bosun import *
+from formatsSeafarers.cook import *
+from formatsSeafarers.oiler import *
+from formatsSeafarers.fitter import *
+from formatsSeafarers.officer import *
+
+
+
+from seafares import *
+databaseApplication = FirebaseDataApplication()
+databaseSeafarers = FirebaseDataSeafarers()
 
 class PDF(FPDF):
     def header(self):
@@ -76,34 +89,28 @@ def pdf_render():
     formatId = request.args.get('formatId')
     uid = request.args.get('id')
     version = request.args.get('version')
-    print(uid)
-    print(version)
-    #data = requests.get("https://bd-my-sql.vercel.app/positions/")
-    #datos = data.json()
- 
-    print(database.marine_position(uid))
     if int(formatId) == 1:
-        hotel = HotelStaff()
-        hotel.format_hotel(pdf, database, uid, version) 
+        hotel = HotelStaffApplication()
+        hotel.format_hotel(pdf, databaseApplication, uid, version) 
         
     elif int(formatId) == 2:
-        ab_os = Ab_Os()
-        ab_os.format_ab_os(pdf,database,uid, version)
+        ab_os = Ab_OsApplication()
+        ab_os.format_ab_os(pdf,databaseApplication,uid, version)
     elif int(formatId) == 3:
-        cook = Cook()
+        cook = CookApplication()
         cook.format_cook()
     elif int(formatId) == 4:
-        bosun = Bosun()
+        bosun = BosunApplication()
         bosun.format_bosun()
     elif int(formatId) == 5:
-        oiler = Oiler()
-        oiler.format_oiler(pdf,database, uid, version)
+        oiler = OilerApplication()
+        oiler.format_oiler(pdf,databaseApplication, uid, version)
     elif int(formatId) == 6:
-        messman = Messman()
-        messman.format_messman(pdf,database, uid, version)
+        messman = MessmanApplication()
+        messman.format_messman(pdf,databaseApplication, uid, version)
     elif int(formatId) == 7:
-        fitter = Fitter()
-        fitter.format_fitter(pdf,database, uid, version)
+        fitter = FitterApplication()
+        fitter.format_fitter(pdf,databaseApplication, uid, version)
     elif int(formatId) == 8:
         pass
     
@@ -132,37 +139,32 @@ def pdf_render_seafarers():
     pdf.add_font('calibri', 'BU','calibri.ttf',uni=True)
     pdf.add_font('calibri', 'B','calibrib.ttf',uni=True)
     uid = request.args.get('id')
-    version = request.args.get('version')
-    print(uid)
-    print(version)
-  
-    print(database.marine_position(uid))
-    for data_enchange in datos:
-        if int(data_enchange["Id"]) == int(database.marine_position(uid)):
-            if int(data_enchange["CVFormatId"]) == 1:
-                hotel = HotelStaff()
-                hotel.format_hotel(pdf, database, uid, version) 
-                
-            elif int(data_enchange["CVFormatId"]) == 2:
-                ab_os = Ab_Os()
-                ab_os.format_ab_os(pdf,database,uid, version)
-            elif int(data_enchange["CVFormatId"]) == 3:
-                cook = Cook()
-                cook.format_cook()
-            elif int(data_enchange["CVFormatId"]) == 4:
-                bosun = Bosun()
-                bosun.format_bosun()
-            elif int(data_enchange["CVFormatId"]) == 5:
-                oiler = Oiler()
-                oiler.format_oiler(pdf,database, uid, version)
-            elif int(data_enchange["CVFormatId"]) == 6:
-                messman = Messman()
-                messman.format_messman(pdf,database, uid, version)
-            elif int(data_enchange["CVFormatId"]) == 7:
-                fitter = Fitter()
-                fitter.format_fitter(pdf,database, uid, version)
-            elif int(data_enchange["CVFormatID"]) == 8:
-                pass
+    formatId = request.args.get('formatId')
+    
+    if int(formatId) == 1:
+            hotel = HotelStaffSeafarers()
+            hotel.format_hotel(pdf, databaseSeafarers, uid) 
+            
+    elif int(formatId) == 2:
+        ab_os = Ab_OsSeafarers()
+        ab_os.format_ab_os(pdf,databaseSeafarers,uid)
+    elif int(formatId) == 3:
+        cook = CookSeafarers()
+        cook.format_cook()
+    elif int(formatId) == 4:
+        bosun = BosunSeafarers()
+        bosun.format_bosun()
+    elif int(formatId) == 5:
+        oiler = OilerSeafarers()
+        oiler.format_oiler(pdf,databaseSeafarers, uid)
+    elif int(formatId) == 6:
+        messman = MessmanSeafarers()
+        messman.format_messman(pdf,databaseSeafarers, uid)
+    elif int(formatId) == 7:
+        fitter = FitterSeafarers()
+        fitter.format_fitter(pdf,databaseSeafarers, uid)
+    elif int(formatId) == 8:
+        pass
     pdf_buffer = io.BytesIO()
 
     # Generar el contenido del PDF como cadena

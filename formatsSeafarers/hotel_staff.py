@@ -1,55 +1,24 @@
 from fpdf import FPDF
 from skills import *
-class PDF(FPDF):
-    def header(self):
-        # Solo agregar el encabezado en la primera página
-        if self.page_no() == 1:  
-            self.image("LOGISTIC-SinFondo.png", 160, 8, 33)  # Alineado a la derecha
-    def footer(self):
-        self.set_y(-20)
-        self.set_font('calibri', 'I', 9)
-
-        # Código
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Código: F-PMSSA-01-E', ln=True, align='R')
-
-        # Revisión
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Revisión: 00', ln=True, align='R')
-
-        # Fecha
-        self.set_x(-60)
-        self.cell(0, 3, 'Fecha: 17 de mayo de 2022', ln=True, align='R')
-
-        # Número de página
-        self.set_x(-30)
-        page_text = f'Página {self.page_no()} de {{nb}}'
-        self.cell(0, 3, page_text, ln=True, align='R')
-def dividir_texto(texto, pdf, ancho_celda):
-    # Dividir el texto en palabras
-    palabras = texto.split(' ')
-    lineas = []
-    linea_actual = ''
-    
-    for palabra in palabras:
-        # Probar si la palabra cabe en la línea actual
-        if pdf.get_string_width(linea_actual + palabra) < ancho_celda:
-            linea_actual += palabra + ' '
-        else:
-            # Si no cabe, agregar la línea actual a la lista y comenzar una nueva
-            lineas.append(linea_actual.strip())
-            linea_actual = palabra + ' '
-    
-    # Agregar la última línea
-    if linea_actual:
-        lineas.append(linea_actual.strip())
-    
-    return lineas
+import requests
+from io import BytesIO
+from PIL import Image
 
 
+def descargar_imagen_firebase(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return Image.open(BytesIO(response.content))
+    else:
+        raise Exception(f"Error al descargar la imagen: {response.status_code}")
 
-class Officer():
-    def format_officer(self, pdf, database, uid,version):
+# Guardar la imagen localmente
+def guardar_imagen_para_fpdf(imagen, nombre_archivo):
+    imagen.save(nombre_archivo, format='PNG')  # O 'JPEG' si prefieres JPG
+
+
+class HotelStaffSeafarers():
+    def format_hotel(self, pdf, database, uid):
 
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]
@@ -65,10 +34,12 @@ class Officer():
         pdf.cell(30, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 9)
         pdf.set_xy(123, 30)
-        pdf.cell(6,10, 'MESSMAN')
+        pdf.cell(6,10, 'HOTEL STAFF')
 
-
-
+        image = database.marine_image_seafarers(uid)
+        imagen = descargar_imagen_firebase(image)
+        guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
+        pdf.image("imagen_descargada.png", x=20, y=50, w=50, h=50)
         pdf.set_xy(80, 40)
         pdf.set_font('calibri', '', 9)
         pdf.cell(55, 10, '1. PERSONAL INFORMATION')
@@ -76,7 +47,7 @@ class Officer():
 
         pdf.set_font('calibri', '', 9) 
         pdf.set_xy(80, 50)
-
+    
         # Definir anchos para alineación
         cell_width = 50
         big_cell_width = 100
@@ -84,8 +55,8 @@ class Officer():
         pdf.set_font('calibri', '', 9) 
         # Encabezado para Nombres
 
-        fullnames = database.marine_name(uid,version)
-        fullLastname = database.marine_lastname(uid, version)
+        fullnames = database.marine_firstname_seafarers(uid)
+        fullLastname = database.marine_lastname_seafarers(uid)
         # Obtener un solo nombre y apellido de la base de datos
 
         # Altura de la celda
@@ -124,13 +95,13 @@ class Officer():
         pdf.set_text_color(255,255,255) 
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='L', fill=True)
 
-        date = database.marine_dateOfBirth(uid, version)
+        date = database.marine_dateOfBirthSeafarers(uid)
         pdf.set_text_color(0,0,0)
         pdf.set_xy(120, 64) 
         pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
 
         # Nacionalidad
-        nationality = database.marine_nationality(uid, version)
+        nationality = database.marine_nationality(uid)
         pdf.set_xy(80, 77)  
         pdf.set_text_color(255,255,255)
         pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
@@ -139,7 +110,7 @@ class Officer():
 
         # Sexo y Estado Civil
 
-        gender = database.marine_gender(uid,version)
+        gender = database.marine_gender(uid)
 
         pdf.set_xy(80, 84)  
         pdf.set_text_color(255,255,255)
@@ -148,7 +119,7 @@ class Officer():
         pdf.cell(w=20, h=7, txt=gender, border=1, align='C')
 
 
-        marital = database.marine_marital(uid, version)
+        marital = database.marine_marital(uid)
         pdf.set_text_color(255,255,255)
         pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L', fill=True)
         pdf.set_text_color(0,0,0)
@@ -186,7 +157,9 @@ class Officer():
         pdf.set_text_color(0,0,0)
         # Segunda celda "BARRIADA EL ALBA..."
         pdf.set_xy(x_inicial + 40, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt="", border=1, align="C")
+        address = database.marine_home_address(uid)
+        
+        pdf.multi_cell(w=50, h=7, txt=address, border=1, align="C")
         height_barrio = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
 
@@ -195,7 +168,7 @@ class Officer():
         pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
         height_airport = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
-        airport = database.marine_airport(uid, version)
+        airport = database.marine_airport(uid)
         pdf.set_xy(x_inicial + 140, y_inicial)
         pdf.set_text_color(0,0,0)
         pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
@@ -231,7 +204,7 @@ class Officer():
         pdf.set_xy(x_inicial, y_inicial + max_height)
 
         # Segunda fila con "PHONE/CELL" y demás datos
-        email = database.marine_email(uid, version)
+        email = database.marine_email(uid)
         pdf.set_text_color(255,255,255)
         pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
         pdf.set_text_color(0,0,0)
@@ -295,7 +268,7 @@ class Officer():
         pdf.cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C', fill=True)
         pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1, fill=True)
         pdf.set_text_color(0,0,0)
-        datos = database.marine_contact(uid, version)
+        datos = database.marine_contact(uid)
 
         # Dibujar la tabla con las celdas alineadas correctamente
         for fila in datos:
@@ -311,8 +284,118 @@ class Officer():
         # Agregar el título "3.WORK EXPERIENCE ONBOARD"
 
         pdf.ln(5)
+        pdf.cell(0,10, txt='3. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
+        pdf.ln(10)
+        pdf.set_text_color(255,255,255)
+        pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
+        pdf.cell(w=90,h=7,txt='NAME OF EDUCATION INSTITUTION/TECHNICAL INSTITUTE/UNIVERSITY', align='C', border=1, fill=True)
+        pdf.cell(w=40,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1, fill=True)
+        pdf.cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1, fill=True)
+        pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1, fill=True)
+        pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1, fill=True)
+        pdf.set_text_color(0,0,0)
+        datos_educacion = [
 
-        pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L",)
+
+        ]
+        pdf.ln(7)
+        # Añadir los datos
+        for fila in datos_educacion:
+            pdf.cell(w=90, h=7, txt=fila[0], align='C', border=1)
+            pdf.cell(w=40, h=7, txt=fila[1], align='C', border=1)
+            pdf.cell(w=30, h=7, txt=fila[2], align='C', border=1)
+            pdf.cell(w=30, h=7, txt=fila[3], align='C', border=1)
+        pdf.ln(10)
+        pdf.set_font('calibri', '', 9)
+        pdf.cell(0,10, txt='4. WORK EXPERIENCE ONSHORE', align='L')
+        pdf.ln(10)
+        pdf.set_text_color(255,255,255)
+        encabezados = [
+        'DATE ON (MM/DD/YYYY)', 'DATE OFF (MM/DD/YYYY)', 'COMPANY NAME / SHIP-OWNER', 
+        'DUTIES OR RESPONSABILITIES', 'RANK/POSITION', 'REASON FOR LEAVING', 
+        'NAME OF CONTACT \nPERSON & TELEPHONE NUMBER'
+        ]
+        # Definir las anchuras de las celdas
+        ancho_celdas = [22, 22, 27, 27, 27, 25, 40]
+
+        # Definir la altura de las celdas
+        altura_fila = [14, 14, 14, 14, 28, 14,9.3]
+
+        # Definir la alineación de cada columna (esto faltaba)
+        align_type = ['C', 'C', 'C', 'C', 'C', 'C', 'C']
+
+        # Coordenadas iniciales para comenzar a escribir
+        x_inicial = pdf.get_x()
+        y_inicial = pdf.get_y()
+
+        # Verificar que todas las listas tienen la misma longitud
+        if not (len(encabezados) == len(ancho_celdas) == len(altura_fila) == len(align_type)):
+            raise ValueError("Las listas encabezados, ancho_celdas, altura_fila y align_type deben tener la misma longitud.")
+
+        # Imprimir los encabezados
+        for i in range(len(encabezados)):
+            pdf.set_xy(x_inicial, y_inicial)
+            
+            # Si la altura de la fila es una lista, selecciona la altura específica
+            altura_actual = altura_fila[i]
+
+            # Dividir el texto del encabezado si es necesario (sin imprimir aún)
+            lines = pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=0, align=align_type[i], split_only=True,fill=True)
+            num_lines = len(lines)
+
+            # Ajustar la altura de la celda según el número de líneas
+            adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
+
+            # Verificar si se necesita un salto de página
+            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+                pdf.add_page()
+                pdf.set_xy(x_inicial, y_inicial)
+
+            # Imprimir la celda del encabezado con el ajuste de altura
+            pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=1, align=align_type[i],fill=True)
+
+            # Actualizar la posición x para la siguiente celda
+            x_inicial += ancho_celdas[i]
+        altura_fila = [14, 14, 7, 14, 14, 14,14]
+        onland = database.marine_onland(uid)
+        pdf.set_text_color(0,0,0)
+        for data in onland:
+            # Reinicia las coordenadas x e y iniciales para cada nueva fila
+            x_inicial = pdf.get_x()
+            y_inicial = pdf.get_y()
+            
+            # Imprimir cada dato de la fila
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(ancho_celdas[0], altura_fila[0], txt=data.get('dateOn', ''), border=1, align='C')
+            
+            x_inicial += ancho_celdas[0]
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(ancho_celdas[1], altura_fila[1], txt=data.get('dateOff', ''), border=1, align='C')
+
+            x_inicial += ancho_celdas[1]
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(ancho_celdas[2], altura_fila[2], txt=data.get('companyName', ''), border=1, align='C')
+
+            x_inicial += ancho_celdas[2]
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(ancho_celdas[3], altura_fila[3], txt=data.get('dutiesOrResponsibilities', ''), border=1, align='C')
+
+            x_inicial += ancho_celdas[3]
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(ancho_celdas[4], altura_fila[4], txt=data.get('rank/position', ''), border=1, align='C')
+
+            x_inicial += ancho_celdas[4]
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(ancho_celdas[5], altura_fila[5], txt=data.get('reasonForLeaving', ''), border=1, align='C')
+
+            x_inicial += ancho_celdas[5]
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
+            
+            pdf.ln(adjusted_height) 
+         # Moverse             
+        pdf.ln(20)
+        pdf.cell(0, 10, txt='5.WORK EXPERIENCE ONBOARD', align="L",)
         pdf.ln(10)
 
         pdf.set_text_color(255,255,255)
@@ -361,7 +444,7 @@ class Officer():
             # Actualizar la posición x para la siguiente celda
             x_inicial += anchuras_columnas[i]
         pdf.set_text_color(0,0,0)
-        onboard = database.marine_onboard(uid, version)  # Obtener los datos de la base de datos
+        onboard = database.marine_onboard(uid)  # Obtener los datos de la base de datos
         nuevaaltura_fila = 7  # Altura uniforme para todas las filas
 
         for fila in onboard:
@@ -397,7 +480,7 @@ class Officer():
 
         # Salto de línea adicional después de cada grupo de filas
         pdf.ln(5)
-        pdf.cell(0, 10, txt='4. Personal Documentation / Seafarer Documentation', align='L')
+        pdf.cell(0, 10, txt='6. Personal Documentation / Seafarer Documentation', align='L')
         pdf.ln(10)  
 
         pdf.set_text_color(255,255,255)    
@@ -457,7 +540,7 @@ class Officer():
             # Mover a la siguiente línea después de completar la fila de encabezados
 
         pdf.set_text_color(0,0,0)
-        personalDocuments = database.marine_personaldocumention(uid,version)
+        personalDocuments = database.marine_personaldocumention(uid)
         # Llenar los datos para cada fila
         # Asegúrate de que la altura de la fila sea un valor numérico
         altura_fila = 7  # O cualquier valor adecuado
@@ -544,7 +627,7 @@ class Officer():
         pdf.ln(20)
         pdf.set_font('calibri', '',9)
 
-        pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')
+        pdf.cell(0, 10, txt='7. TRAINING AND CERTIFICATION.', align='L')
         pdf.ln(10)
         pdf.set_text_color(255,255,255)
         pdf.cell(w=0, h=7, txt='STCW CERTIFICATES', align='C', border=1, ln=1, fill=True)
@@ -650,116 +733,7 @@ class Officer():
             pdf.cell(w=column_widths[3], h=adjusted_height, txt="", border=1, align='C', ln=0)
             pdf.cell(w=column_widths[4], h=adjusted_height, txt="", border=1, align='C', ln=1)
 
-        pdf.set_font('calibri', '', 9)
-        pdf.cell(0,10, txt='6. WORK EXPERIENCE ONSHORE', align='L')
-        pdf.ln(10)
-        pdf.set_text_color(255,255,255)
-        encabezados = [
-        'DATE ON (MM/DD/YYYY)', 'DATE OFF (MM/DD/YYYY)', 'COMPANY NAME / SHIP-OWNER', 
-        'DUTIES OR RESPONSABILITIES', 'RANK/POSITION', 'REASON FOR LEAVING', 
-        'NAME OF CONTACT \nPERSON & TELEPHONE NUMBER'
-        ]
-        # Definir las anchuras de las celdas
-        ancho_celdas = [22, 22, 27, 27, 27, 25, 40]
 
-        # Definir la altura de las celdas
-        altura_fila = [14, 14, 14, 14, 28, 14,9.3]
-
-        # Definir la alineación de cada columna (esto faltaba)
-        align_type = ['C', 'C', 'C', 'C', 'C', 'C', 'C']
-
-        # Coordenadas iniciales para comenzar a escribir
-        x_inicial = pdf.get_x()
-        y_inicial = pdf.get_y()
-
-        # Verificar que todas las listas tienen la misma longitud
-        if not (len(encabezados) == len(ancho_celdas) == len(altura_fila) == len(align_type)):
-            raise ValueError("Las listas encabezados, ancho_celdas, altura_fila y align_type deben tener la misma longitud.")
-
-        # Imprimir los encabezados
-        for i in range(len(encabezados)):
-            pdf.set_xy(x_inicial, y_inicial)
-            
-            # Si la altura de la fila es una lista, selecciona la altura específica
-            altura_actual = altura_fila[i]
-
-            # Dividir el texto del encabezado si es necesario (sin imprimir aún)
-            lines = pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=0, align=align_type[i], split_only=True,fill=True)
-            num_lines = len(lines)
-
-            # Ajustar la altura de la celda según el número de líneas
-            adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
-
-            # Verificar si se necesita un salto de página
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-                pdf.set_xy(x_inicial, y_inicial)
-
-            # Imprimir la celda del encabezado con el ajuste de altura
-            pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=1, align=align_type[i],fill=True)
-
-            # Actualizar la posición x para la siguiente celda
-            x_inicial += ancho_celdas[i]
-        altura_fila = [14, 14, 7, 14, 14, 14,14]
-        onland = database.marine_onland(uid, version)
-        pdf.set_text_color(0,0,0)
-        for data in onland:
-            # Reinicia las coordenadas x e y iniciales para cada nueva fila
-            x_inicial = pdf.get_x()
-            y_inicial = pdf.get_y()
-            
-            # Imprimir cada dato de la fila
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[0], altura_fila[0], txt=data.get('dateOn', ''), border=1, align='C')
-            
-            x_inicial += ancho_celdas[0]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[1], altura_fila[1], txt=data.get('dateOff', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[1]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[2], altura_fila[2], txt=data.get('companyName', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[2]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[3], altura_fila[3], txt=data.get('dutiesOrResponsibilities', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[3]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[4], altura_fila[4], txt=data.get('rank/position', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[4]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[5], altura_fila[5], txt=data.get('reasonForLeaving', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[5]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
-            
-            pdf.ln(adjusted_height)  # Moverse 
-
-        pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
-        pdf.ln(10)
-        pdf.set_text_color(255,255,255)
-        pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
-        pdf.cell(w=90,h=7,txt='NAME OF EDUCATION INSTITUTION/TECHNICAL INSTITUTE/UNIVERSITY', align='C', border=1, fill=True)
-        pdf.cell(w=40,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1, fill=True)
-        pdf.cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1, fill=True)
-        pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1, fill=True)
-        pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1, fill=True)
-        pdf.set_text_color(0,0,0)
-        datos_educacion = [
-
-
-        ]
-        pdf.ln(7)
-        # Añadir los datos
-        for fila in datos_educacion:
-            pdf.cell(w=90, h=7, txt=fila[0], align='C', border=1)
-            pdf.cell(w=40, h=7, txt=fila[1], align='C', border=1)
-            pdf.cell(w=30, h=7, txt=fila[2], align='C', border=1)
-            pdf.cell(w=30, h=7, txt=fila[3], align='C', border=1)
-            pdf.ln(7)
             
 
         pdf.ln(5)
@@ -771,7 +745,7 @@ class Officer():
 
         pdf.set_font('calibri','',9)
 
-        data =  database.marine_vaccines(uid,version)
+        data =  database.marine_vaccines(uid)
 
         pdf.cell(w=40,h=6,txt="TYPE OF VACCINE", border=1, align='C', fill=True)
         pdf.cell(w=40,h=6,txt="COUNTRY", border=1, align='C', fill=True)
@@ -827,16 +801,12 @@ class Officer():
             pdf.cell(w=40, h=6, txt='N/A', align='C', border=1)
             pdf.cell(w=30, h=6, txt='OTHER', align='C', border=1, ln=1)
 
-        pdf.ln(5)
-        skills = Skills()
-        skills.messman(pdf)
-        #skills.messman(pdf)
         pdf.ln(10)
         pdf.set_font("calibri", "B", 9)
         pdf.cell(0,10,txt='-'*200,  ln =1)
         pdf.cell(0, 10, txt="for office use only.", align = "L")
         pdf.ln(10)
-        pdf.cell(0, 10, txt='10. OBSERVATIONS:', align= 'L')
+        pdf.cell(0, 10, txt='9. OBSERVATIONS:', align= 'L')
         pdf.ln(10)
         pdf.set_text_color(255,255,255)
         pdf.cell(w=30, h=7, txt="DATE", align="L", border=1, fill=True)

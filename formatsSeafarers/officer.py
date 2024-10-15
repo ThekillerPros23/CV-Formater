@@ -48,8 +48,8 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 
 
-class Cook():
-    def format_cook(self, pdf, database, uid,version):
+class OfficerSeafarers():
+    def format_officer(self, pdf, database, uid):
 
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]
