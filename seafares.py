@@ -26,7 +26,7 @@ class FirebaseDataSeafarers():
 
             # Verifica si el UID del documento coincide con el ID proporcionado
             if doc_data.get('uid') == id:
-               img =  doc_data['seafarerData']['photoURL']
+                img =  doc_data['photoURL']
         return img
     def marine_firstname_seafarers(self, id):
         docs = self.get_documents_seafarer()
@@ -41,13 +41,12 @@ class FirebaseDataSeafarers():
             # Verifica si el UID del documento coincide con el ID proporcionado
             if doc_data.get('uid') == id:
                 # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('firstName', None)
+                    seafarer_documents = doc_data['applicationData']['applicationProfile']['profile'].get('firstName', None)
                     break  # Deja de iterar una vez que se encuentra el documento
 
         # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
         return seafarer_documents
-    def marine_marlins(self,id):
+    def marine_marlins_total(self,id):
         docs = self.get_documents_seafarer()
 
         for doc in docs:
@@ -56,12 +55,9 @@ class FirebaseDataSeafarers():
             # Verifica si el UID del documento coincide con el ID proporcionado
             if doc_data.get('uid') == id:
                 # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['applicationData']['lang'].get('marlins', None)
-                    break  # Deja de iterar una vez que se encuentra el documento
-
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
+                seafarer_documents = doc_data['applicationData']['applicationProfile']['lang']['marlins']['PercentageTotal']
         return seafarer_documents
+    
     def marine_lastname_seafarers(self, id):
         docs = self.get_documents_seafarer()
 
@@ -75,8 +71,7 @@ class FirebaseDataSeafarers():
             # Verifica si el UID del documento coincide con el ID proporcionado
             if doc_data.get('uid') == id:
                 # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('lastName', None)
+                    seafarer_documents = doc_data['applicationData']['applicationProfile']['profile'].get('lastName', None)
                     break  # Deja de iterar una vez que se encuentra el documento
 
         # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
@@ -93,8 +88,7 @@ class FirebaseDataSeafarers():
             # Verifica si el UID del documento coincide con el ID proporcionado
             if doc_data.get('uid') == id:
                 # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('dateBirth', None)
+                    seafarer_documents = doc_data['applicationData']['applicationProfile']['profile'].get('dateBirth', None)
                     
         
         # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
