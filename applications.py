@@ -38,22 +38,7 @@ class FirebaseDataApplication():
                             break  # Si solo necesitas la primera posición, puedes romper el bucle aquí
         
         return position
-    def marine_image(self, id):
-        # Get all seafarer documents
-        docs = self.get_documents_seafarer()
 
-        # Loop through each document
-        for doc in docs:
-            doc_data = doc.to_dict()
-
-            # Check if the UID matches the provided ID
-            if doc_data.get('uid') == id:
-                # Check if 'seafarerData' and 'seafarerCertificates' exist
-                if 'seafarerData' in doc_data and 'photoURL' in doc_data['seafarerData']:
-                    return doc_data['seafarerData']['photoURL']
-        
-        # Return an empty list if no matching certificate is found
-        return []
     
     def marine_image_application(self,id, version):   
         docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
@@ -206,3 +191,13 @@ class FirebaseDataApplication():
                         if 'applicationProfile' in version and 'vaccines' in version['applicationProfile']:
                             vaccines = version['applicationProfile'].get('vaccines', None)
         return vaccines
+    def marine_personaldocumention(self, id, version):
+        contact = []
+        docs = self.get_documents_applications()  # Obtén un nuevo stream cada vez que llames a la función
+        for doc in docs:
+            doc_data = doc.to_dict()  # Convertir el documento a un diccionario
+            # nombre de los aplicantes
+            if doc_data.get('uid') == id:
+                    for version in doc_data['versions']:
+                        if 'applicationProfile' in version and 'vaccines' in version['applicationProfile']:
+                            vaccines = version['applicationProfile'].get('vaccines', None)

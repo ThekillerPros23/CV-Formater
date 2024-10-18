@@ -49,7 +49,7 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 
 class FitterSeafarers():
-    def format_fitter(self, pdf, database, uid,version):
+    def format_fitter(self, pdf, database, uid):
 
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]

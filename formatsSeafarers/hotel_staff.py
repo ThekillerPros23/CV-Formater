@@ -240,8 +240,8 @@ class HotelStaffSeafarers():
         pdf.cell(w=60, h=7, txt="ISSUE DATE", border=1, align="C", fill=True)
         pdf.cell(w=70, h=7, txt="PLACE OF ISSUE", border=1, align="C",ln=1, fill=True)
         pdf.set_text_color(0,0,0)
-        total = database.marine_marlins_total(uid)
-        print(total)
+        #total = database.marine_marlins_total(uid)
+        #print(total)
         pdf.cell(w=60, h=7, txt="", border=1, align="R")
         pdf.cell(w=60, h=7, txt="", border=1, align="C")
         pdf.cell(w=70, h=7, txt="", border=1, align="C",ln=1)
@@ -543,6 +543,7 @@ class HotelStaffSeafarers():
 
         pdf.set_text_color(0,0,0)
         personalDocuments = database.marine_personaldocumention(uid)
+        print(personalDocuments)
         # Llenar los datos para cada fila
         # Asegúrate de que la altura de la fila sea un valor numérico
         altura_fila = 7  # O cualquier valor adecuado

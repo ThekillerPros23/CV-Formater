@@ -19,7 +19,7 @@ class FirebaseDataSeafarers():
 
         # Inicializa una variable para almacenar los documentos encontrados
         seafarer_documents = []
-
+        img = None
         # Itera sobre los documentos para encontrar el ID coincidente
         for doc in docs:
             doc_data = doc.to_dict()  # Convierte el documento en un diccionario
@@ -190,7 +190,7 @@ class FirebaseDataSeafarers():
 
             # Verifica si el UID del documento coincide con el ID proporcionado
             if doc_data.get('uid') == id:
-                seafarer_documents = doc_data['seafarerData']['seafarerProfile'].get('vaccines', None)
+                seafarer_documents = doc_data["applicationData"]['applicationProfile']['profile'].get('vaccines', None)
                     
         
         # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
