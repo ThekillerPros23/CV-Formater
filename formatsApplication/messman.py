@@ -1,33 +1,9 @@
 from fpdf import FPDF
 from skills import *
 import requests
-class PDF(FPDF):
-    def header(self):
-        # Solo agregar el encabezado en la primera página
-        if self.page_no() == 1:  
-            self.image("LOGISTIC-SinFondo.png", 160, 8, 33)
-            self.ln(10)  # Alineado a la derecha
-            self.image('imagen_descargada.png', 160,8,33)
-    def footer(self):
-        self.set_y(-20)
-        self.set_font('calibri', 'I', 9)
+from io import BytesIO
+from PIL import Image
 
-        # Código
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Código: F-PMSSA-01-E', ln=True, align='R')
-
-        # Revisión
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Revisión: 00', ln=True, align='R')
-
-        # Fecha
-        self.set_x(-60)
-        self.cell(0, 3, 'Fecha: 17 de mayo de 2022', ln=True, align='R')
-
-        # Número de página
-        self.set_x(-30)
-        page_text = f'Página {self.page_no()} de {{nb}}'
-        self.cell(0, 3, page_text, ln=True, align='R')
 def dividir_texto(texto, pdf, ancho_celda):
     # Dividir el texto en palabras
     palabras = texto.split(' ')
@@ -83,6 +59,7 @@ class MessmanApplication():
         image = database.marine_image_application(uid,version)
         imagen = descargar_imagen_firebase(image)
         guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
+        pdf.image("imagen_descargada.png", x=20, y=50, w=50, h=50)
        # Agregar imagen al PDF con tamaño ajustado
         pdf.set_xy(30, 50)
      
@@ -872,4 +849,4 @@ class MessmanApplication():
         pdf.cell(w=30, h=7, txt="", align="L", border=1)
         pdf.cell(w=130, h=7, txt="", align="C", border=1)
         pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-        pdf.image("imagen_descargada.png", 10, 10, 100, 100)
+      

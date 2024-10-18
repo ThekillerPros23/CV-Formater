@@ -1,30 +1,9 @@
 from fpdf import FPDF
 from skills import *
-class PDF(FPDF):
-    def header(self):
-        # Solo agregar el encabezado en la primera página
-        if self.page_no() == 1:  
-            self.image("LOGISTIC-SinFondo.png", 160, 8, 33)  # Alineado a la derecha
-    def footer(self):
-        self.set_y(-20)
-        self.set_font('calibri', 'I', 9)
+import requests
+from io import BytesIO
+from PIL import Image
 
-        # Código
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Código: F-PMSSA-01-E', ln=True, align='R')
-
-        # Revisión
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Revisión: 00', ln=True, align='R')
-
-        # Fecha
-        self.set_x(-60)
-        self.cell(0, 3, 'Fecha: 17 de mayo de 2022', ln=True, align='R')
-
-        # Número de página
-        self.set_x(-30)
-        page_text = f'Página {self.page_no()} de {{nb}}'
-        self.cell(0, 3, page_text, ln=True, align='R')
 def dividir_texto(texto, pdf, ancho_celda):
     # Dividir el texto en palabras
     palabras = texto.split(' ')
@@ -46,11 +25,21 @@ def dividir_texto(texto, pdf, ancho_celda):
     
     return lineas
 
+def descargar_imagen_firebase(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return Image.open(BytesIO(response.content))
+    else:
+        raise Exception(f"Error al descargar la imagen: {response.status_code}")
+
+# Guardar la imagen localmente
+def guardar_imagen_para_fpdf(imagen, nombre_archivo):
+    imagen.save(nombre_archivo, format='PNG')  # O 'JPEG' si prefieres JPG
+
 
 
 class OfficerSeafarers():
-    def format_officer(self, pdf, database, uid):
-
+    def format_officer(self, pdf, database, uid,version):
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]
         pdf.add_page()
@@ -67,7 +56,12 @@ class OfficerSeafarers():
         pdf.set_xy(123, 30)
         pdf.cell(6,10, 'MESSMAN')
 
-
+        image = database.marine_image_application(uid,version)
+        imagen = descargar_imagen_firebase(image)
+        guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
+       # Agregar imagen al PDF con tamaño ajustado
+        pdf.set_xy(30, 50)
+     
 
         pdf.set_xy(80, 40)
         pdf.set_font('calibri', '', 9)
@@ -854,3 +848,4 @@ class OfficerSeafarers():
         pdf.cell(w=30, h=7, txt="", align="L", border=1)
         pdf.cell(w=130, h=7, txt="", align="C", border=1)
         pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
+        pdf.image("imagen_descargada.png", 10, 10, 100, 100)

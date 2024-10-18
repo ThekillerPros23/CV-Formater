@@ -98,10 +98,10 @@ def pdf_render():
         ab_os.format_ab_os(pdf,databaseApplication,uid, version)
     elif int(formatId) == 3:
         cook = CookApplication()
-        cook.format_cook()
+        cook.format_cook(pdf, databaseApplication, uid, version)
     elif int(formatId) == 4:
         bosun = BosunApplication()
-        bosun.format_bosun()
+        bosun.format_bosun(pdf,databaseApplication, uid, version)
     elif int(formatId) == 5:
         oiler = OilerApplication()
         oiler.format_oiler(pdf,databaseApplication, uid, version)
@@ -112,7 +112,8 @@ def pdf_render():
         fitter = FitterApplication()
         fitter.format_fitter(pdf,databaseApplication, uid, version)
     elif int(formatId) == 8:
-        pass
+        officer = OfficerApplication()
+        officer.format_officer(pdf,databaseApplication,uid,version)
     
     pdf_buffer = io.BytesIO()
 

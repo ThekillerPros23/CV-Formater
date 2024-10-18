@@ -22,7 +22,7 @@ class Ab_OsApplication():
         pdf.cell(30, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 9)
         pdf.set_xy(123, 30)
-        pdf.cell(6,10, 'MESSMAN')
+        pdf.cell(6,10, 'ABOS')
 
 
 

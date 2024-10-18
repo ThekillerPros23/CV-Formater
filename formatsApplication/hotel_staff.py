@@ -158,7 +158,6 @@ class HotelStaffApplication():
         # Segunda celda "BARRIADA EL ALBA..."
         pdf.set_xy(x_inicial + 40, y_inicial)
         address = database.marine_home_address(uid,version)
-        print(address)
         pdf.multi_cell(w=50, h=7, txt=address, border=1, align="C")
         height_barrio = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
@@ -393,7 +392,7 @@ class HotelStaffApplication():
             pdf.multi_cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
             
             pdf.ln(adjusted_height) 
-         # Moverse             
+        # Moverse             
         pdf.ln(20)
         pdf.cell(0, 10, txt='5.WORK EXPERIENCE ONBOARD', align="L",)
         pdf.ln(10)
@@ -746,7 +745,6 @@ class HotelStaffApplication():
         pdf.set_font('calibri','',9)
 
         data =  database.marine_vaccines(uid,version)
-
         pdf.cell(w=40,h=6,txt="TYPE OF VACCINE", border=1, align='C', fill=True)
         pdf.cell(w=40,h=6,txt="COUNTRY", border=1, align='C', fill=True)
         pdf.cell(w=40,h=6,txt="DOZE", border=1, align='C', fill=True)
