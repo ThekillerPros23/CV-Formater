@@ -748,7 +748,7 @@ class HotelStaffSeafarers():
 
         pdf.set_font('calibri','',9)
 
-        data =  database.marine_vaccines(uid)
+        vaccines =  database.marine_vaccines(uid) or {}
 
         pdf.cell(w=40,h=6,txt="TYPE OF VACCINE", border=1, align='C', fill=True)
         pdf.cell(w=40,h=6,txt="COUNTRY", border=1, align='C', fill=True)
@@ -758,23 +758,23 @@ class HotelStaffSeafarers():
         pdf.cell(w=40, h=24, txt='COVID BOOK', align='C', border=1, fill=True)
         pdf.set_text_color(0,0,0)
         # Manejo seguro para evitar KeyError y rellenar campos vacíos si los datos no existen
-        if "covid" in data and "cards" in data["covid"]:
-            for card in data["covid"]["cards"]:
-                # Usar get() para evitar errores si no hay algún valor en el campo
+        if "covid" in vaccines and "cards" in vaccines["covid"]:
+            for card in vaccines["covid"]["cards"]:
+                # Usar get() para manejar valores faltantes
                 country_name = card.get("CountryIssue", {}).get("CountryName", "N/A")
                 doze = card.get("Doze", "N/A")
                 issue_date = card.get("IssueDate", "N/A")
                 vaccine_name = card.get("VaccineBrand", {}).get("name", "N/A")
 
-                # Escribir en el PDF con valores predeterminados
-                pdf.set_text_color(0,0,0)
+                # Escribir valores en el PDF
+                pdf.set_text_color(0, 0, 0)
                 pdf.cell(w=40, h=6, txt=country_name, align='C', border=1)
-                pdf.set_text_color(255,255,255)
+                pdf.set_text_color(255, 255, 255)
                 pdf.cell(w=40, h=6, txt=doze, align='C', border=1, fill=True)
-                pdf.set_text_color(0,0,0)
+                pdf.set_text_color(0, 0, 0)
                 pdf.cell(w=40, h=6, txt=issue_date, align='C', border=1)
                 pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
-                pdf.cell(w=40, h=6, txt='')  # Agregar una celda vacía si es necesario
+                pdf.cell(w=40, h=6, txt='')  # Celda vacía si es necesario
             pdf.ln()
         else:
             # Si no hay datos de 'covid', rellenar con celdas vacías

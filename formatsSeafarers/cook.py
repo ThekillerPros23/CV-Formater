@@ -67,7 +67,12 @@ class CookSeafarers():
         pdf.set_xy(123, 30)
         pdf.cell(6,10, 'MESSMAN')
 
-
+        image = database.marine_image_application(uid)
+        imagen = descargar_imagen_firebase(image)
+        guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
+       # Agregar imagen al PDF con tamaño ajustado
+        pdf.set_xy(30, 50)
+     
 
         pdf.set_xy(80, 40)
         pdf.set_font('calibri', '', 9)
@@ -84,9 +89,8 @@ class CookSeafarers():
         pdf.set_font('calibri', '', 9) 
         # Encabezado para Nombres
 
-        fullnames = database.marine_name(uid,version)
-        fullLastname = database.marine_lastname(uid, version)
-        # Obtener un solo nombre y apellido de la base de datos
+        fullnames = database.marine_name(uid,)
+        fullLastname = database.marine_lastname(uid, )       # Obtener un solo nombre y apellido de la base de datos
 
         # Altura de la celda
         height = 7
@@ -854,3 +858,4 @@ class CookSeafarers():
         pdf.cell(w=30, h=7, txt="", align="L", border=1)
         pdf.cell(w=130, h=7, txt="", align="C", border=1)
         pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
+        pdf.image("imagen_descargada.png", 10, 10, 100, 100)

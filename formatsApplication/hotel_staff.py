@@ -473,7 +473,7 @@ class HotelStaffApplication():
                 # Actualizar la posición X para la siguiente celda
                 x_inicial += anchuras_columnas[i]
                 pdf.set_x(x_inicial)
-
+            pdf.ln()
         # Saltar a la siguiente línea después de imprimir la fila completa
         pdf.ln(max_height)
 

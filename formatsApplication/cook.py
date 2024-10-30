@@ -65,9 +65,15 @@ class CookApplication():
         pdf.cell(30, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 9)
         pdf.set_xy(123, 30)
-        pdf.cell(6,10, 'COOK')
+        pdf.cell(6,10, 'MESSMAN')
 
-
+        image = database.marine_image_application(uid,version)
+        imagen = descargar_imagen_firebase(image)
+        guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
+        pdf.image("imagen_descargada.png", x=20, y=50, w=50, h=50)
+       # Agregar imagen al PDF con tamaño ajustado
+        pdf.set_xy(30, 50)
+     
 
         pdf.set_xy(80, 40)
         pdf.set_font('calibri', '', 9)
