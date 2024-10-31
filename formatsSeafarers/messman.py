@@ -39,7 +39,7 @@ def guardar_imagen_para_fpdf(imagen, nombre_archivo):
 
 
 class MessmanSeafarers():
-    def format_messman(self, pdf, database, uid,version):
+    def format_messman(self, pdf, database,uid):
 
         pdf.set_fill_color(59,70,86)
         anchuras = [40, 50, 60, 40]
@@ -57,12 +57,12 @@ class MessmanSeafarers():
         pdf.set_xy(123, 30)
         pdf.cell(6,10, 'MESSMAN')
 
-        image = database.marine_image_application(uid,version)
+        image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)
         guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
        # Agregar imagen al PDF con tamaño ajustado
         pdf.set_xy(30, 50)
-     
+        pdf.image("imagen_descargada.png", x=20, y=50, w=50, h=50)
 
         pdf.set_xy(80, 40)
         pdf.set_font('calibri', '', 9)
@@ -79,8 +79,8 @@ class MessmanSeafarers():
         pdf.set_font('calibri', '', 9) 
         # Encabezado para Nombres
 
-        fullnames = database.marine_name(uid,version)
-        fullLastname = database.marine_lastname(uid, version)
+        fullnames = database.marine_firstname_seafarers(uid)
+        fullLastname = database.marine_lastname_seafarers(uid)
         # Obtener un solo nombre y apellido de la base de datos
 
         # Altura de la celda
@@ -119,13 +119,13 @@ class MessmanSeafarers():
         pdf.set_text_color(255,255,255) 
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='L', fill=True)
 
-        date = database.marine_dateOfBirth(uid, version)
+        date = database.marine_dateOfBirthSeafarers(uid,)
         pdf.set_text_color(0,0,0)
         pdf.set_xy(120, 64) 
         pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
 
         # Nacionalidad
-        nationality = database.marine_nationality(uid, version)
+        nationality = database.marine_nationality(uid,)
         pdf.set_xy(80, 77)  
         pdf.set_text_color(255,255,255)
         pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
@@ -134,7 +134,7 @@ class MessmanSeafarers():
 
         # Sexo y Estado Civil
 
-        gender = database.marine_gender(uid,version)
+        gender = database.marine_gender(uid)
 
         pdf.set_xy(80, 84)  
         pdf.set_text_color(255,255,255)
@@ -143,7 +143,7 @@ class MessmanSeafarers():
         pdf.cell(w=20, h=7, txt=gender, border=1, align='C')
 
 
-        marital = database.marine_marital(uid, version)
+        marital = database.marine_marital(uid,)
         pdf.set_text_color(255,255,255)
         pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L', fill=True)
         pdf.set_text_color(0,0,0)
@@ -190,7 +190,7 @@ class MessmanSeafarers():
         pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
         height_airport = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
-        airport = database.marine_airport(uid, version)
+        airport = database.marine_airport(uid,)
         pdf.set_xy(x_inicial + 140, y_inicial)
         pdf.set_text_color(0,0,0)
         pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
@@ -226,7 +226,7 @@ class MessmanSeafarers():
         pdf.set_xy(x_inicial, y_inicial + max_height)
 
         # Segunda fila con "PHONE/CELL" y demás datos
-        email = database.marine_email(uid, version)
+        email = database.marine_email(uid,)
         pdf.set_text_color(255,255,255)
         pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
         pdf.set_text_color(0,0,0)
@@ -290,7 +290,7 @@ class MessmanSeafarers():
         pdf.cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C', fill=True)
         pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1, fill=True)
         pdf.set_text_color(0,0,0)
-        datos = database.marine_contact(uid, version)
+        datos = database.marine_contact(uid,)
 
         # Dibujar la tabla con las celdas alineadas correctamente
         for fila in datos:
@@ -356,7 +356,7 @@ class MessmanSeafarers():
             # Actualizar la posición x para la siguiente celda
             x_inicial += anchuras_columnas[i]
         pdf.set_text_color(0,0,0)
-        onboard = database.marine_onboard(uid, version)  # Obtener los datos de la base de datos
+        onboard = database.marine_onboard(uid,)  # Obtener los datos de la base de datos
         nuevaaltura_fila = 7  # Altura uniforme para todas las filas
 
         for fila in onboard:
@@ -452,7 +452,7 @@ class MessmanSeafarers():
             # Mover a la siguiente línea después de completar la fila de encabezados
 
         pdf.set_text_color(0,0,0)
-        personalDocuments = database.marine_personaldocumention(uid,version)
+        personalDocuments = database.marine_personaldocumention(uid)
         # Llenar los datos para cada fila
         # Asegúrate de que la altura de la fila sea un valor numérico
         altura_fila = 7  # O cualquier valor adecuado
@@ -696,7 +696,7 @@ class MessmanSeafarers():
             # Actualizar la posición x para la siguiente celda
             x_inicial += ancho_celdas[i]
         altura_fila = [14, 14, 7, 14, 14, 14,14]
-        onland = database.marine_onland(uid, version)
+        onland = database.marine_onland(uid,)
         pdf.set_text_color(0,0,0)
         for data in onland:
             # Reinicia las coordenadas x e y iniciales para cada nueva fila
@@ -766,7 +766,7 @@ class MessmanSeafarers():
 
         pdf.set_font('calibri','',9)
 
-        data =  database.marine_vaccines(uid,version)
+        vaccines =  database.marine_vaccines(uid) or {}
 
         pdf.cell(w=40,h=6,txt="TYPE OF VACCINE", border=1, align='C', fill=True)
         pdf.cell(w=40,h=6,txt="COUNTRY", border=1, align='C', fill=True)
@@ -776,23 +776,23 @@ class MessmanSeafarers():
         pdf.cell(w=40, h=24, txt='COVID BOOK', align='C', border=1, fill=True)
         pdf.set_text_color(0,0,0)
         # Manejo seguro para evitar KeyError y rellenar campos vacíos si los datos no existen
-        if "covid" in data and "cards" in data["covid"]:
-            for card in data["covid"]["cards"]:
-                # Usar get() para evitar errores si no hay algún valor en el campo
+        if "covid" in vaccines and "cards" in vaccines["covid"]:
+            for card in vaccines["covid"]["cards"]:
+                # Usar get() para manejar valores faltantes
                 country_name = card.get("CountryIssue", {}).get("CountryName", "N/A")
                 doze = card.get("Doze", "N/A")
                 issue_date = card.get("IssueDate", "N/A")
                 vaccine_name = card.get("VaccineBrand", {}).get("name", "N/A")
 
-                # Escribir en el PDF con valores predeterminados
-                pdf.set_text_color(0,0,0)
+                # Escribir valores en el PDF
+                pdf.set_text_color(0, 0, 0)
                 pdf.cell(w=40, h=6, txt=country_name, align='C', border=1)
-                pdf.set_text_color(255,255,255)
+                pdf.set_text_color(255, 255, 255)
                 pdf.cell(w=40, h=6, txt=doze, align='C', border=1, fill=True)
-                pdf.set_text_color(0,0,0)
+                pdf.set_text_color(0, 0, 0)
                 pdf.cell(w=40, h=6, txt=issue_date, align='C', border=1)
                 pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
-                pdf.cell(w=40, h=6, txt='')  # Agregar una celda vacía si es necesario
+                pdf.cell(w=40, h=6, txt='')  # Celda vacía si es necesario
             pdf.ln()
         else:
             # Si no hay datos de 'covid', rellenar con celdas vacías
@@ -802,7 +802,6 @@ class MessmanSeafarers():
             pdf.cell(w=30, h=6, txt='N/A', align='C', border=1, ln=1)
             pdf.cell(w=40, h=6, txt='')  # Celda vacía adicional si es necesario
             pdf.ln()
-
         # Manejo seguro para fiebre amarilla
         if "yellowFever" in data and "cards" in data["yellowFever"]:
             for card in data["yellowFever"]["cards"]:
@@ -849,4 +848,4 @@ class MessmanSeafarers():
         pdf.cell(w=30, h=7, txt="", align="L", border=1)
         pdf.cell(w=130, h=7, txt="", align="C", border=1)
         pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-        pdf.image("imagen_descargada.png", 10, 10, 100, 100)
+       

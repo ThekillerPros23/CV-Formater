@@ -1,312 +1,84 @@
-import firebase_admin
-from firebase_admin import credentials
 from firebase_admin import firestore
+from firebase_admin import credentials
+import firebase_admin
 
-
-# Usar una cuenta de servicio.
 class FirebaseDataSeafarers():
     
     def __init__(self):
-        
         self.cred = credentials.Certificate('dev-portal-logistic-firebase-adminsdk-mtvp2-bbadfb4ad5.json')
-        self.app = firebase_admin.initialize_app(self.cred,name='seafarers')
+        self.app = firebase_admin.initialize_app(self.cred, name='seafarers')
         self.db = firestore.client(self.app)
-    def get_documents_seafarer(self):
-        users_ref = self.db.collection('usersData')
-        return users_ref.stream()
-    def marine_image_seafarers(self,id):
-        docs = self.get_documents_seafarer()
-
-        # Inicializa una variable para almacenar los documentos encontrados
-        seafarer_documents = []
-        img = None
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                img =  doc_data['photoURL']
-        return img
-    def marine_firstname_seafarers(self, id):
-        docs = self.get_documents_seafarer()
-
-        # Inicializa una variable para almacenar los documentos encontrados
-        seafarer_documents = []
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('firstName', None)
-                    break  # Deja de iterar una vez que se encuentra el documento
-
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
-    def marine_marlins_total(self,id):
-        docs = self.get_documents_seafarer()
-
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                seafarer_documents = doc_data['seafarerData']['seafarerProfile']['lang']['marlins']['PercentageTotal']
-        return seafarer_documents
     
+    def get_document_by_uid(self, uid):
+        # Filtra el documento por UID directamente en la consulta
+        users_ref = self.db.collection('usersData').where('uid', '==', uid).limit(1)
+        docs = list(users_ref.stream())
+        return docs[0].to_dict() if docs else None
+    def marine_image_seafarers(self, id):
+        doc_data = self.get_document_by_uid(id)
+        # Return photoURL if it exists; otherwise, return the fallback URL
+        return doc_data.get('photoURL') if doc_data and doc_data.get('photoURL') else "https://static.vecteezy.com/system/resources/previews/005/545/335/non_2x/user-sign-icon-person-symbol-human-avatar-isolated-on-white-backogrund-vector.jpg"
+
+    def marine_firstname_seafarers(self, id):
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile'].get('firstName') if doc_data else None
+
+    # Aplica el mismo enfoque de filtrado a las otras funciones
     def marine_lastname_seafarers(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile'].get('lastName') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-        seafarer_documents = []
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('lastName', None)
-                    break  # Deja de iterar una vez que se encuentra el documento
-
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_dateOfBirthSeafarers(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile'].get('dateBirth') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('dateBirth', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_contact(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['contacts'].get('contact') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['contacts'].get('contact', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_onland(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['skills'].get('onland') if doc_data else {}
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                    seafarer_documents = doc_data['seafarerData']['skills']['onland']                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_onboard(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['skills'].get('onboard') if doc_data else {}
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                    seafarer_documents = doc_data['seafarerData']['skills']['onboard']                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_nationality(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile']['countryBirth'].get('CountryName') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
+    def marine_cellphone(self, id):
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile']["phone"].get("value") if doc_data else ""
 
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile']['countryBirth'].get('CountryName', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
-    def marine_cellphone(self,id):
-        docs = self.get_documents_seafarer()
-
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                seafarer_documents = doc_data['seafarerData']['seafarerProfile']['lang']['marlins']['PercentageTotal']
-        return seafarer_documents
     def marine_gender(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile']['gender'].get('name') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile']['gender'].get('name', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_vaccines(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile'].get('vaccines') if doc_data else {}
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                seafarer_documents = doc_data["seafarerData"]['applicationProfile']['profile'].get('vaccines', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_marital(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile']['maritalStatus'].get('name') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile']['maritalStatus'].get('name', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_home_address(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile'].get('address') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('address', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_airport(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData']['seafarerProfile']['profile'].get('airport') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerProfile']['profile'].get('airport', None)
-                    
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
     def marine_email(self, id):
-        docs = self.get_documents_seafarer()
+        doc_data = self.get_document_by_uid(id)
+        return doc_data.get('email') if doc_data else ""
 
-        # Inicializa una variable para almacenar los documentos encontrados
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                email =  doc_data['email']
-
-        
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return email
     def marine_personaldocumention(self, id):
-        # Obtiene un nuevo stream de documentos
-        docs = self.get_documents_seafarer()
-
-        # Inicializa una variable para almacenar los documentos encontrados
-        seafarer_documents = []
-
-        # Itera sobre los documentos para encontrar el ID coincidente
-        for doc in docs:
-            doc_data = doc.to_dict()  # Convierte el documento en un diccionario
-
-            # Verifica si el UID del documento coincide con el ID proporcionado
-            if doc_data.get('uid') == id:
-                # Verifica que 'seafarerData' y 'seafarerDocument' existan en el documento
-                if 'seafarerData' in doc_data and 'seafarerDocument' in doc_data['seafarerData']:
-                    seafarer_documents = doc_data['seafarerData']['seafarerDocument']
-                    break  # Deja de iterar una vez que se encuentra el documento
-
-        # Retorna la lista de documentos, o una lista vacía si no se encuentra nada
-        return seafarer_documents
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData'].get('seafarerDocument') if doc_data else {}
     def marine_certificates(self, id):
-        # Get all seafarer documents
-        docs = self.get_documents_seafarer()
-
-        # Loop through each document
-        for doc in docs:
-            doc_data = doc.to_dict()
-
-            # Check if the UID matches the provided ID
-            if doc_data.get('uid') == id:
-                # Check if 'seafarerData' and 'seafarerCertificates' exist
-                if 'seafarerData' in doc_data and 'seafarerCertificates' in doc_data['seafarerData']:
-                    return doc_data['seafarerData']['seafarerCertificates']
+        doc_data = self.get_document_by_uid(id)
+        return doc_data['seafarerData'].get('seafarerCertificates') if doc_data else { }

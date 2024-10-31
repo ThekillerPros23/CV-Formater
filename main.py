@@ -91,29 +91,29 @@ def pdf_render():
     version = request.args.get('version')
     if int(formatId) == 1:
         hotel = HotelStaffApplication()
-        hotel.format_hotel(pdf, databaseApplication, uid, version) 
+        hotel.format_hotel(pdf, databaseApplication, uid) 
         
     elif int(formatId) == 2:
         ab_os = Ab_OsApplication()
-        ab_os.format_ab_os(pdf,databaseApplication,uid, version)
+        ab_os.format_ab_os(pdf,databaseApplication,uid)
     elif int(formatId) == 3:
         cook = CookApplication()
-        cook.format_cook(pdf, databaseApplication, uid, version)
+        cook.format_cook(pdf, databaseApplication, uid)
     elif int(formatId) == 4:
         bosun = BosunApplication()
-        bosun.format_bosun(pdf,databaseApplication, uid, version)
+        bosun.format_bosun(pdf,databaseApplication, uid)
     elif int(formatId) == 5:
         oiler = OilerApplication()
-        oiler.format_oiler(pdf,databaseApplication, uid, version)
+        oiler.format_oiler(pdf,databaseApplication, uid)
     elif int(formatId) == 6:
         messman = MessmanApplication()
-        messman.format_messman(pdf,databaseApplication, uid, version)
+        messman.format_messman(pdf,databaseApplication, uid)
     elif int(formatId) == 7:
         fitter = FitterApplication()
-        fitter.format_fitter(pdf,databaseApplication, uid, version)
+        fitter.format_fitter(pdf,databaseApplication, uid)
     elif int(formatId) == 8:
         officer = OfficerApplication()
-        officer.format_officer(pdf,databaseApplication,uid,version)
+        officer.format_officer(pdf,databaseApplication,uid)
     
     pdf_buffer = io.BytesIO()
 
@@ -165,7 +165,9 @@ def pdf_render_seafarers():
         fitter = FitterSeafarers()
         fitter.format_fitter(pdf,databaseSeafarers, uid)
     elif int(formatId) == 8:
-        pass
+        officer = OfficerSeafarers()
+        officer.format_officer(pdf,databaseSeafarers,uid)
+
     pdf_buffer = io.BytesIO()
 
     # Generar el contenido del PDF como cadena

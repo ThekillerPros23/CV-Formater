@@ -95,7 +95,7 @@ class HotelStaffSeafarers():
         pdf.set_text_color(255,255,255) 
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='L', fill=True)
 
-        date = database.marine_dateOfBirthSeafarers(uid)
+        date = database.marine_dateOfBirthSeafarers(uid) or ""
         pdf.set_text_color(0,0,0)
         pdf.set_xy(120, 64) 
         pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
@@ -157,7 +157,7 @@ class HotelStaffSeafarers():
         pdf.set_text_color(0,0,0)
         # Segunda celda "BARRIADA EL ALBA..."
         pdf.set_xy(x_inicial + 40, y_inicial)
-        address = database.marine_home_address(uid)
+        address = database.marine_home_address(uid) or ""
         
         pdf.multi_cell(w=50, h=7, txt=address, border=1, align="C")
         height_barrio = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
@@ -168,7 +168,7 @@ class HotelStaffSeafarers():
         pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
         height_airport = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
-        airport = database.marine_airport(uid)
+        airport = database.marine_airport(uid) or ""
         pdf.set_xy(x_inicial + 140, y_inicial)
         pdf.set_text_color(0,0,0)
         pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
@@ -274,14 +274,18 @@ class HotelStaffSeafarers():
 
         # Dibujar la tabla con las celdas alineadas correctamente
         for fila in datos:
-            nombre_completo = f"{fila['firstNames']} {fila['lastNames']}"
-            telefono = fila['phone'].get('value', '') if fila['phone']['value'] else ''
-            columnas = [fila['relationship'], nombre_completo, telefono, fila['address']]
-
+        # Usamos .get para cada campo y manejamos cuando el valor sea None o no esté definido.
+            nombre_completo = f"{fila.get('firstNames', '')} {fila.get('lastNames', '')}"
+            telefono = fila.get('phone', {}).get('value', '')  # Si 'phone' o 'value' no existen, será vacío.
+            direccion = fila.get('address', '')  # Si 'address' no existe, será vacío.
+            
+            columnas = [fila.get('relationship', ''), nombre_completo, telefono, direccion]
+            
             for i, valor in enumerate(columnas):
                 pdf.cell(w=anchuras[i], h=8, txt=valor, border=1, align='C')
             
-            pdf.ln(8)  # Saltar a la siguiente línea después de cada fil
+            pdf.ln(8)
+
 
         # Agregar el título "3.WORK EXPERIENCE ONBOARD"
 
@@ -448,37 +452,37 @@ class HotelStaffSeafarers():
         pdf.set_text_color(0,0,0)
         onboard = database.marine_onboard(uid)  # Obtener los datos de la base de datos
         nuevaaltura_fila = 7  # Altura uniforme para todas las filas
-
         for fila in onboard:
-            # Obtener el nombre del tipo de buque o cadena vacía si no está disponible
-            tipo_vessel = fila['typeOfVessel'][0]['name'] if fila['typeOfVessel'] else ''
+            # Obtener el nombre del tipo de buque o una cadena vacía si no está disponible
+            tipo_vessel = fila.get('typeOfVessel', [{}])[0].get('name', '') if fila.get('typeOfVessel') else ''
             
-            # Crear la lista de datos de cada columna en el orden correcto
+            # Crear la lista de datos de cada columna en el orden correcto, usando .get() para valores ausentes
             columnas = [
-                fila['dateOn'],         # Fecha de inicio
-                fila['dateOff'],        # Fecha de finalización
-                fila['companyName'],    # Nombre de la compañía
-                fila['vesselName'],     # Nombre del buque
-                fila['imo#'],           # Número IMO
-                fila['gt/hp'] if fila['gt/hp'] else '',  # GT/HP (vacío si no está disponible)
-                tipo_vessel,            # Tipo de buque
-                fila['rank/position']   # Rango/posición
+                fila.get('dateOn', ''),               # Fecha de inicio
+                fila.get('dateOff', ''),              # Fecha de finalización
+                fila.get('companyName', ''),          # Nombre de la compañía
+                fila.get('vesselName', ''),           # Nombre del buque
+                fila.get('imo#', ''),                 # Número IMO
+                fila.get('gt/hp', ''),                # GT/HP (vacío si no está disponible)
+                tipo_vessel,                          # Tipo de buque
+                fila.get('rank/position', '')         # Rango/posición
             ]
 
             x_inicial = pdf.get_x()  # Posición X inicial antes de imprimir la fila
             max_height = nuevaaltura_fila  # Altura predeterminada para la fila
 
             # Dibujar cada celda de la fila
-            for i in range(len(columnas)):
+            for i, valor in enumerate(columnas):
                 # Imprimir una celda para cada valor en la columna
-                pdf.cell(w=anchuras_columnas[i], h=max_height, txt=columnas[i], align='C', border=1)
+                pdf.cell(w=anchuras_columnas[i], h=max_height, txt=valor, align='C', border=1)
                 
                 # Actualizar la posición X para la siguiente celda
                 x_inicial += anchuras_columnas[i]
                 pdf.set_x(x_inicial)
 
-        # Saltar a la siguiente línea después de imprimir la fila completa
-        pdf.ln(max_height)
+            # Saltar a la siguiente línea después de imprimir la fila completa
+            pdf.ln(max_height)
+
 
         # Salto de línea adicional después de cada grupo de filas
         pdf.ln(5)
@@ -786,8 +790,8 @@ class HotelStaffSeafarers():
             pdf.ln()
 
         # Manejo seguro para fiebre amarilla
-        if "yellowFever" in data and "cards" in data["yellowFever"]:
-            for card in data["yellowFever"]["cards"]:
+        if "yellowFever" in vaccines and "cards" in vaccines["yellowFever"]:
+            for card in vaccines["yellowFever"]["cards"]:
                 country_name = card.get("CountryIssue", {}).get("CountryName", "N/A")
                 issue_date = card.get("IssueDate", "N/A")
 
