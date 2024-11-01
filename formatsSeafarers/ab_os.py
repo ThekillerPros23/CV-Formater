@@ -185,8 +185,10 @@ class Ab_OsSeafarers():
         height_complete_home = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
         pdf.set_text_color(0,0,0)
         # Segunda celda "BARRIADA EL ALBA..."
+        home= database.marine_home_address(uid)
+
         pdf.set_xy(x_inicial + 40, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt="", border=1, align="C")
+        pdf.multi_cell(w=50, h=7, txt=home, border=1, align="C")
         height_barrio = pdf.get_y() - y_inicial  # Altura ocupada por esta celda
 
 
@@ -234,12 +236,13 @@ class Ab_OsSeafarers():
         email = database.marine_email(uid,)
         pdf.set_text_color(255,255,255)
         pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
+        cell = database.marine_cellphone(uid)
         pdf.set_text_color(0,0,0)
-        pdf.cell(w=30, h=7, txt="", border=1, align="L")
+        pdf.cell(w=30, h=7, txt=cell, border=1, align="L")
         pdf.set_text_color(255,255,255)
         pdf.cell(w=30, h=7, txt="WHATSAPP", border=1, align="C", fill=True)
         pdf.set_text_color(0,0,0)
-        pdf.cell(w=30, h=7, txt="", border=1, align="C")
+        pdf.cell(w=30, h=7, txt=cell, border=1, align="C")
         pdf.set_text_color(255,255,255)
         pdf.cell(w=20, h=7, txt="E-MAIL", border=1, align="L", fill=True)
         pdf.set_text_color(0,0,0)
@@ -299,15 +302,17 @@ class Ab_OsSeafarers():
 
         # Dibujar la tabla con las celdas alineadas correctamente
         for fila in datos:
-            nombre_completo = f"{fila['firstNames']} {fila['lastNames']}"
-            telefono = fila['phone'].get('value', '') if fila['phone']['value'] else ''
-            columnas = [fila['relationship'], nombre_completo, telefono, fila['address']]
-
+        # Usamos .get para cada campo y manejamos cuando el valor sea None o no esté definido.
+            nombre_completo = f"{fila.get('firstNames', '')} {fila.get('lastNames', '')}"
+            telefono = fila.get('phone', {}).get('value', '')  # Si 'phone' o 'value' no existen, será vacío.
+            direccion = fila.get('address', '')  # Si 'address' no existe, será vacío.
+            
+            columnas = [fila.get('relationship', ''), nombre_completo, telefono, direccion]
+            
             for i, valor in enumerate(columnas):
                 pdf.cell(w=anchuras[i], h=8, txt=valor, border=1, align='C')
             
-            pdf.ln(8)  # Saltar a la siguiente línea después de cada fil
-
+            pdf.ln(8)
         # Agregar el título "3.WORK EXPERIENCE ONBOARD"
 
         pdf.ln(5)
@@ -829,7 +834,7 @@ class Ab_OsSeafarers():
 
         pdf.ln(5)
         skills = Skills()
-        skills.messman(pdf)
+        skills.ab_os(pdf)
         #skills.messman(pdf)
         pdf.ln(10)
         pdf.set_font("calibri", "B", 9)
