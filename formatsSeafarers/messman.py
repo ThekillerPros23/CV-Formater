@@ -730,8 +730,7 @@ class MessmanSeafarers():
             x_inicial += ancho_celdas[5]
             pdf.set_xy(x_inicial, y_inicial)
             pdf.multi_cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
-            
-            pdf.ln(adjusted_height)  # Moverse 
+        pdf.ln()
 
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
         pdf.ln(10)

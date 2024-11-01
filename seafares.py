@@ -82,3 +82,10 @@ class FirebaseDataSeafarers():
     def marine_certificates(self, id):
         doc_data = self.get_document_by_uid(id)
         return doc_data['seafarerData'].get('seafarerCertificates') if doc_data else { }
+    def marine_lang_engl(self, id):
+        doc_data = self.get_document_by_uid(id)
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("ENGLISH", {}).get("PercentageSpeak", "")
+
+    def marine_lang_span(self, id):
+        doc_data = self.get_document_by_uid(id)
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("SPANISH", {}).get("PercentageSpeak", "")
