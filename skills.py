@@ -10,9 +10,9 @@ class Skills():
         pdf.cell(w=130,h=6, txt="FOR: ABLE SEAMAN (AB) / ORDINARY SEAMAN (OS)", align="C", border=1, )
         pdf.cell(w=30,h=6,txt="", border=1, align='C')
         pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
-        pdf.cell(0,7, txt = "Mark the follow skills/ responsibilities/ learning experience / achievements if you have knowledge, competence, and experience about:", border=1, align="C", ln=1, fill = True)
+        pdf.cell(0,7, txt = "Mark the following skills/ responsibilities/ learning experience / achievements if you have knowledge, competence, and experience about:", border=1, align="C", ln=1, fill = True)
         
-        pdf.cell(w=130,h=6, txt="Skill professional sailor, responsible, reliable, proactive and well organized with good managerial and organizational skills on the maintenance and conservation of the vessel´s decks and superstructures.", align="C", border=1, )
+        pdf.cell(w=130,h=6, txt="Skilled professional sailor, responsible, reliable, proactive, and well-organized, with strong managerial and organizational skills in the maintenance and conservation of the vessel's decks and superstructures.", align="C", border=1, )
         pdf.cell(w=30,h=6,txt="", border=1, align='C')
         pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
        
@@ -32,7 +32,7 @@ class Skills():
         pdf.cell(w=30,h=6,txt="", border=1, align='C')
         pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
        
-        pdf.cell(0,7, txt = "I have procedures of the supported and carried out in all deck-planned maintenance including", border=1, align="C", ln=1, fill = True)
+        pdf.cell(0,7, txt = "I have experience with the procedures supported and carried out in all deck-planned maintenance, including:", border=1, align="C", ln=1, fill = True)
         
         pdf.cell(w=130,h=6, txt="Anchor windlass, chains, and anchors", align="C", border=1, )
         pdf.cell(w=30,h=6,txt="", border=1, align='C')
@@ -115,7 +115,7 @@ class Skills():
         pdf.cell(w=30,h=6,txt="", border=1, align='C')
         pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 
-        pdf.cell(w=130,h=6, txt="Respect and good treatment towards to my other colleagues.", align="C", border=1, )
+        pdf.cell(w=130,h=6, txt="Respect and good treatment towards my other colleagues.", align="C", border=1, )
         pdf.cell(w=30,h=6,txt="", border=1, align='C')
         pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 

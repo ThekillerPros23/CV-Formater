@@ -29,7 +29,6 @@ from formatsSeafarers.officer import *
 from seafares import *
 databaseApplication = FirebaseDataApplication()
 databaseSeafarers = FirebaseDataSeafarers()
-
 class PDF(FPDF):
     def header(self):
         # Solo agregar el encabezado en la primera página
@@ -89,6 +88,7 @@ def pdf_render():
     formatId = request.args.get('formatId')
     uid = request.args.get('id')
     version = request.args.get('version')
+    footer_data = {}
     if int(formatId) == 1:
         hotel = HotelStaffApplication()
         hotel.format_hotel(pdf, databaseApplication, uid) 
@@ -141,14 +141,17 @@ def pdf_render_seafarers():
     pdf.add_font('calibri', 'B','calibrib.ttf',uni=True)
     uid = request.args.get('id')
     formatId = request.args.get('formatId')
-    
+ 
     if int(formatId) == 1:
-            hotel = HotelStaffSeafarers()
-            hotel.format_hotel(pdf, databaseSeafarers, uid) 
-            
+
+        hotel = HotelStaffSeafarers()
+        hotel.format_hotel(pdf, databaseSeafarers, uid) 
+        
     elif int(formatId) == 2:
+     
         ab_os = Ab_OsSeafarers()
         ab_os.format_ab_os(pdf,databaseSeafarers,uid)
+      
     elif int(formatId) == 3:
         cook = CookSeafarers()
         cook.format_cook()
@@ -167,9 +170,9 @@ def pdf_render_seafarers():
     elif int(formatId) == 8:
         officer = OfficerSeafarers()
         officer.format_officer(pdf,databaseSeafarers,uid)
-
+    
     pdf_buffer = io.BytesIO()
-
+    
     # Generar el contenido del PDF como cadena
     pdf_output = pdf.output(dest='S').encode('latin1')  # 'S' significa 'return as string'
     

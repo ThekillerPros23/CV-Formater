@@ -828,26 +828,4 @@ class CookSeafarers():
         skills.messman(pdf)
         #skills.messman(pdf)
         pdf.ln(10)
-        pdf.set_font("calibri", "B", 9)
-        pdf.cell(0,10,txt='-'*200,  ln =1)
-        pdf.cell(0, 10, txt="for office use only.", align = "L")
-        pdf.ln(10)
-        pdf.cell(0, 10, txt='10. OBSERVATIONS:', align= 'L')
-        pdf.ln(10)
-        pdf.set_text_color(255,255,255)
-        pdf.cell(w=30, h=7, txt="DATE", align="L", border=1, fill=True)
-        pdf.cell(w=130, h=7, txt="COMMENTS", align="C", border=1,fill=True)
-        pdf.cell(w=30, h=7, txt="VALIDATED BY:", align="L", border=1,ln=1, fill=True)
-        pdf.set_text_color(0,0,0)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1)
-        pdf.cell(w=130, h=7, txt="", align="C", border=1)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-
-        pdf.cell(w=30, h=7, txt="", align="L", border=1)
-        pdf.cell(w=130, h=7, txt="", align="C", border=1)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-
-        pdf.cell(w=30, h=7, txt="", align="L", border=1)
-        pdf.cell(w=130, h=7, txt="", align="C", border=1)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-       
+      

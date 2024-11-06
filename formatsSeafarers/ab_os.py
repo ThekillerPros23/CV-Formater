@@ -651,43 +651,45 @@ class Ab_OsSeafarers():
 
             # Actualizar la posición x para la siguiente celda
             x_inicial += ancho_celdas[i]
-        altura_fila = [14, 14, 7, 14, 14, 14,7]
+        altura_fila = [14, 14, 14, 7, 14, 14,14]
         onland = database.marine_onland(uid,)
         pdf.set_text_color(0,0,0)
         for data in onland:
-            # Reinicia las coordenadas x e y iniciales para cada nueva fila
+            # Reset initial x and y coordinates for each new row
             x_inicial = pdf.get_x()
             y_inicial = pdf.get_y()
             
-            # Imprimir cada dato de la fila
+            # Print each piece of data in a single line using cell
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[0], altura_fila[0], txt=data.get('dateOn', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[0], altura_fila[0], txt=data.get('dateOn', ''), border=1, align='C')
             
             x_inicial += ancho_celdas[0]
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[1], altura_fila[1], txt=data.get('dateOff', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[1], altura_fila[1], txt=data.get('dateOff', ''), border=1, align='C')
 
             x_inicial += ancho_celdas[1]
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[2], altura_fila[2], txt=data.get('companyName', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[2], altura_fila[2], txt=data.get('companyName', ''), border=1, align='C')
 
             x_inicial += ancho_celdas[2]
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[3], altura_fila[3], txt=data.get('dutiesOrResponsibilities', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[3], altura_fila[3], txt=data.get('dutiesOrResponsibilities', ''), border=1, align='C')
 
             x_inicial += ancho_celdas[3]
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[4], altura_fila[4], txt=data.get('rank/position', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[4], altura_fila[4], txt=data.get('rank/position', ''), border=1, align='C')
 
             x_inicial += ancho_celdas[4]
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[5], altura_fila[5], txt=data.get('reasonForLeaving', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[5], altura_fila[5], txt=data.get('reasonForLeaving', ''), border=1, align='C')
 
             x_inicial += ancho_celdas[5]
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
             
-        pdf.ln()  # Moverse 
+            pdf.ln(altura_fila[0])  # Move to the next row
+
+ 
 
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
         pdf.ln(10)
@@ -759,51 +761,38 @@ class Ab_OsSeafarers():
             pdf.cell(w=40, h=6, txt='')  # Celda vacía adicional si es necesario
             pdf.ln()
         # Manejo seguro para fiebre amarilla
+       # Verificar si hay datos de 'yellowFever' y 'cards'
+        pdf.set_text_color(255, 255, 255)
         if "yellowFever" in vaccines and "cards" in vaccines["yellowFever"]:
             for card in vaccines["yellowFever"]["cards"]:
+                # Extraer información de 'CountryIssue' y 'IssueDate'
                 country_name = card.get("CountryIssue", {}).get("CountryName", "N/A")
                 issue_date = card.get("IssueDate", "N/A")
-
-                pdf.cell(w=40, h=6, txt='YELLOW FEVER', align='C', border=1)
+                
+                # Agregar celdas con datos de fiebre amarilla
+                pdf.cell(w=40, h=6, txt='YELLOW FEVER', align='C', border=1, fill=True)
+                pdf.set_text_color(0, 0, 0)
                 pdf.cell(w=40, h=6, txt=country_name, align='C', border=1)
-                pdf.cell(w=40, h=6, txt='UNLIMITED', align='C', border=1,fill=True)
+                pdf.set_text_color(255, 255, 255)
+                pdf.cell(w=40, h=6, txt='UNLIMITED', align='C', border=1, fill=True)
+                pdf.set_text_color(0, 0, 0)
                 pdf.cell(w=40, h=6, txt=issue_date, align='C', border=1)
-                pdf.cell(w=30, h=6, txt='OTHER', align='C', border=1, ln=1)
+                
+                pdf.cell(w=30, h=6, txt='OTHER', align='C', border=1, ln=1,)
+                
         else:
-            # Si no hay datos de 'yellowFever', rellenar con celdas vacías
+            # Si no hay datos, rellenar con celdas vacías
             pdf.cell(w=40, h=6, txt='YELLOW FEVER', align='C', border=1, fill=True)
             pdf.cell(w=40, h=6, txt='No Data', align='C', border=1)
             pdf.cell(w=40, h=6, txt='UNLIMITED', align='C', border=1)
             pdf.cell(w=40, h=6, txt='N/A', align='C', border=1)
             pdf.cell(w=30, h=6, txt='OTHER', align='C', border=1, ln=1)
-
         pdf.ln(5)
+        pdf.set_text_color(0, 0, 0)
         skills = Skills()
         skills.ab_os(pdf)
         #skills.messman(pdf)
         pdf.ln(10)
-        pdf.set_font("calibri", "B", 9)
-        pdf.cell(0,10,txt='-'*200,  ln =1)
-        pdf.cell(0, 10, txt="for office use only.", align = "L")
-        pdf.ln(10)
-        pdf.cell(0, 10, txt='10. OBSERVATIONS:', align= 'L')
-        pdf.ln(10)
-        pdf.set_text_color(255,255,255)
-        pdf.cell(w=30, h=7, txt="DATE", align="L", border=1, fill=True)
-        pdf.cell(w=130, h=7, txt="COMMENTS", align="C", border=1,fill=True)
-        pdf.cell(w=30, h=7, txt="VALIDATED BY:", align="L", border=1,ln=1, fill=True)
-        pdf.set_text_color(0,0,0)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1)
-        pdf.cell(w=130, h=7, txt="", align="C", border=1)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-
-        pdf.cell(w=30, h=7, txt="", align="L", border=1)
-        pdf.cell(w=130, h=7, txt="", align="C", border=1)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-
-        pdf.cell(w=30, h=7, txt="", align="L", border=1)
-        pdf.cell(w=130, h=7, txt="", align="C", border=1)
-        pdf.cell(w=30, h=7, txt="", align="L", border=1,ln=1)
-  
+   
 
 

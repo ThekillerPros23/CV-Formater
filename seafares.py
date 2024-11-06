@@ -58,7 +58,7 @@ class FirebaseDataSeafarers():
 
     def marine_vaccines(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data['seafarerData']['seafarerProfile']['profile'].get('vaccines') if doc_data else {}
+        return doc_data['seafarerData']['seafarerProfile'].get('vaccines') if doc_data else {}
 
     def marine_marital(self, id):
         doc_data = self.get_document_by_uid(id)
@@ -88,4 +88,5 @@ class FirebaseDataSeafarers():
 
     def marine_lang_span(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("SPANISH", {}).get("PercentageSpeak", "")
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("SPANISH", {}).get("PercentageSpeak", "") 
+    
