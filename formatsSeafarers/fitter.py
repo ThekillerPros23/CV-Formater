@@ -3,7 +3,7 @@ from skills import *
 import requests
 from io import BytesIO
 from PIL import Image
-
+from courses.fitter import *
 
 def descargar_imagen_firebase(url):
     response = requests.get(url)
@@ -596,8 +596,8 @@ class FitterSeafarers():
             x_inicial += anchuras_columnas[i]
 
         # Mover a la siguiente línea después de completar la fila de encabezados
-
-        courses = [
+        
+        """courses = [
         "Basic Safety Maritime Training Course (BST)",
         "Proficiency in Personal Survival Techniques 1.19",
         "Fire Prevention and Firefighting 1.20",
@@ -615,7 +615,10 @@ class FitterSeafarers():
         "Engine Rating Course / WER",
         "Able Engine Course",
 
-        ]
+        ]"""
+
+        course = FitterCourses()
+        courses = course.courses()
         # Agregar las celdas con los cursos
 
         pdf.set_font("calibri","",9)

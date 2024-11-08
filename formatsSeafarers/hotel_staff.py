@@ -20,11 +20,11 @@ class PDF(FPDF):
 
         # Revisión
         self.set_x(-60)
-        self.cell(0, 3.5, 'Revisión: 03', ln=True, align='R')
+        self.cell(0, 3.5, 'Revisión: 05', ln=True, align='R')
 
         # Fecha
         self.set_x(-60)
-        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
+        self.cell(0, 3, 'Fecha: 07 de noviembre de 2024', ln=True, align='R')
 
         # Número de página
         self.set_x(-30)
@@ -51,7 +51,10 @@ class HotelStaffSeafarers():
         pdf.add_page()
         pdf.alias_nb_pages()
         # Agregar contenido al PDF
-        pdf.set_xy(0, 20)  # Ajustar la posición para el título
+        pdf.set_font('calibri', 'B', 22)
+        pdf.multi_cell(0,10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION")
+        pdf.set_xy(0, 40)  # Ajustar la posición para el título
+        
         pdf.set_font('calibri', '', 22)
         pdf.cell(0, 10, 'SEAFARER APPLICATION FORM', align='C')
 

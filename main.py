@@ -1,5 +1,5 @@
 from fpdf import FPDF
-from flask import Flask, jsonify,Response, request
+from flask import Flask, jsonify,Response, request,make_response
 from datetime import datetime
 from applications import *
 import io
@@ -17,7 +17,7 @@ from formatsApplication.officer import *
 
 from formatsSeafarers.hotel_staff import *
 from formatsSeafarers.messman import * 
-from formatsSeafarers.ab_os import *
+from formatsSeafarers.ab import *
 from formatsSeafarers.bosun import *
 from formatsSeafarers.cook import *
 from formatsSeafarers.oiler import *
@@ -55,7 +55,7 @@ app = Flask(__name__)
 @app.route('/pdf_render/applications', methods=['GET','POST'])
 def pdf_render():
     pdf = PDF(orientation='P', unit='mm', format='A4')
-    pdf.add_font("NotoEmoji", "", "NotoColorEmoji-Regular.ttf", uni=True)
+    
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
     pdf.add_font('calibri', 'BU','calibri.ttf',uni=True)
@@ -109,7 +109,6 @@ def pdf_render():
 @app.route('/pdf_render/seafarers', methods=['GET','POST'])
 def pdf_render_seafarers():
     pdf = PDF(orientation='P', unit='mm', format='A4')
-    pdf.add_font("NotoEmoji", "", "NotoColorEmoji-Regular.ttf", uni=True)
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
     pdf.add_font('calibri', 'BU','calibri.ttf',uni=True)
@@ -118,7 +117,7 @@ def pdf_render_seafarers():
     formatId = request.args.get('formatId')
  
     if int(formatId) == 1:
-
+        #from 
         hotel = HotelStaffSeafarers()
         hotel.format_hotel(pdf, databaseSeafarers, uid) 
         
@@ -156,8 +155,7 @@ def pdf_render_seafarers():
     
     # Colocamos el cursor al inicio del buffer para que se pueda leer
     pdf_buffer.seek(0)
-
-    # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
+       # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
     return Response(pdf_buffer, mimetype='application/pdf', headers={
         'Content-Disposition': 'inline'  
     })
