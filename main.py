@@ -1,5 +1,5 @@
 from fpdf import FPDF
-from flask import Flask, jsonify,Response, request
+from flask import Flask, jsonify,Response, request,make_response
 from datetime import datetime
 from applications import *
 import io
@@ -117,7 +117,7 @@ def pdf_render_seafarers():
     formatId = request.args.get('formatId')
  
     if int(formatId) == 1:
-
+        #from 
         hotel = HotelStaffSeafarers()
         hotel.format_hotel(pdf, databaseSeafarers, uid) 
         
@@ -155,8 +155,7 @@ def pdf_render_seafarers():
     
     # Colocamos el cursor al inicio del buffer para que se pueda leer
     pdf_buffer.seek(0)
-
-    # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
+       # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
     return Response(pdf_buffer, mimetype='application/pdf', headers={
         'Content-Disposition': 'inline'  
     })
