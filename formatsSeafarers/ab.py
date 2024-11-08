@@ -203,35 +203,44 @@ class Ab_OsSeafarers():
         pdf.set_font('calibri', '', 9)
 
        # Save initial position
+       # Guardar la posición inicial
         x_inicial = pdf.get_x()
         y_inicial = pdf.get_y()
 
-        # First cell "COMPLETE HOME ADDRESS" with multi_cell
+        # Columna 1: "COMPLETE HOME ADDRESS" con fondo
         pdf.set_xy(x_inicial, y_inicial)
         pdf.multi_cell(w=40, h=7, txt="COMPLETE HOME ADDRESS", border=1, align="L", fill=True)
-        height_complete_home = pdf.get_y() - y_inicial  # Height used by this cell
+        height_complete_home = pdf.get_y() - y_inicial  # Altura usada por esta celda
 
-        # Second cell with home address data
+        # Columna 2: Dirección del hogar
         home = database.marine_home_address(uid) or ""
         pdf.set_xy(x_inicial + 40, y_inicial)
         pdf.multi_cell(w=50, h=7, txt=home, border=1, align="C")
-        height_barrio = pdf.get_y() - y_inicial  # Height used by this cell
+        height_barrio = pdf.get_y() - y_inicial  # Altura usada por esta celda
 
-        # Third cell "NEARLY AIRPORT" with fill=True
+        # Columna 3: "NEARLY AIRPORT" con fondo
         pdf.set_xy(x_inicial + 90, y_inicial)
         pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
-        height_airport = pdf.get_y() - y_inicial  # Height used by this cell
+        height_airport = pdf.get_y() - y_inicial  # Altura usada por esta celda
 
-        # Fourth cell with airport data
+        # Columna 4: Datos del aeropuerto
         airport = database.marine_airport(uid) or ""
         pdf.set_xy(x_inicial + 140, y_inicial)
         pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
-        height_empty = pdf.get_y() - y_inicial  # Height used by this cell
+        height_empty = pdf.get_y() - y_inicial  # Altura usada por esta celda
 
-        # Determine the maximum height among all cells
+        # Determinar la altura máxima entre las celdas
         max_height = max(height_complete_home, height_barrio, height_airport, height_empty)
 
-       
+        # Ajustar altura de la Columna 1 si es necesario
+        pdf.set_xy(x_inicial, y_inicial)
+        pdf.multi_cell(w=40, h=max_height, txt="COMPLETE HOME ADDRESS", border=1, align="L", fill=True)
+
+        # Ajustar altura de la Columna 3 si es necesario
+        pdf.set_xy(x_inicial + 90, y_inicial)
+        pdf.multi_cell(w=50, h=max_height, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
+
+        # Mover a la siguiente posición para continuar
         pdf.set_xy(x_inicial, y_inicial + max_height)
 
 
@@ -268,30 +277,50 @@ class Ab_OsSeafarers():
 
         pdf.ln(5)
         pdf.set_font('calibri','',9)
-        
-        pdf.cell(w=0, h=7, txt="MARLINS / LANGUAGE -TEST", border=1, align="C",ln=1 ,fill=True)
+        marlin = database.marine_marlins(uid) or []
 
+        # Verifica si `marlin` contiene al menos un elemento antes de intentar acceder al índice
+        if marlin:
+            marlins = marlin[0]  # Accede al primer elemento
+        else:
+            # Maneja el caso en que `marlin` esté vacío o no se hayan encontrado datos
+            marlins = {
+                'PercentageTotal': "",
+                'IssueDate': "",
+                'PlaceIssue': "",
+                'PercentageListening': "",
+                'PercentageGrammar': "",
+                'PercentageVocabulary': "",
+                'PercentageNumbers': "",
+                'PercentageReading': ""
+            }
+
+        # Continúa con la lógica de creación del PDF
+        pdf.cell(w=0, h=7, txt="MARLINS / LANGUAGE -TEST", border=1, align="C", ln=1, fill=True)
+
+        # Encabezados de columnas principales
         pdf.cell(w=60, h=7, txt="TOTAL %", border=1, align="C", fill=True)
         pdf.cell(w=60, h=7, txt="ISSUE DATE", border=1, align="C", fill=True)
-        pdf.cell(w=70, h=7, txt="PLACE OF ISSUE", border=1, align="C",ln=1, fill=True)
-        
-        pdf.cell(w=60, h=7, txt="", border=1, align="R")
-        pdf.cell(w=60, h=7, txt="", border=1, align="C")
-        pdf.cell(w=70, h=7, txt="", border=1, align="C",ln=1)
-        
+        pdf.cell(w=70, h=7, txt="PLACE OF ISSUE", border=1, align="C", ln=1, fill=True)
+
+        # Datos principales
+        pdf.cell(w=60, h=7, txt=str(marlins['PercentageTotal']) + "%", border=1, align="R")
+        pdf.cell(w=60, h=7, txt=marlins['IssueDate'], border=1, align="C")
+        pdf.cell(w=70, h=7, txt=marlins['PlaceIssue'], border=1, align="C", ln=1)
+
+        # Encabezados de secciones de habilidades
         pdf.cell(w=30, h=7, txt='LISTENING', border=1, align='L', fill=True)
         pdf.cell(w=40, h=7, txt='GRAMMAR', border=1, align='L', fill=True)
         pdf.cell(w=40, h=7, txt='VOCABULARY', border=1, align='L', fill=True)
         pdf.cell(w=40, h=7, txt='TIME AND NUMBERS', border=1, align='C', fill=True)
         pdf.cell(w=40, h=7, txt='READING', border=1, align='L', ln=1, fill=True)
-        
-        pdf.cell(w=30, h=7, txt='%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt='%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt='%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt='%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt='%', border=1, align='R')    
 
-
+        # Datos de habilidades individuales
+        pdf.cell(w=30, h=7, txt=str(marlins['PercentageListening']) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins['PercentageGrammar']) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins['PercentageVocabulary']) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins['PercentageNumbers']) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins['PercentageReading']) + '%', border=1, align='R')
         pdf.ln(10)
         pdf.set_font('calibri','',9)
         pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN", border=0, align='L')
