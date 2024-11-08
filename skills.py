@@ -1,7 +1,8 @@
 from fpdf import FPDF
+from skills import *
 class Skills():
-    def ab_os(self,pdf):
-      
+    def ab_os(self,pdf,database, uid):
+        skill = database.marine_skills(uid)
         pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L', ln=1)
 
         pdf.cell(w=130,h=6,txt="SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS", border=1, align='L')

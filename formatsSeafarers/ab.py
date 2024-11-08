@@ -838,7 +838,7 @@ class Ab_OsSeafarers():
         pdf.ln(5)
         
         skills = Skills()
-        skills.ab_os(pdf)
+        skills.ab_os(pdf, database,uid)
         #skills.messman(pdf)
         pdf.ln(10)
    

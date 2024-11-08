@@ -110,4 +110,5 @@ class FirebaseDataSeafarers():
 
 
     def marine_skills(self,id):
-        pass
+        doc_data = self.get_document_by_uid(id)
+        return doc_data.get("seafarerData", {}).get("skills", {}).get("skill", {})
