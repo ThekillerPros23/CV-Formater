@@ -77,19 +77,20 @@ class Ab_OsSeafarers():
         pdf.alias_nb_pages()
         # Agregar contenido al PDF
         
-        pdf.set_font('calibri', 'B', 20)
-        
-        pdf.multi_cell(0,10, "LOGISTIC INTERNATIONAL SERVICES \n  CORPORATION",align='C')
+        pdf.set_font('calibri', 'B', 26)
+        pdf.set_xy(0, 10)  # Ajustar la posición inicial del título principal
+        pdf.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n  CORPORATION", align='C')
 
-        pdf.set_xy(0, 30)  # Ajustar la posición para el título
-        pdf.set_font('calibri', '', 20)
+        # Título del formulario
+        pdf.set_xy(0, 30)
+        pdf.set_font('calibri', '', 22)
         pdf.cell(0, 10, 'SEAFARER APPLICATION FORM', align='C')
 
-        pdf.set_xy(80, 40)  # Ajustar la posición para el siguiente texto
-        pdf.set_font('calibri', '', 16)
-        pdf.cell(30, 10, 'POSITION APPLYING FOR RANK: ' )
-        pdf.set_font('calibri', 'BU', 16)
-        pdf.set_xy(140, 40)
+        pdf.set_xy(70, 40)  # Ajustar la posición para el siguiente texto
+        pdf.set_font('calibri', '', 14)
+        pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
+        pdf.set_font('calibri', 'BU', 14)
+        pdf.set_xy(135, 40)
         pdf.cell(6,10, 'AB')
 
         image = database.marine_image_seafarers(uid)
@@ -99,10 +100,9 @@ class Ab_OsSeafarers():
         pdf.set_xy(30, 50)
         pdf.image("imagen_descargada.png", x=20, y=50, w=50, h=50)
 
-        pdf.set_xy(0, 5)
-        pdf.set_font('calibri', '', 9)
+        pdf.set_xy(20, 50)
+        pdf.set_font('calibri', '', 12)
         pdf.cell(55, 10, '1. PERSONAL INFORMATION')
-
 
         pdf.set_font('calibri', '', 9) 
         pdf.set_xy(80, 50)
@@ -154,10 +154,16 @@ class Ab_OsSeafarers():
         # Número de identificación
         pdf.set_xy(80, 77)
         pdf.multi_cell(w=40, h=14, txt='IDENTIFICATION NUMBER', border=1, align='L', fill=True)
-        identification_number = database.marine_identification(uid) or ""
+        identification_data = database.marine_identification(uid) or []
+
+        # Encuentra el documentNumber de "Identification (ID, NID, etc.)" directamente
+        identification_number = next(
+            (doc['data']['documentNumber'] for doc in identification_data
+            if doc.get('data', {}).get('documentName', {}).get('name') == "Identification (ID, NID, etc.)"),
+            ""
+        )
         pdf.set_xy(120, 77)
         pdf.cell(w=80, h=14, txt=identification_number, border=1, align='C', ln=1)
-
         # Nacionalidad
         nationality = database.marine_nationality(uid)
         pdf.set_xy(80, 91)
