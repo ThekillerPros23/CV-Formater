@@ -257,11 +257,10 @@ class Ab_OsSeafarers():
         pdf.set_font('calibri','',9)
         marlin = database.marine_marlins(uid) or []
 
-        # Verifica si `marlin` contiene al menos un elemento antes de intentar acceder al índice
-        if marlin:
-            marlins = marlin[0]  # Accede al primer elemento
+        if isinstance(marlin, list) and marlin:
+            marlins = marlin[0]  # Accede al primer elemento si la lista no está vacía
         else:
-            # Maneja el caso en que `marlin` esté vacío o no se hayan encontrado datos
+            # Si `marlin` está vacío o no es una lista, usa un diccionario vacío con campos predeterminados
             marlins = {
                 'PercentageTotal': "",
                 'IssueDate': "",
