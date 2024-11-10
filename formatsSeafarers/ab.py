@@ -178,44 +178,48 @@ class Ab_OsSeafarers():
 
        # Save initial position
        # Guardar la posición inicial
+      # Posición inicial
         x_inicial = pdf.get_x()
         y_inicial = pdf.get_y()
 
-        # Columna 1: "COMPLETE HOME ADDRESS" con fondo
+        # Calcular alturas sin dibujar aún, para determinar la altura máxima
         pdf.set_xy(x_inicial, y_inicial)
-        pdf.multi_cell(w=40, h=7, txt="COMPLETE HOME ADDRESS", border=1, align="L", fill=True)
-        height_complete_home = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=40, h=7, txt="COMPLETE HOME ADDRESS", border=0)  # Sin border para solo medir altura
+        height_complete_home = pdf.get_y() - y_inicial
 
-        # Columna 2: Dirección del hogar
         home = database.marine_home_address(uid) or ""
         pdf.set_xy(x_inicial + 40, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt=home, border=1, align="C")
-        height_barrio = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=50, h=7, txt=home, border=0)
+        height_home_address = pdf.get_y() - y_inicial
 
-        # Columna 3: "NEARLY AIRPORT" con fondo
         pdf.set_xy(x_inicial + 90, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
-        height_airport = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=0)
+        height_nearly_airport = pdf.get_y() - y_inicial
 
-        # Columna 4: Datos del aeropuerto
         airport = database.marine_airport(uid) or ""
         pdf.set_xy(x_inicial + 140, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
-        height_empty = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=50, h=7, txt=airport, border=0)
+        height_airport = pdf.get_y() - y_inicial
 
-        # Determinar la altura máxima entre las celdas
-        max_height = max(height_complete_home, height_barrio, height_airport, height_empty)
+        # Obtener la altura máxima para todas las celdas
+        max_height = max(height_complete_home, height_home_address, height_nearly_airport, height_airport)
 
-        # Ajustar altura de la Columna 1 si es necesario
+        # Dibujar cada celda de la fila con la altura máxima calculada
         pdf.set_xy(x_inicial, y_inicial)
         pdf.multi_cell(w=40, h=max_height, txt="COMPLETE HOME ADDRESS", border=1, align="L", fill=True)
 
-        # Ajustar altura de la Columna 3 si es necesario
+        pdf.set_xy(x_inicial + 40, y_inicial)
+        pdf.multi_cell(w=50, h=max_height, txt="", border=1, align="C")
+
         pdf.set_xy(x_inicial + 90, y_inicial)
         pdf.multi_cell(w=50, h=max_height, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
 
-        # Mover a la siguiente posición para continuar
+        pdf.set_xy(x_inicial + 140, y_inicial)
+        pdf.multi_cell(w=50, h=max_height, txt="", border=1, align="C")
+
+        # Mover el cursor a la siguiente posición para continuar el flujo
         pdf.set_xy(x_inicial, y_inicial + max_height)
+
 
 
         # Segunda fila con "PHONE/CELL" y demás datos
@@ -299,52 +303,63 @@ class Ab_OsSeafarers():
         pdf.set_font('calibri','',9)
         pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN", border=0, align='L')
         pdf.ln(10)
-        
-        pdf.cell(w=0,h=7,txt="EMERGENCY CONTACT / NEXT OF KIN", border=1, align='C',ln=1,fill=True)
-        pdf.cell(w=40,h=7,txt="RELATIONSHIP", border=1, align='C', fill=True)
-        pdf.cell(w=50,h=7,txt="COMPLETE NAME", border=1, align='C',fill=True)
-        pdf.cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C', fill=True)
-        pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1, fill=True)
-        
+ 
         datos = database.marine_contact(uid,)
+        # Dibujar cada fila de datos
+        cell_height = 7  # Altura base para cada línea de texto
 
-        #anchuras = [30, 50, 30, 80]  # Ajusta los valores de anchura según sea necesario
+        # Anchos específicos para cada columna
+        anchuras = [40, 50, 60, 40]
 
-# Dibujar la tabla con las celdas alineadas correctamente
+        # Dibujar encabezado
+        pdf.cell(w=anchuras[0], h=cell_height, txt="RELATIONSHIP", border=1, align='C', fill=True)
+        pdf.cell(w=anchuras[1], h=cell_height, txt="COMPLETE NAME", border=1, align='C', fill=True)
+        pdf.cell(w=anchuras[2], h=cell_height, txt="TELEPHONE NUMBER / MOBILE", border=1, align='C', fill=True)
+        pdf.cell(w=anchuras[3], h=cell_height, txt="ADDRESS", border=1, align='C', ln=1, fill=True)
+
+        # Dibujar cada fila de datos
         for fila in datos:
-            # Usamos .get para cada campo y manejamos cuando el valor sea None o no esté definido.
+            # Obtener valores de cada campo
             nombre_completo = f"{fila.get('firstNames', '')} {fila.get('lastNames', '')}"
-            telefono = fila.get('phone', {}).get('value', '')  # Si 'phone' o 'value' no existen, será vacío.
-            direccion = fila.get('address', '')  # Si 'address' no existe, será vacío.
+            telefono = fila.get('phone', {}).get('value', '')
+            direccion = fila.get('address', '')
+            relacion = fila.get('relationship', '')
 
-            # Calcula la altura de cada celda
-            alturas = [
-                pdf.get_string_width(fila.get('relationship', '')) / anchuras[0] * 8,
-                pdf.get_string_width(nombre_completo) / anchuras[1] * 8,
-                pdf.get_string_width(telefono) / anchuras[2] * 8,
-                pdf.get_string_width(direccion) / anchuras[3] * 8
-            ]
-            # La altura máxima de la fila
-            max_altura = max(alturas)
+            # Calcular el número de líneas necesarias en cada celda
+            relacion_lineas = pdf.multi_cell(anchuras[0], cell_height, relacion, border=0, align='L', split_only=True)
+            nombre_lineas = pdf.multi_cell(anchuras[1], cell_height, nombre_completo, border=0, align='L', split_only=True)
+            telefono_lineas = pdf.multi_cell(anchuras[2], cell_height, telefono, border=0, align='L', split_only=True)
+            direccion_lineas = pdf.multi_cell(anchuras[3], cell_height, direccion, border=0, align='L', split_only=True)
 
-            # Primera celda: relationship
-            pdf.cell(w=anchuras[0], h=16, txt=fila.get('relationship', ''), border=1, align='C')
+            # Determinar la altura de la fila según la máxima cantidad de líneas en cualquier celda
+            max_lineas = max(len(relacion_lineas), len(nombre_lineas), len(telefono_lineas), len(direccion_lineas))
+            altura_fila = cell_height * max_lineas
 
-            # Segunda celda: nombre_completo
-            pdf.cell(w=anchuras[1], h=16, txt=nombre_completo, border=1, align='C')
+            # Añadir una nueva página si la altura sobrepasa el límite
+            if pdf.get_y() + altura_fila > pdf.page_break_trigger:
+                pdf.add_page()
 
-            # Tercera celda: telefono
-            pdf.cell(w=anchuras[2], h=16, txt=telefono, border=1, align='C')
+            # Guardar posición inicial Y
+            y_inicial = pdf.get_y()
+            x_inicial = pdf.get_x()  # Posición X para la primera columna
 
-            # Cuarta celda: dirección con multi_cell
-            x, y = pdf.get_x(), pdf.get_y()
-            pdf.multi_cell(w=anchuras[3], h=8, txt=direccion, border=1, align='C')
+            # Dibujar cada celda de la fila con el ancho y altura ajustada
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.cell(anchuras[0], altura_fila, relacion, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0], y_inicial)
+
+            pdf.cell(anchuras[1], altura_fila, nombre_completo, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1], y_inicial)
+
+            pdf.cell(anchuras[2], altura_fila, telefono, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2], y_inicial)
+
+            # Celda para la dirección con multi_cell para permitir el salto de línea automático
+            pdf.multi_cell(anchuras[3], cell_height, direccion, border=1, align='C')
+
+            # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
+            pdf.set_y(y_inicial + altura_fila)
             
-            # Restaurar la posición x para mantener la alineación y mover hacia la siguiente fila
-            pdf.set_xy(x + anchuras[3], y)
-            pdf.ln(max_altura)
-        # Agregar el título "3.WORK EXPERIENCE ONBOARD"
-
         pdf.ln(10)
 
         pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L",)
