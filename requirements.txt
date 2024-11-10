@@ -3,3 +3,5 @@ fpdf
 nodemon
 flask
 firebase-admin
+pillow
+requests
