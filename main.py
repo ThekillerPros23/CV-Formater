@@ -30,6 +30,182 @@ from seafares import *
 databaseApplication = FirebaseDataApplication()
 databaseSeafarers = FirebaseDataSeafarers()
 
+class HotelStaffPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 24)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION - HOTEL STAFF", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-C', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 01', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 5 de octubre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+
+class AbPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 26)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION ", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-C', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 02', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 7 de noviembre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+
+class CookPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 26)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION ", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-B', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 02', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+
+class BosunPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 26)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION ", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-B', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 02', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+class OilerPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 26)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION ", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-B', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 02', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+
+class MessmanPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 26)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION ", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-B', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 02', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+
+class FitterPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 26)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION ", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-B', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 02', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+
+class OfficerPDF(FPDF):
+    def header(self):
+        self.set_font('calibri', 'B', 26)
+        self.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n CORPORATION ", align='C')
+        if self.page_no() == 1:
+            self.image("LOGISTIC-SinFondo.png", 173, 8, 32)
+        else:
+            self.image("LOGISTIC-SinFondo.png", 0, 11, 35)
+
+    def footer(self):
+        self.set_text_color(0, 0, 0)
+        self.set_y(-20)
+        self.set_font('calibri', 'I', 9)
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Código: F-PMSSA-01-B', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3.5, 'Revisión: 02', ln=True, align='R')
+        self.set_x(-60)
+        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
+        self.set_x(-30)
+        self.cell(0, 3, f'Página {self.page_no()} de {{nb}}', ln=True, align='R')
+
+
 def dividir_texto(texto, pdf, ancho_celda):
     # Dividir el texto en palabras
     palabras = texto.split(' ')
@@ -108,14 +284,32 @@ def pdf_render():
     
 @app.route('/pdf_render/seafarers', methods=['GET','POST'])
 def pdf_render_seafarers():
-    pdf = PDF(orientation='P', unit='mm', format='A4')
+    uid = request.args.get('id')
+    formatId = request.args.get('formatId')
+ 
+    if int(formatId) == 1:
+        pdf = HotelStaffPDF(orientation='P', unit='mm', format='A4')
+
+    elif int(formatId) == 2:
+        pdf = AbPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 3:
+        pdf = CookPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 4:
+        pdf = BosunPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 5:
+            pdf = OilerPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 6:
+            pdf = MessmanPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 7:
+            pdf = FitterPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 8:
+            pdf = OfficerPDF(orientation='P', unit='mm', format='A4')
+
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
     pdf.add_font('calibri', 'BU','calibri.ttf',uni=True)
     pdf.add_font('calibri', 'B','calibrib.ttf',uni=True)
-    uid = request.args.get('id')
-    formatId = request.args.get('formatId')
- 
+
     if int(formatId) == 1:
         #from 
         hotel = HotelStaffSeafarers()
@@ -128,10 +322,10 @@ def pdf_render_seafarers():
       
     elif int(formatId) == 3:
         cook = CookSeafarers()
-        cook.format_cook()
+        cook.format_cook(pdf,databaseSeafarers,uid)
     elif int(formatId) == 4:
         bosun = BosunSeafarers()
-        bosun.format_bosun()
+        bosun.format_bosun(pdf,databaseSeafarers,uid)
     elif int(formatId) == 5:
         oiler = OilerSeafarers()
         oiler.format_oiler(pdf,databaseSeafarers, uid)

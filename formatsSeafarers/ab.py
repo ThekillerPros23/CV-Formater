@@ -5,33 +5,6 @@ from io import BytesIO
 from PIL import Image
 from courses.ab import *
 from datetime import datetime
-class PDF(FPDF):
-    def header(self):
-        # Solo agregar el encabezado en la primera página
-        if self.page_no() == 1:  
-            self.image("LOGISTIC-SinFondo.png", 200, 8, 60)  # Alineado a la derecha
-    def footer(self):
-        self.set_text_color(0,0,0)
-        self.set_y(-20)
-        self.set_font('calibri', 'I', 9)
-
-        # Código
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Código: F-PMSSA-01-C', ln=True, align='R')
-
-        # Revisión
-        self.set_x(-60)
-        self.cell(0, 3.5, 'Revisión: 00', ln=True, align='R')
-
-        # Fecha
-        self.set_x(-60)
-        self.cell(0, 3, 'Fecha: 7 de octubre de 2024', ln=True, align='R')
-
-        # Número de página
-        self.set_x(-30)
-        page_text = f'Página {self.page_no()} de {{nb}}'
-        self.cell(0, 3, page_text, ln=True, align='R')
-
 
 def descargar_imagen_firebase(url):
     response = requests.get(url)
@@ -74,13 +47,11 @@ class Ab_OsSeafarers():
         pdf.set_fill_color(142,170,219)
         anchuras = [40, 50, 60, 40]
         pdf.add_page()
+
         pdf.alias_nb_pages()
         # Agregar contenido al PDF
         
-        pdf.set_font('calibri', 'B', 26)
-        pdf.set_xy(0, 10)  # Ajustar la posición inicial del título principal
-        pdf.multi_cell(0, 10, "LOGISTIC INTERNATIONAL SERVICES \n  CORPORATION", align='C')
-
+       
         # Título del formulario
         pdf.set_xy(0, 30)
         pdf.set_font('calibri', '', 22)
@@ -97,15 +68,15 @@ class Ab_OsSeafarers():
         imagen = descargar_imagen_firebase(image)
         guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
        # Agregar imagen al PDF con tamaño ajustado
-        pdf.set_xy(30, 50)
-        pdf.image("imagen_descargada.png", x=20, y=50, w=50, h=50)
+        pdf.set_xy(30, 60)
+        pdf.image("imagen_descargada.png", x=20, y=60, w=50, h=50)
 
         pdf.set_xy(20, 50)
         pdf.set_font('calibri', '', 12)
         pdf.cell(55, 10, '1. PERSONAL INFORMATION')
 
         pdf.set_font('calibri', '', 9) 
-        pdf.set_xy(80, 50)
+        pdf.set_xy(80, 55)
 
         # Definir anchos para alineación
         cell_width = 50
@@ -138,32 +109,42 @@ class Ab_OsSeafarers():
         pdf.set_font('calibri', '', 9)
 
         # Dibujar la celda de "SURNAMES" con primer y segundo apellido
-        pdf.set_xy(80, 57)  # Ajustar la posición para los apellidos
+        pdf.set_xy(80, 62)  # Ajustar la posición para los apellidos
         pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L', fill=True)  # Etiqueta de "SURNAMES"
         pdf.cell(w=40, h=height, txt=primer_apellido, border=1, align='C')  # Primer apellido
         pdf.cell(w=40, h=height, txt=segundo_apellido, border=1, align='C', ln=1)  # Segundo apellido (si existe)
         pdf.set_font('calibri', '', 9)
 
         # Fecha de nacimiento
-        pdf.set_xy(80, 64)
+        pdf.set_xy(80, 69)
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='L', fill=True)
         date = database.marine_dateOfBirthSeafarers(uid) or ""
-        pdf.set_xy(120, 64)
+        pdf.set_xy(120, 69)
         pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
 
         # Número de identificación
-        pdf.set_xy(80, 77)
+        pdf.set_xy(80, 82)
         pdf.multi_cell(w=40, h=14, txt='IDENTIFICATION NUMBER', border=1, align='L', fill=True)
         identification_data = database.marine_identification(uid) or []
 
-        # Encuentra el documentNumber de "Identification (ID, NID, etc.)" directamente
+        # Busca primero "Identification (ID, NID, etc.)", si no existe, busca "Passport"
         identification_number = next(
             (doc['data']['documentNumber'] for doc in identification_data
             if doc.get('data', {}).get('documentName', {}).get('name') == "Identification (ID, NID, etc.)"),
-            ""
+            None
         )
-        pdf.set_xy(120, 77)
-        pdf.cell(w=80, h=14, txt=identification_number, border=1, align='C', ln=1)
+
+        # Si no se encontró identificación, intenta con "Passport"
+        if identification_number is None:
+            identification_number = next(
+                (doc['data']['documentNumber'] for doc in identification_data
+                if doc.get('data', {}).get('documentName', {}).get('name') == "Passport"),
+                ""
+            )
+
+        print(identification_number)
+        pdf.set_xy(120, 82)
+        pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
         # Nacionalidad
         nationality = database.marine_nationality(uid)
         pdf.set_xy(80, 91)
@@ -364,7 +345,7 @@ class Ab_OsSeafarers():
             pdf.ln(max_altura)
         # Agregar el título "3.WORK EXPERIENCE ONBOARD"
 
-        pdf.ln(5)
+        pdf.ln(10)
 
         pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L",)
         pdf.ln(10)

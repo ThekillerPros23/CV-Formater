@@ -1,6 +1,6 @@
-pandas 
+
 fpdf
-nodemon
+
 flask
 firebase-admin
 pillow
