@@ -1,13 +1,10 @@
 from fpdf import FPDF
 from skills import *
-from fpdf import FPDF
-from skills import *
 import requests
 from io import BytesIO
 from PIL import Image
-from courses.cook import *
+from courses.ab import *
 from datetime import datetime
-
 
 def descargar_imagen_firebase(url):
     response = requests.get(url)
@@ -45,9 +42,11 @@ def dividir_texto(texto, pdf, ancho_celda):
 
 class CookSeafarers():
     def format_cook(self, pdf, database, uid):
+        
         pdf.set_fill_color(142,170,219)
         anchuras = [40, 50, 60, 40]
         pdf.add_page()
+
         pdf.alias_nb_pages()
         # Agregar contenido al PDF
         
@@ -62,7 +61,7 @@ class CookSeafarers():
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
         pdf.set_xy(135, 40)
-        pdf.cell(6,10, 'COOK')
+        pdf.cell(6,10, 'AB')
 
         image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)
@@ -142,7 +141,6 @@ class CookSeafarers():
                 ""
             )
 
-        print(identification_number)
         pdf.set_xy(120, 82)
         pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
         # Nacionalidad
@@ -178,44 +176,48 @@ class CookSeafarers():
 
        # Save initial position
        # Guardar la posición inicial
+      # Posición inicial
         x_inicial = pdf.get_x()
         y_inicial = pdf.get_y()
 
-        # Columna 1: "COMPLETE HOME ADDRESS" con fondo
+        # Calcular alturas sin dibujar aún, para determinar la altura máxima
         pdf.set_xy(x_inicial, y_inicial)
-        pdf.multi_cell(w=40, h=7, txt="COMPLETE HOME ADDRESS", border=1, align="L", fill=True)
-        height_complete_home = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=40, h=7, txt="COMPLETE HOME ADDRESS", border=0)  # Sin border para solo medir altura
+        height_complete_home = pdf.get_y() - y_inicial
 
-        # Columna 2: Dirección del hogar
         home = database.marine_home_address(uid) or ""
         pdf.set_xy(x_inicial + 40, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt=home, border=1, align="C")
-        height_barrio = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=50, h=7, txt=home, border=0)
+        height_home_address = pdf.get_y() - y_inicial
 
-        # Columna 3: "NEARLY AIRPORT" con fondo
         pdf.set_xy(x_inicial + 90, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
-        height_airport = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=0)
+        height_nearly_airport = pdf.get_y() - y_inicial
 
-        # Columna 4: Datos del aeropuerto
         airport = database.marine_airport(uid) or ""
         pdf.set_xy(x_inicial + 140, y_inicial)
-        pdf.multi_cell(w=50, h=7, txt=airport, border=1, align="C")
-        height_empty = pdf.get_y() - y_inicial  # Altura usada por esta celda
+        pdf.multi_cell(w=50, h=7, txt=airport, border=0)
+        height_airport = pdf.get_y() - y_inicial
 
-        # Determinar la altura máxima entre las celdas
-        max_height = max(height_complete_home, height_barrio, height_airport, height_empty)
+        # Obtener la altura máxima para todas las celdas
+        max_height = max(height_complete_home, height_home_address, height_nearly_airport, height_airport)
 
-        # Ajustar altura de la Columna 1 si es necesario
+        # Dibujar cada celda de la fila con la altura máxima calculada
         pdf.set_xy(x_inicial, y_inicial)
         pdf.multi_cell(w=40, h=max_height, txt="COMPLETE HOME ADDRESS", border=1, align="L", fill=True)
 
-        # Ajustar altura de la Columna 3 si es necesario
+        pdf.set_xy(x_inicial + 40, y_inicial)
+        pdf.multi_cell(w=50, h=max_height, txt="", border=1, align="C")
+
         pdf.set_xy(x_inicial + 90, y_inicial)
         pdf.multi_cell(w=50, h=max_height, txt="NEARLY AIRPORT", border=1, align="L", fill=True)
 
-        # Mover a la siguiente posición para continuar
+        pdf.set_xy(x_inicial + 140, y_inicial)
+        pdf.multi_cell(w=50, h=max_height, txt="", border=1, align="C")
+
+        # Mover el cursor a la siguiente posición para continuar el flujo
         pdf.set_xy(x_inicial, y_inicial + max_height)
+
 
 
         # Segunda fila con "PHONE/CELL" y demás datos
@@ -253,11 +255,10 @@ class CookSeafarers():
         pdf.set_font('calibri','',9)
         marlin = database.marine_marlins(uid) or []
 
-        # Verifica si `marlin` contiene al menos un elemento antes de intentar acceder al índice
-        if marlin:
-            marlins = marlin[0]  # Accede al primer elemento
+        if isinstance(marlin, list) and marlin:
+            marlins = marlin[0]  # Accede al primer elemento si la lista no está vacía
         else:
-            # Maneja el caso en que `marlin` esté vacío o no se hayan encontrado datos
+            # Si `marlin` está vacío o no es una lista, usa un diccionario vacío con campos predeterminados
             marlins = {
                 'PercentageTotal': "",
                 'IssueDate': "",
@@ -299,140 +300,125 @@ class CookSeafarers():
         pdf.set_font('calibri','',9)
         pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN", border=0, align='L')
         pdf.ln(10)
-        
-        pdf.cell(w=0,h=7,txt="EMERGENCY CONTACT / NEXT OF KIN", border=1, align='C',ln=1,fill=True)
-        pdf.cell(w=40,h=7,txt="RELATIONSHIP", border=1, align='C', fill=True)
-        pdf.cell(w=50,h=7,txt="COMPLETE NAME", border=1, align='C',fill=True)
-        pdf.cell(w=60,h=7,txt="TELEPHONE NUMBER / MOBILE", border=1, align='C', fill=True)
-        pdf.cell(w=40, h=7, txt="ADDRESS", border=1, align='C', ln=1, fill=True)
-        
+ 
         datos = database.marine_contact(uid,)
+        # Dibujar cada fila de datos
+        cell_height = 7  # Altura base para cada línea de texto
 
-        #anchuras = [30, 50, 30, 80]  # Ajusta los valores de anchura según sea necesario
+        # Anchos específicos para cada columna
+        anchuras = [40, 50, 60, 40]
 
-# Dibujar la tabla con las celdas alineadas correctamente
+        # Dibujar encabezado
+        pdf.cell(w=anchuras[0], h=cell_height, txt="RELATIONSHIP", border=1, align='C', fill=True)
+        pdf.cell(w=anchuras[1], h=cell_height, txt="COMPLETE NAME", border=1, align='C', fill=True)
+        pdf.cell(w=anchuras[2], h=cell_height, txt="TELEPHONE NUMBER / MOBILE", border=1, align='C', fill=True)
+        pdf.cell(w=anchuras[3], h=cell_height, txt="ADDRESS", border=1, align='C', ln=1, fill=True)
+
+        # Dibujar cada fila de datos
         for fila in datos:
-            # Usamos .get para cada campo y manejamos cuando el valor sea None o no esté definido.
+            # Obtener valores de cada campo
             nombre_completo = f"{fila.get('firstNames', '')} {fila.get('lastNames', '')}"
-            telefono = fila.get('phone', {}).get('value', '')  # Si 'phone' o 'value' no existen, será vacío.
-            direccion = fila.get('address', '')  # Si 'address' no existe, será vacío.
+            telefono = fila.get('phone', {}).get('value', '')
+            direccion = fila.get('address', '')
+            relacion = fila.get('relationship', '')
 
-            # Calcula la altura de cada celda
-            alturas = [
-                pdf.get_string_width(fila.get('relationship', '')) / anchuras[0] * 8,
-                pdf.get_string_width(nombre_completo) / anchuras[1] * 8,
-                pdf.get_string_width(telefono) / anchuras[2] * 8,
-                pdf.get_string_width(direccion) / anchuras[3] * 8
-            ]
-            # La altura máxima de la fila
-            max_altura = max(alturas)
+            # Calcular el número de líneas necesarias en cada celda
+            relacion_lineas = pdf.multi_cell(anchuras[0], cell_height, relacion, border=0, align='L', split_only=True)
+            nombre_lineas = pdf.multi_cell(anchuras[1], cell_height, nombre_completo, border=0, align='L', split_only=True)
+            telefono_lineas = pdf.multi_cell(anchuras[2], cell_height, telefono, border=0, align='L', split_only=True)
+            direccion_lineas = pdf.multi_cell(anchuras[3], cell_height, direccion, border=0, align='L', split_only=True)
 
-            # Primera celda: relationship
-            pdf.cell(w=anchuras[0], h=16, txt=fila.get('relationship', ''), border=1, align='C')
+            # Determinar la altura de la fila según la máxima cantidad de líneas en cualquier celda
+            max_lineas = max(len(relacion_lineas), len(nombre_lineas), len(telefono_lineas), len(direccion_lineas))
+            altura_fila = cell_height * max_lineas
 
-            # Segunda celda: nombre_completo
-            pdf.cell(w=anchuras[1], h=16, txt=nombre_completo, border=1, align='C')
-
-            # Tercera celda: telefono
-            pdf.cell(w=anchuras[2], h=16, txt=telefono, border=1, align='C')
-
-            # Cuarta celda: dirección con multi_cell
-            x, y = pdf.get_x(), pdf.get_y()
-            pdf.multi_cell(w=anchuras[3], h=8, txt=direccion, border=1, align='C')
-            
-            # Restaurar la posición x para mantener la alineación y mover hacia la siguiente fila
-            pdf.set_xy(x + anchuras[3], y)
-            pdf.ln(max_altura)
-        # Agregar el título "3.WORK EXPERIENCE ONBOARD"
-
-        pdf.ln(10)
-
-        pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L",)
-        pdf.ln(10)
-
-        
-        anchuras_columnas = [25, 25, 32, 20, 18, 18, 23, 25]  
-        altura_fila = [7,7,14,7,14,14,14,14]
-
-        titulos_columnas = [
-        'DATE ON  (MM/DD/YYYY)',
-        'DATE OFF (MM/DD/YYYY)',
-        'COMPANY NAME',
-        'VESSEL NAME',
-        'IMO #',
-        'GT / HP',
-        'TYPE OF VESSEL',
-        'RANK/POSITION'
-        ]
-        x_inicial = pdf.get_x()
-        y_inicial = pdf.get_y()
-        align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
-        pdf.set_xy(x_inicial, y_inicial)
-        pdf.set_font('calibri','', 9)
-        for i in range(len(titulos_columnas)):
-            pdf.set_xy(x_inicial, y_inicial)
-            
-            # Si estás usando una lista para la altura de fila, usa el índice i para acceder a cada altura
-            if isinstance(altura_fila, list):
-                altura_actual = altura_fila[i]
-            else:
-                altura_actual = altura_fila
-
-            # Dividir el texto del título si es necesario
-            lines = pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=0, align=align_type[i], split_only=True, fill=True)
-            num_lines = len(lines)
-
-            # Ajustar la altura de la celda según el número de líneas
-            adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
-            
-            # Verificar si se necesita un salto de página
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+            # Añadir una nueva página si la altura sobrepasa el límite
+            if pdf.get_y() + altura_fila > pdf.page_break_trigger:
                 pdf.add_page()
-                pdf.set_xy(x_inicial, y_inicial)
 
-            # Imprimir la celda del título
-            pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=1, align=align_type[i], fill=True)
+            # Guardar posición inicial Y
+            y_inicial = pdf.get_y()
+            x_inicial = pdf.get_x()  # Posición X para la primera columna
 
-            # Actualizar la posición x para la siguiente celda
-            x_inicial += anchuras_columnas[i]
-        
-       # Retrieve and sort data by 'dateOn' in descending order
+            # Dibujar cada celda de la fila con el ancho y altura ajustada
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.cell(anchuras[0], altura_fila, relacion, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0], y_inicial)
+
+            pdf.cell(anchuras[1], altura_fila, nombre_completo, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1], y_inicial)
+
+            pdf.cell(anchuras[2], altura_fila, telefono, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2], y_inicial)
+
+            # Celda para la dirección con multi_cell para permitir el salto de línea automático
+            pdf.multi_cell(anchuras[3], cell_height, direccion, border=1, align='C')
+
+            # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
+            pdf.set_y(y_inicial + altura_fila)
+            
+        pdf.ln(20)
+
+       # Encabezado
+        pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L")
+        pdf.ln(10)
+
+        # Configuración de columnas
+        anchuras_columnas = [25, 25, 32, 20, 18, 18, 23, 25]  
+        titulos_columnas = [
+            'DATE ON  (MM/DD/YYYY)',
+            'DATE OFF (MM/DD/YYYY)',
+            'COMPANY NAME',
+            'VESSEL NAME',
+            'IMO #',
+            'GT / HP',
+            'TYPE OF VESSEL',
+            'RANK/POSITION'
+        ]
+        align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
+        pdf.set_font('calibri', '', 9)
+
+        # Dibujar los encabezados
+        for i, titulo in enumerate(titulos_columnas):
+            pdf.cell(w=anchuras_columnas[i], h=7, txt=titulo, border=1, align=align_type[i], fill=True)
+        pdf.ln(7)
+
+        # Cargar datos y ordenarlos
         onboard = sorted(database.marine_onboard(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
 
-        nuevaaltura_fila = 7  # Uniform row height
-
+        # Generar filas con datos
         for fila in onboard:
-            # Extract vessel type or default to an empty string if not available
-            tipo_vessel = fila.get('typeOfVessel', [{}])[0].get('name', '') if fila.get('typeOfVessel') else ''
-
-            # List of column data in the correct order
             columnas = [
-                fila.get('dateOn', ''),               # Start date
-                fila.get('dateOff', ''),              # End date
-                fila.get('companyName', ''),          # Company name
-                fila.get('vesselName', ''),           # Vessel name
-                fila.get('imo#', ''),                 # IMO number
-                fila.get('gt/hp', ''),                # GT/HP
-                tipo_vessel,                          # Vessel type
-                fila.get('rank/position', '')         # Rank/position
+                fila.get('dateOn', ''),
+                fila.get('dateOff', ''),
+                fila.get('companyName', ''),
+                fila.get('vesselName', ''),
+                fila.get('imo#', ''),
+                fila.get('gt/hp', ''),
+                fila.get('typeOfVessel', [{}])[0].get('name', '') if fila.get('typeOfVessel') else '',
+                fila.get('rank/position', '')
             ]
+            
+            max_height = 7
+            y_inicial = pdf.get_y()
+            
+            # Revisar si necesita salto de página antes de imprimir
+            if y_inicial + max_height > pdf.page_break_trigger:
+                pdf.add_page()
 
-            x_inicial = pdf.get_x()  # Initial X position before printing the row
-            max_height = nuevaaltura_fila  # Default row height
-
-            # Draw each cell in the row
+            # Dibujar cada celda en una sola línea
             for i, valor in enumerate(columnas):
-                pdf.cell(w=anchuras_columnas[i], h=max_height, txt=valor, align='C', border=1)
-                x_inicial += anchuras_columnas[i]
-                pdf.set_x(x_inicial)
-
-            # Move to the next line after completing the row
+                # Truncar el texto si es muy largo
+                if len(valor) > 30:
+                    valor = valor[:27] + "..."
+                pdf.cell(w=anchuras_columnas[i], h=max_height, txt=valor, border=1, align=align_type[i])
+            
             pdf.ln(max_height)
 
 
 
         # Salto de línea adicional después de cada grupo de filas
-        pdf.ln(40)
+        pdf.ln(30)
         pdf.cell(0, 10, txt='4. Personal Documentation / Seafarer Documentation', align='L',ln=1)
 
 
@@ -605,7 +591,7 @@ class CookSeafarers():
 
         ]
         """""
-        course = CookCourses()
+        course = AbCourses()
         courses = course.courses()
         # Agregar las celdas con los cursos
 
@@ -616,7 +602,7 @@ class CookSeafarers():
         # Retrieve certificates from the database
         # Retrieve certificates from the database
         certificates = database.marine_certificates(uid)
-        print(certificates)
+  
 
         for i, course in enumerate(courses):
             # Check if there's a matching certificate for the course
@@ -761,20 +747,30 @@ class CookSeafarers():
         pdf.cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1, fill=True)
         pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1, fill=True)
         pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1, fill=True)
-        
-        datos_educacion = [
-
-
-        ]
+        education = database.marine_otherskills(uid)
+        print(education)
         pdf.ln(7)
+   
         # Añadir los datos
-        for fila in datos_educacion:
-            pdf.cell(w=90, h=7, txt=fila[0], align='C', border=1)
-            pdf.cell(w=40, h=7, txt=fila[1], align='C', border=1)
-            pdf.cell(w=30, h=7, txt=fila[2], align='C', border=1)
-            pdf.cell(w=30, h=7, txt=fila[3], align='C', border=1)
-            pdf.ln(7)
+# Populate the table with data from the Firestore `education` document
+        for record in education:
+            institution = record.get('educationInstitution', '')
+            title = record.get('certificateName', '')
             
+            # Ensure country is retrieved as a string
+            country_data = record.get('certificateCountry', '')
+            country = country_data if isinstance(country_data, str) else ""
+
+            start_date = record.get('startDate', '')
+            end_date = record.get('endDate', '')
+            
+            pdf.cell(w=90, h=7, txt=institution, align='C', border=1)
+            pdf.cell(w=40, h=7, txt=title, align='C', border=1)
+            pdf.cell(w=30, h=7, txt=country, align='C', border=1)
+            pdf.cell(w=30, h=7, txt=start_date, align='C', border=1)
+            pdf.cell(w=30, h=7, txt=end_date, align='C', border=1)
+            pdf.ln(7)
+
 
         pdf.ln(5)
 
@@ -825,3 +821,5 @@ class CookSeafarers():
         skills.ab_os(pdf, database,uid)
         #skills.messman(pdf)
         pdf.ln(10)
+   
+
