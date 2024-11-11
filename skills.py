@@ -81,7 +81,7 @@ class Skills():
         
         pdf.cell(w=130,h=6, txt="Fast Rescue boats Handling", align="C", border=1, )
         pdf.cell(w=30,h=6,txt="yes", border=1, align='C')
-        pdf.cell(w=30,h=6,txt="es", border=1, align='C',ln=1)
+        pdf.cell(w=30,h=6,txt="", border=1, align='C',ln=1)
 
         pdf.cell(w=130,h=6, txt="Survival Craft Boat handling", align="C", border=1, )
         pdf.cell(w=30,h=6,txt="yes", border=1, align='C')
