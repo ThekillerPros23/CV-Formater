@@ -115,3 +115,6 @@ class FirebaseDataSeafarers():
     def marine_identification(self,id):
         doc_data = self.get_document_by_uid(id)
         return doc_data['seafarerData'].get('seafarerDocument') if doc_data else {}
+    def marine_otherskills(self,id):
+        doc_data = self.get_document_by_uid(id)
+        return doc_data.get("seafarerData", {}).get("additionalCertificates", {})

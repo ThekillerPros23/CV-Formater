@@ -142,7 +142,6 @@ class Ab_OsSeafarers():
                 ""
             )
 
-        print(identification_number)
         pdf.set_xy(120, 82)
         pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
         # Nacionalidad
@@ -604,7 +603,7 @@ class Ab_OsSeafarers():
         # Retrieve certificates from the database
         # Retrieve certificates from the database
         certificates = database.marine_certificates(uid)
-        print(certificates)
+  
 
         for i, course in enumerate(courses):
             # Check if there's a matching certificate for the course
@@ -749,20 +748,30 @@ class Ab_OsSeafarers():
         pdf.cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1, fill=True)
         pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1, fill=True)
         pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1, fill=True)
-        
-        datos_educacion = [
-
-
-        ]
+        education = database.marine_otherskills(uid)
+        print(education)
         pdf.ln(7)
+   
         # Añadir los datos
-        for fila in datos_educacion:
-            pdf.cell(w=90, h=7, txt=fila[0], align='C', border=1)
-            pdf.cell(w=40, h=7, txt=fila[1], align='C', border=1)
-            pdf.cell(w=30, h=7, txt=fila[2], align='C', border=1)
-            pdf.cell(w=30, h=7, txt=fila[3], align='C', border=1)
-            pdf.ln(7)
+# Populate the table with data from the Firestore `education` document
+        for record in education:
+            institution = record.get('educationInstitution', '')
+            title = record.get('certificateName', '')
             
+            # Ensure country is retrieved as a string
+            country_data = record.get('certificateCountry', '')
+            country = country_data if isinstance(country_data, str) else ""
+
+            start_date = record.get('startDate', '')
+            end_date = record.get('endDate', '')
+            
+            pdf.cell(w=90, h=7, txt=institution, align='C', border=1)
+            pdf.cell(w=40, h=7, txt=title, align='C', border=1)
+            pdf.cell(w=30, h=7, txt=country, align='C', border=1)
+            pdf.cell(w=30, h=7, txt=start_date, align='C', border=1)
+            pdf.cell(w=30, h=7, txt=end_date, align='C', border=1)
+            pdf.ln(7)
+
 
         pdf.ln(5)
 
