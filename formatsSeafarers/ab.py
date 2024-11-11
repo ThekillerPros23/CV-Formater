@@ -359,94 +359,68 @@ class Ab_OsSeafarers():
             # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
             pdf.set_y(y_inicial + altura_fila)
             
+        pdf.ln(20)
+
+       # Encabezado
+        pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L")
         pdf.ln(10)
 
-        pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L",)
-        pdf.ln(10)
-
-        
+        # Configuración de columnas
         anchuras_columnas = [25, 25, 32, 20, 18, 18, 23, 25]  
-        altura_fila = [7,7,14,7,14,14,14,14]
-
         titulos_columnas = [
-        'DATE ON  (MM/DD/YYYY)',
-        'DATE OFF (MM/DD/YYYY)',
-        'COMPANY NAME',
-        'VESSEL NAME',
-        'IMO #',
-        'GT / HP',
-        'TYPE OF VESSEL',
-        'RANK/POSITION'
+            'DATE ON  (MM/DD/YYYY)',
+            'DATE OFF (MM/DD/YYYY)',
+            'COMPANY NAME',
+            'VESSEL NAME',
+            'IMO #',
+            'GT / HP',
+            'TYPE OF VESSEL',
+            'RANK/POSITION'
         ]
-        x_inicial = pdf.get_x()
-        y_inicial = pdf.get_y()
         align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
-        pdf.set_xy(x_inicial, y_inicial)
-        pdf.set_font('calibri','', 9)
-        for i in range(len(titulos_columnas)):
-            pdf.set_xy(x_inicial, y_inicial)
-            
-            # Si estás usando una lista para la altura de fila, usa el índice i para acceder a cada altura
-            if isinstance(altura_fila, list):
-                altura_actual = altura_fila[i]
-            else:
-                altura_actual = altura_fila
+        pdf.set_font('calibri', '', 9)
 
-            # Dividir el texto del título si es necesario
-            lines = pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=0, align=align_type[i], split_only=True, fill=True)
-            num_lines = len(lines)
+        # Dibujar los encabezados
+        for i, titulo in enumerate(titulos_columnas):
+            pdf.cell(w=anchuras_columnas[i], h=7, txt=titulo, border=1, align=align_type[i], fill=True)
+        pdf.ln(7)
 
-            # Ajustar la altura de la celda según el número de líneas
-            adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
-            
-            # Verificar si se necesita un salto de página
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-                pdf.set_xy(x_inicial, y_inicial)
-
-            # Imprimir la celda del título
-            pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=1, align=align_type[i], fill=True)
-
-            # Actualizar la posición x para la siguiente celda
-            x_inicial += anchuras_columnas[i]
-        
-       # Retrieve and sort data by 'dateOn' in descending order
+        # Cargar datos y ordenarlos
         onboard = sorted(database.marine_onboard(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
 
-        nuevaaltura_fila = 7  # Uniform row height
-
+        # Generar filas con datos
         for fila in onboard:
-            # Extract vessel type or default to an empty string if not available
-            tipo_vessel = fila.get('typeOfVessel', [{}])[0].get('name', '') if fila.get('typeOfVessel') else ''
-
-            # List of column data in the correct order
             columnas = [
-                fila.get('dateOn', ''),               # Start date
-                fila.get('dateOff', ''),              # End date
-                fila.get('companyName', ''),          # Company name
-                fila.get('vesselName', ''),           # Vessel name
-                fila.get('imo#', ''),                 # IMO number
-                fila.get('gt/hp', ''),                # GT/HP
-                tipo_vessel,                          # Vessel type
-                fila.get('rank/position', '')         # Rank/position
+                fila.get('dateOn', ''),
+                fila.get('dateOff', ''),
+                fila.get('companyName', ''),
+                fila.get('vesselName', ''),
+                fila.get('imo#', ''),
+                fila.get('gt/hp', ''),
+                fila.get('typeOfVessel', [{}])[0].get('name', '') if fila.get('typeOfVessel') else '',
+                fila.get('rank/position', '')
             ]
+            
+            max_height = 7
+            y_inicial = pdf.get_y()
+            
+            # Revisar si necesita salto de página antes de imprimir
+            if y_inicial + max_height > pdf.page_break_trigger:
+                pdf.add_page()
 
-            x_inicial = pdf.get_x()  # Initial X position before printing the row
-            max_height = nuevaaltura_fila  # Default row height
-
-            # Draw each cell in the row
+            # Dibujar cada celda en una sola línea
             for i, valor in enumerate(columnas):
-                pdf.cell(w=anchuras_columnas[i], h=max_height, txt=valor, align='C', border=1)
-                x_inicial += anchuras_columnas[i]
-                pdf.set_x(x_inicial)
-
-            # Move to the next line after completing the row
+                # Truncar el texto si es muy largo
+                if len(valor) > 30:
+                    valor = valor[:27] + "..."
+                pdf.cell(w=anchuras_columnas[i], h=max_height, txt=valor, border=1, align=align_type[i])
+            
             pdf.ln(max_height)
 
 
 
         # Salto de línea adicional después de cada grupo de filas
-        pdf.ln(40)
+        pdf.ln(30)
         pdf.cell(0, 10, txt='4. Personal Documentation / Seafarer Documentation', align='L',ln=1)
 
 
