@@ -61,7 +61,7 @@ class CookSeafarers():
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
         pdf.set_xy(135, 40)
-        pdf.cell(6,10, 'AB')
+        pdf.cell(6,10, 'COOK')
 
         image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)
