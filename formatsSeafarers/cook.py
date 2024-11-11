@@ -3,7 +3,7 @@ from skills import *
 import requests
 from io import BytesIO
 from PIL import Image
-from courses.ab import *
+from courses.cook import *
 from datetime import datetime
 
 def descargar_imagen_firebase(url):
@@ -591,7 +591,7 @@ class CookSeafarers():
 
         ]
         """""
-        course = AbCourses()
+        course = CookCourses()
         courses = course.courses()
         # Agregar las celdas con los cursos
 
