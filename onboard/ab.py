@@ -68,9 +68,20 @@ class Onboard:
         anchuras = [25, 25, 32, 25, 18, 15, 30, 28]
         cell_height = 7
         for fila in onboard:
-            # Obtener valores de cada campo
-            fecha_ingreso = fila.get('dateOn', '')
-            fecha_salida = fila.get('dateOff', '')
+        # Obtener valores de cada campo y formatear las fechas
+            fecha_ingreso_raw = fila.get('dateOn', '')
+            fecha_salida_raw = fila.get('dateOff', '')
+
+            # Convertir las fechas al formato MM/DD/YYYY si están en formato YYYY-MM-DD
+            fecha_ingreso = (
+                f"{fecha_ingreso_raw[5:7]}/{fecha_ingreso_raw[8:10]}/{fecha_ingreso_raw[:4]}"
+                if len(fecha_ingreso_raw) == 10 else fecha_ingreso_raw
+            )
+            fecha_salida = (
+                f"{fecha_salida_raw[5:7]}/{fecha_salida_raw[8:10]}/{fecha_salida_raw[:4]}"
+                if len(fecha_salida_raw) == 10 else fecha_salida_raw
+            )
+
             nombre_empresa = fila.get('companyName', '')
             nombre_barco = fila.get('vesselName', '')
             imo_numero = fila.get('imo#', '')
@@ -128,4 +139,3 @@ class Onboard:
 
             # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
             pdf.set_y(y_inicial + altura_fila)
-
