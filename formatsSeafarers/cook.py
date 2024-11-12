@@ -1,5 +1,5 @@
 from fpdf import FPDF
-from skills import *
+from skill.cook import *
 import requests
 from io import BytesIO
 from PIL import Image
@@ -816,9 +816,11 @@ class CookSeafarers():
             
             pdf.cell(w=40, h=6, txt=formatted_issue_date, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
-                        
+        
+
+        pdf.ln(10)
         skills = Skills()
-        skills.ab_os(pdf, database,uid)
+        skills.cook(pdf, database,uid)
         #skills.messman(pdf)
         pdf.ln(10)
    

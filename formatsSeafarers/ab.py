@@ -1,11 +1,11 @@
 from fpdf import FPDF
-from skills import *
+from skill.ab import *
 import requests
 from io import BytesIO
 from PIL import Image
 from courses.ab import *
 from datetime import datetime
-
+from onboard.ab import *
 def descargar_imagen_firebase(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -18,27 +18,23 @@ def guardar_imagen_para_fpdf(imagen, nombre_archivo):
     imagen.save(nombre_archivo, format='PNG')  # O 'JPEG' si prefieres JPG
 
 
-def dividir_texto(texto, pdf, ancho_celda):
-    # Dividir el texto en palabras
-    palabras = texto.split(' ')
+def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
+    palabras = texto.split()
+    linea_actual = ""
     lineas = []
-    linea_actual = ''
-    
-    for palabra in palabras:
-        # Probar si la palabra cabe en la línea actual
-        if pdf.get_string_width(linea_actual + palabra) < ancho_celda:
-            linea_actual += palabra + ' '
-        else:
-            # Si no cabe, agregar la línea actual a la lista y comenzar una nueva
-            lineas.append(linea_actual.strip())
-            linea_actual = palabra + ' '
-    
-    # Agregar la última línea
-    if linea_actual:
-        lineas.append(linea_actual.strip())
-    
-    return lineas
 
+    for palabra in palabras:
+        prueba_linea = f"{linea_actual} {palabra}".strip()
+        if pdf.get_string_width(prueba_linea) <= ancho_maximo:
+            linea_actual = prueba_linea
+        else:
+            lineas.append(linea_actual)
+            linea_actual = palabra
+
+    if linea_actual:
+        lineas.append(linea_actual)
+
+    return lineas
 
 
 class Ab_OsSeafarers():
@@ -117,10 +113,24 @@ class Ab_OsSeafarers():
 
         # Fecha de nacimiento
         pdf.set_xy(80, 69)
-        pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(YYYY-MM-DD)', border=1, align='L', fill=True)
+        pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(MM-DD-YYY)', border=1, align='L', fill=True)
+    
         date = database.marine_dateOfBirthSeafarers(uid) or ""
+
+        # Formatear la fecha en caso de que esté en un formato diferente
+        if date:
+            try:
+                # Intentar convertir la fecha al formato MM-DD-YYYY
+                formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%m-%d-%Y")
+            except ValueError:
+                # Si la fecha no está en el formato esperado, mantén el valor original o muestra un mensaje
+                formatted_date = date
+        else:
+            formatted_date = ""
+
+        # Usar el valor formateado en el PDF
         pdf.set_xy(120, 69)
-        pdf.cell(w=80, h=13, txt=date, border=1, align='C', ln=1)
+        pdf.cell(w=80, h=13, txt=formatted_date, border=1, align='C', ln=1)
 
         # Número de identificación
         pdf.set_xy(80, 82)
@@ -360,63 +370,8 @@ class Ab_OsSeafarers():
             
         pdf.ln(20)
 
-       # Encabezado
-        pdf.cell(0, 10, txt='3.WORK EXPERIENCE ONBOARD', align="L")
-        pdf.ln(10)
-
-        # Configuración de columnas
-        anchuras_columnas = [25, 25, 32, 20, 18, 18, 23, 25]  
-        titulos_columnas = [
-            'DATE ON  (MM/DD/YYYY)',
-            'DATE OFF (MM/DD/YYYY)',
-            'COMPANY NAME',
-            'VESSEL NAME',
-            'IMO #',
-            'GT / HP',
-            'TYPE OF VESSEL',
-            'RANK/POSITION'
-        ]
-        align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
-        pdf.set_font('calibri', '', 9)
-
-        # Dibujar los encabezados
-        for i, titulo in enumerate(titulos_columnas):
-            pdf.cell(w=anchuras_columnas[i], h=7, txt=titulo, border=1, align=align_type[i], fill=True)
-        pdf.ln(7)
-
-        # Cargar datos y ordenarlos
-        onboard = sorted(database.marine_onboard(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
-
-        # Generar filas con datos
-        for fila in onboard:
-            columnas = [
-                fila.get('dateOn', ''),
-                fila.get('dateOff', ''),
-                fila.get('companyName', ''),
-                fila.get('vesselName', ''),
-                fila.get('imo#', ''),
-                fila.get('gt/hp', ''),
-                fila.get('typeOfVessel', [{}])[0].get('name', '') if fila.get('typeOfVessel') else '',
-                fila.get('rank/position', '')
-            ]
-            
-            max_height = 7
-            y_inicial = pdf.get_y()
-            
-            # Revisar si necesita salto de página antes de imprimir
-            if y_inicial + max_height > pdf.page_break_trigger:
-                pdf.add_page()
-
-            # Dibujar cada celda en una sola línea
-            for i, valor in enumerate(columnas):
-                # Truncar el texto si es muy largo
-                if len(valor) > 30:
-                    valor = valor[:27] + "..."
-                pdf.cell(w=anchuras_columnas[i], h=max_height, txt=valor, border=1, align=align_type[i])
-            
-            pdf.ln(max_height)
-
-
+        onboard = Onboard()
+        onboard.ab(pdf,database,uid)
 
         # Salto de línea adicional después de cada grupo de filas
         pdf.ln(30)
@@ -466,7 +421,6 @@ class Ab_OsSeafarers():
             "US VISA C1-D"
         ]
 
-        # Recorre toda la lista de documentos y muestra 8 filas siempre
         for document_name in documents:
             # Guardar posición inicial
             x_inicial = pdf.get_x()
@@ -488,8 +442,23 @@ class Ab_OsSeafarers():
                     country = document.get('data', {}).get('country', {}).get('value', '')
                     document_number = document.get('data', {}).get('documentNumber', '')
                     issued_at = document.get('data', {}).get('placeIssue', '')
+
+                    # Convertir las fechas a formato MM-DD-YYYY
                     date_of_issue = document.get('data', {}).get('issueDate', '')
                     valid_until = document.get('data', {}).get('expirationDate', '')
+
+                    try:
+                        if date_of_issue:
+                            date_of_issue = datetime.strptime(date_of_issue, "%Y-%m-%d").strftime("%m-%d-%Y")
+                    except ValueError:
+                        pass  # Si el formato no es correcto, dejamos el valor tal cual
+
+                    try:
+                        if valid_until:
+                            valid_until = datetime.strptime(valid_until, "%Y-%m-%d").strftime("%m-%d-%Y")
+                    except ValueError:
+                        pass
+
                     break  # Detener la búsqueda una vez encontrado el documento correspondiente
 
             # Contenido de cada columna en la fila actual
@@ -500,7 +469,6 @@ class Ab_OsSeafarers():
             max_altura = max(altura_fila, *alturas)
 
             # Imprimir la primera columna con fondo (fill)
-             # Color de fondo (puedes ajustar este valor)
             pdf.cell(w=anchuras_columnas[0], h=max_altura, txt=str(columnas[0]), border=1, align='C', fill=True)
 
             # Imprimir las demás celdas sin fondo
@@ -509,7 +477,6 @@ class Ab_OsSeafarers():
 
             # Mover a la siguiente línea
             pdf.ln(max_altura)
-
 
 
         pdf.ln(20)
@@ -675,7 +642,6 @@ class Ab_OsSeafarers():
         if not (len(encabezados) == len(ancho_celdas) == len(altura_fila) == len(align_type)):
             raise ValueError("Las listas encabezados, ancho_celdas, altura_fila y align_type deben tener la misma longitud.")
 
-        # Imprimir los encabezados
         for i in range(len(encabezados)):
             pdf.set_xy(x_inicial, y_inicial)
             
@@ -683,7 +649,7 @@ class Ab_OsSeafarers():
             altura_actual = altura_fila[i]
 
             # Dividir el texto del encabezado si es necesario (sin imprimir aún)
-            lines = pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=0, align=align_type[i], split_only=True,fill=True)
+            lines = pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=0, align=align_type[i], split_only=True, fill=True)
             num_lines = len(lines)
 
             # Ajustar la altura de la celda según el número de líneas
@@ -695,25 +661,43 @@ class Ab_OsSeafarers():
                 pdf.set_xy(x_inicial, y_inicial)
 
             # Imprimir la celda del encabezado con el ajuste de altura
-            pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=1, align=align_type[i],fill=True)
+            pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=1, align=align_type[i], fill=True)
 
-            # Actualizar la posición x para la fsiguiente celda
+            # Actualizar la posición x para la siguiente celda
             x_inicial += ancho_celdas[i]
-        altura_fila = [14, 14, 14, 7, 14, 14,14]
-        onland = database.marine_onland(uid,)
-        
+
+        # Configuración de alturas de fila
+        altura_fila = [14, 14, 14, 7, 14, 14, 14]
+        onland = database.marine_onland(uid)
+
         for data in onland:
-            # Reset initial x and y coordinates for each new row
+            # Resetear las coordenadas x e y para cada nueva fila
             x_inicial = pdf.get_x()
             y_inicial = pdf.get_y()
-            
-            # Print each piece of data in a single line using cell
+
+            # Convertir las fechas a formato MM-DD-YYYY
+            date_on = data.get('dateOn', '')
+            date_off = data.get('dateOff', '')
+
+            try:
+                if date_on:
+                    date_on = datetime.strptime(date_on, "%Y-%m-%d").strftime("%m-%d-%Y")
+            except ValueError:
+                pass  # Si la fecha tiene un formato inesperado, la dejamos tal cual
+
+            try:
+                if date_off:
+                    date_off = datetime.strptime(date_off, "%Y-%m-%d").strftime("%m-%d-%Y")
+            except ValueError:
+                pass
+
+            # Imprimir cada celda con el formato de fecha modificado
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[0], altura_fila[0], txt=data.get('dateOn', ''), border=1, align='C')
-            
+            pdf.cell(ancho_celdas[0], altura_fila[0], txt=date_on, border=1, align='C')
+
             x_inicial += ancho_celdas[0]
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[1], altura_fila[1], txt=data.get('dateOff', ''), border=1, align='C')
+            pdf.cell(ancho_celdas[1], altura_fila[1], txt=date_off, border=1, align='C')
 
             x_inicial += ancho_celdas[1]
             pdf.set_xy(x_inicial, y_inicial)
@@ -734,16 +718,16 @@ class Ab_OsSeafarers():
             x_inicial += ancho_celdas[5]
             pdf.set_xy(x_inicial, y_inicial)
             pdf.cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
-            
+
             pdf.ln(altura_fila[0])  # Move to the next row
 
- 
+    
 
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
         pdf.ln(10)
         
         pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
-        pdf.cell(w=90,h=7,txt='NAME OF EDUCATION INSTITUTION/TECHNICAL INSTITUTE/UNIVERSITY', align='C', border=1, fill=True)
+        pdf.cell(w=60,h=7,txt='NAME OF EDUCATION INSTITUTION/TECHNICAL INSTITUTE/UNIVERSITY', align='C', border=1, fill=True)
         pdf.cell(w=40,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1, fill=True)
         pdf.cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1, fill=True)
         pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1, fill=True)
@@ -758,20 +742,33 @@ class Ab_OsSeafarers():
             institution = record.get('educationInstitution', '')
             title = record.get('certificateName', '')
             
-            # Ensure country is retrieved as a string
+            # Asegurarse de que el país sea una cadena de texto
             country_data = record.get('certificateCountry', '')
             country = country_data if isinstance(country_data, str) else ""
 
+            # Convertir fechas al formato MM-DD-YYYY
             start_date = record.get('startDate', '')
             end_date = record.get('endDate', '')
-            
-            pdf.cell(w=90, h=7, txt=institution, align='C', border=1)
+
+            try:
+                if start_date:
+                    start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%m-%d-%Y")
+            except ValueError:
+                pass  # Si la fecha tiene un formato inesperado, se deja tal cual
+
+            try:
+                if end_date:
+                    end_date = datetime.strptime(end_date, "%Y-%m-%d").strftime("%m-%d-%Y")
+            except ValueError:
+                pass
+
+            # Imprimir celdas con el formato de fecha actualizado
+            pdf.cell(w=60, h=7, txt=institution, align='C', border=1)
             pdf.cell(w=40, h=7, txt=title, align='C', border=1)
             pdf.cell(w=30, h=7, txt=country, align='C', border=1)
             pdf.cell(w=30, h=7, txt=start_date, align='C', border=1)
             pdf.cell(w=30, h=7, txt=end_date, align='C', border=1)
             pdf.ln(7)
-
 
         pdf.ln(5)
 
@@ -798,26 +795,37 @@ class Ab_OsSeafarers():
             pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('CountryName', ''), border=1, align='C')
             pdf.cell(w=40, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
             
-            # Format IssueDate directly
+            # Formatear IssueDate
             issue_date = card.get('IssueDate', '')
             formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
             
             pdf.cell(w=40, h=6, txt=formatted_issue_date, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
 
-        # Fill Yellow Fever vaccine data
-        for card in vaccines.get('yellowFever', {}).get('cards', []):
+        # Datos de fiebre amarilla
+        yellow_fever_cards = vaccines.get('yellowFever', {}).get('cards', [])
+        if not yellow_fever_cards:
+            # Si no hay datos, imprime una fila en blanco con el título "YELLOW FEVER"
             pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
-            pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('CountryName', ''), border=1, align='C')
-            pdf.cell(w=40, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
+            pdf.cell(w=40, h=6, txt="", border=1, align='C')  # País en blanco
+            pdf.cell(w=40, h=6, txt="", border=1, align='C', fill=True)  # Dosis en blanco
+            pdf.cell(w=40, h=6, txt="", border=1, align='C')  # Fecha en blanco
+            pdf.cell(w=30, h=6, txt="", border=1, align='C', ln=1)  # Marca en blanco
+        else:
+            # Si hay datos, imprime cada tarjeta
+            for card in yellow_fever_cards:
+                pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
+                pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('CountryName', ''), border=1, align='C')
+                pdf.cell(w=40, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
+                
+                # Formatear IssueDate
+                issue_date = card.get('IssueDate', '')
+                formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+                
+                pdf.cell(w=40, h=6, txt=formatted_issue_date, border=1, align='C')
+                pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
             
-            # Format IssueDate directly
-            issue_date = card.get('IssueDate', '')
-            formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
-            
-            pdf.cell(w=40, h=6, txt=formatted_issue_date, border=1, align='C')
-            pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
-                        
+        pdf.ln(10)
         skills = Skills()
         skills.ab_os(pdf, database,uid)
         #skills.messman(pdf)
