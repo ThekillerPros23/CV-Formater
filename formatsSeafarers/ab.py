@@ -6,6 +6,7 @@ from PIL import Image
 from courses.ab import *
 from datetime import datetime
 from onboard.ab import *
+from onshore.onshore import *
 def descargar_imagen_firebase(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -58,7 +59,9 @@ class Ab_OsSeafarers():
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
         pdf.set_xy(135, 40)
-        pdf.cell(6,10, 'AB')
+        position = database.marine_position(uid)
+        position_name = position[0].get('name', "") if position else ""
+        pdf.cell(6,10, position_name)
 
         image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)
@@ -571,7 +574,7 @@ class Ab_OsSeafarers():
         # Retrieve certificates from the database
         certificates = database.marine_certificates(uid)
   
-
+        print(certificates)
         for i, course in enumerate(courses):
             # Check if there's a matching certificate for the course
             if i < len(certificates):
@@ -616,113 +619,8 @@ class Ab_OsSeafarers():
             pdf.cell(w=column_widths[4], h=adjusted_height, txt=expiry_date, border=1, align='C', ln=1)
 
         
-        pdf.set_font('calibri', '', 9)
-        pdf.cell(0,10, txt='6. WORK EXPERIENCE ONSHORE', align='L')
-        pdf.ln(10)
-        
-        encabezados = [
-        'DATE ON (MM/DD/YYYY)', 'DATE OFF (MM/DD/YYYY)', 'COMPANY NAME / SHIP-OWNER', 
-        'DUTIES OR RESPONSABILITIES', 'RANK/POSITION', 'REASON FOR LEAVING', 
-        'NAME OF CONTACT \nPERSON & TELEPHONE NUMBER'
-        ]
-        # Definir las anchuras de las celdas
-        ancho_celdas = [22, 22, 27, 27, 27, 25, 40]
-
-        # Definir la altura de las celdas
-        altura_fila = [14, 14, 14, 14, 28, 14,9.3]
-
-        # Definir la alineación de cada columna (esto faltaba)
-        align_type = ['C', 'C', 'C', 'C', 'C', 'C', 'C']
-
-        # Coordenadas iniciales para comenzar a escribir
-        x_inicial = pdf.get_x()
-        y_inicial = pdf.get_y()
-
-        # Verificar que todas las listas tienen la misma longitud
-        if not (len(encabezados) == len(ancho_celdas) == len(altura_fila) == len(align_type)):
-            raise ValueError("Las listas encabezados, ancho_celdas, altura_fila y align_type deben tener la misma longitud.")
-
-        for i in range(len(encabezados)):
-            pdf.set_xy(x_inicial, y_inicial)
-            
-            # Si la altura de la fila es una lista, selecciona la altura específica
-            altura_actual = altura_fila[i]
-
-            # Dividir el texto del encabezado si es necesario (sin imprimir aún)
-            lines = pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=0, align=align_type[i], split_only=True, fill=True)
-            num_lines = len(lines)
-
-            # Ajustar la altura de la celda según el número de líneas
-            adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
-
-            # Verificar si se necesita un salto de página
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-                pdf.set_xy(x_inicial, y_inicial)
-
-            # Imprimir la celda del encabezado con el ajuste de altura
-            pdf.multi_cell(ancho_celdas[i], altura_actual / 2, encabezados[i], border=1, align=align_type[i], fill=True)
-
-            # Actualizar la posición x para la siguiente celda
-            x_inicial += ancho_celdas[i]
-
-        # Configuración de alturas de fila
-        altura_fila = [14, 14, 14, 7, 14, 14, 14]
-        onland = database.marine_onland(uid)
-
-        for data in onland:
-            # Resetear las coordenadas x e y para cada nueva fila
-            x_inicial = pdf.get_x()
-            y_inicial = pdf.get_y()
-
-            # Convertir las fechas a formato MM-DD-YYYY
-            date_on = data.get('dateOn', '')
-            date_off = data.get('dateOff', '')
-
-            try:
-                if date_on:
-                    date_on = datetime.strptime(date_on, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass  # Si la fecha tiene un formato inesperado, la dejamos tal cual
-
-            try:
-                if date_off:
-                    date_off = datetime.strptime(date_off, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass
-
-            # Imprimir cada celda con el formato de fecha modificado
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[0], altura_fila[0], txt=date_on, border=1, align='C')
-
-            x_inicial += ancho_celdas[0]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[1], altura_fila[1], txt=date_off, border=1, align='C')
-
-            x_inicial += ancho_celdas[1]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[2], altura_fila[2], txt=data.get('companyName', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[2]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[3], altura_fila[3], txt=data.get('dutiesOrResponsibilities', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[3]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[4], altura_fila[4], txt=data.get('rank/position', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[4]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[5], altura_fila[5], txt=data.get('reasonForLeaving', ''), border=1, align='C')
-
-            x_inicial += ancho_celdas[5]
-            pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(ancho_celdas[6], altura_fila[6], txt=data.get('nameOfContactPersonAndTelephoneNumber', ''), border=1, align='C')
-
-            pdf.ln(altura_fila[0])  # Move to the next row
-
-    
-
+        onland = Onshore()
+        onland.ab(pdf,database,uid)
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
         pdf.ln(10)
         

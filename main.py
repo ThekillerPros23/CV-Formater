@@ -4,7 +4,7 @@ from datetime import datetime
 from applications import *
 import io
 import requests
-from skills import *
+
 from formatsApplication.hotel_staff import *
 from formatsApplication.messman import * 
 from formatsApplication.ab_os import *
