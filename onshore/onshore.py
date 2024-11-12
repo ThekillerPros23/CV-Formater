@@ -24,106 +24,108 @@ class Onshore:
         pdf.cell(0, 10, txt='6. WORK EXPIRENCE ONSHORE', align="L")
         pdf.ln(10)
 
-        # Configuración de columnas para ajustarse al ancho total de la página
-        anchuras_columnas = [22, 22, 27, 27, 27, 25, 40]
+        anchuras_columnas =     [22, 22, 27, 27, 27, 25, 40]
         titulos_columnas = [
-            'DATE ON (MM/DD/YYYY)',
-            'DATE OFF (MM/DD/YYYY)',
+            'DATE ON(MM/DD/YYYY)',
+            'DATE OFF(MM/DD/YYYY)',
             'COMPANY NAME',
             'DUTIES OR RESPONSIBILITIES',
             'RANK / POSITION',
             'REASON FOR LEAVING',
             'NAME OF CONTACT PERSON & TELEPHONE NUMBER',
-          
+           
         ]
         align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
-        altura_linea = 6  # Altura de cada línea de texto
+        altura_linea = [8, 8, 24, 12, 24, 12, 12, 6]  # Altura personalizada para cada celda de título
         margen_inferior = 10  # Margen inferior para evitar que el contenido se corte
+
         pdf.set_font('calibri', '', 9)
 
-        # Ajustar altura de los títulos en función de los saltos de línea
+        # Calcular el número de líneas para cada título
         alturas_titulos = [
-            ajustar_texto_a_altura(titulo, anchuras_columnas[i], pdf) for i, titulo in enumerate(titulos_columnas)
+            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulos_columnas[i], border=0, align=align_type[i], split_only=True)
+            for i in range(len(titulos_columnas))
         ]
-        max_lineas_titulo = max(len(lineas) for lineas in alturas_titulos)
-        altura_titulo = altura_linea * max_lineas_titulo
 
-        # Dibujar encabezados de la tabla con saltos de línea
+        # Obtener el número de líneas en cada título y calcular la altura final para cada uno
+        alturas_finales_titulos = [len(lineas) * altura_linea[i] for i, lineas in enumerate(alturas_titulos)]
+
+        # Dibujar los encabezados de las columnas con alturas personalizadas
         x_inicial = pdf.get_x()  # Posición inicial en X
         y_inicial = pdf.get_y()  # Posición inicial en Y
 
-        for i, lineas_titulo in enumerate(alturas_titulos):
-            ancho_columna = anchuras_columnas[i]
-            texto_multilinea = "\n".join(lineas_titulo)
+        # Dibujar cada título de columna en su respectiva celda
+        for i, titulo in enumerate(titulos_columnas):
+            pdf.set_xy(x_inicial + sum(anchuras_columnas[:i]), y_inicial)
             
-            # Dibujar una celda para cada título, pero sin saltar a la siguiente línea
-            pdf.multi_cell(w=ancho_columna, h=altura_linea, txt=texto_multilinea, border=1, align=align_type[i], fill=True)
-            
-            # Mover el cursor manualmente a la siguiente posición en X
-            pdf.set_xy(x_inicial + ancho_columna, y_inicial)
-            x_inicial += ancho_columna  # Incrementar X para la próxima celda
+            # Usar la altura específica calculada para cada título
+            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulo, border=1, align=align_type[i], fill=True)
 
-        # Mover el cursor hacia abajo después de todos los títulos en una sola línea
-        pdf.ln(altura_titulo)
-
-        # Cargar y ordenar datos
+        # Mover el cursor hacia abajo después de los títulos, usando la altura máxima entre todas las celdas
+        
+                # Cargar y ordenar datos
         onland = sorted(database.marine_onland(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
-
-        # Generar filas con datos
+        anchuras =   [22, 22, 27, 27, 27, 25, 40]
+        cell_height = 7
         for fila in onland:
-            # Convertir fechas a formato MM-DD-YYYY
-            date_on = fila.get('dateOn', '')
-            date_off = fila.get('dateOff', '')
+            # Obtener valores de cada campo
+            fecha_ingreso = fila.get('dateOn', '')
+            fecha_salida = fila.get('dateOff', '')
+            nombre_empresa = fila.get('companyName', '')
+            nombre_barco = fila.get('dutiesOrResponsibilities', '')
+            imo_numero = fila.get('rank/position', '')
+            gt_hp = fila.get('reasonForLeaving', '')
+            tipo_barco = fila.get('NAME OF CONTACT PERSON & TELEPHONE NUMBER', "")
+     
 
-            try:
-                if date_on:
-                    date_on = datetime.strptime(date_on, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass  # Si la fecha tiene un formato inesperado, se deja tal cual
+            # Calcular el número de líneas necesarias en cada celda para multi_cells
+            nombre_empresa_lineas = pdf.multi_cell(anchuras[2], cell_height, nombre_empresa, border=0, align='L', split_only=True)
+            nombre_barco_lineas = pdf.multi_cell(anchuras[3], cell_height, nombre_barco, border=0, align='L', split_only=True)
+            tipo_barco_lineas = pdf.multi_cell(anchuras[6], cell_height, tipo_barco, border=0, align='L', split_only=True)
 
-            try:
-                if date_off:
-                    date_off = datetime.strptime(date_off, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass
+            # Determinar la altura de la fila según la máxima cantidad de líneas en cualquier multi_cell
+            max_lineas = max(len(nombre_empresa_lineas), len(nombre_barco_lineas), len(tipo_barco_lineas))
+            altura_fila = cell_height * max_lineas
 
-            # Crear las columnas de cada fila
-            columnas = [
-                date_on,
-                date_off,
-                fila.get('companyName', ''),
-                fila.get('dutiesOrResponsibilities', ''),
-                fila.get('rank/position', ''),
-                fila.get('reasonForLeaving', ''),
-                fila.get('nameOfContactPersonAndTelephoneNumber', ''),
-                 
-            ]
+            # Añadir una nueva página si la altura sobrepasa el límite
+            if pdf.get_y() + altura_fila > pdf.page_break_trigger:
+                pdf.add_page()
 
-            # Calcular el número de líneas de texto en cada columna y obtener la altura máxima de la fila
-            alturas_lineas = [
-                ajustar_texto_a_altura(texto, anchuras_columnas[i], pdf) for i, texto in enumerate(columnas)
-            ]
-            max_lineas_fila = max(len(linea) for linea in alturas_lineas)
-            altura_celda = altura_linea * max_lineas_fila  # Altura uniforme para toda la fila
+            # Guardar posición inicial Y
+            y_inicial = pdf.get_y()
+            x_inicial = pdf.get_x()  # Posición X para la primera columna
 
-            # Verificar si hay suficiente espacio en la página actual
-            if pdf.get_y() + altura_celda + margen_inferior > pdf.page_break_trigger:
-                pdf.add_page()  # Salto de página si no hay suficiente espacio
+            # Dibujar cada celda de la fila con el ancho y altura ajustada
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.cell(anchuras[0], altura_fila, fecha_ingreso, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0], y_inicial)
 
-            # Guardar la posición inicial para alinear columnas
-            x, y = pdf.get_x(), pdf.get_y()
+            pdf.cell(anchuras[1], altura_fila, fecha_salida, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1], y_inicial)
 
-            # Dibujar cada celda con la altura ajustada de la fila
-            for i, lineas_texto in enumerate(alturas_lineas):
-                ancho_columna = anchuras_columnas[i]
-                
-                # Unir las líneas de texto en una cadena con saltos de línea
-                texto_multilinea = "\n".join(lineas_texto)
-                
-                # Dibujar celda con la altura uniforme para toda la fila
-                pdf.set_xy(x, y)  # Mantener el cursor en el lugar correcto para cada columna
-                pdf.multi_cell(w=ancho_columna, h=altura_celda / max_lineas_fila, txt=texto_multilinea, border=1, align=align_type[i])
-                x += ancho_columna  # Mover la posición X para la próxima celda en la fila
+            # Utilizar multi_cell para nombre_empresa ajustado a la altura máxima
+            pdf.multi_cell(anchuras[2], cell_height, nombre_empresa, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2], y_inicial)
 
-            # Restablecer para la próxima fila
-            pdf.ln(altura_celda)
+            # Utilizar multi_cell para nombre_barco ajustado a la altura máxima
+            pdf.multi_cell(anchuras[3], cell_height, nombre_barco, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_inicial)
+
+            # Utilizar cell para imo_numero
+            pdf.cell(anchuras[4], altura_fila, imo_numero, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4], y_inicial)
+
+            # Utilizar cell para gt_hp
+            pdf.cell(anchuras[5], altura_fila, gt_hp, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4] + anchuras[5], y_inicial)
+
+            # Utilizar multi_cell para tipo_barco ajustado a la altura máxima
+            pdf.multi_cell(anchuras[6], cell_height, tipo_barco, border=1, align='C')
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4] + anchuras[5] + anchuras[6], y_inicial)
+
+            # Utilizar cell para posicion
+          
+
+            # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
+            pdf.set_y(y_inicial + altura_fila)
+
