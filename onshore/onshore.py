@@ -64,15 +64,16 @@ class Onshore:
         # Mover el cursor hacia abajo después de los títulos, usando la altura máxima entre todas las celdas
         
                 # Cargar y ordenar datos
+      # Ordenar los registros y definir anchuras y altura de celda
         onland = sorted(database.marine_onland(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
-        anchuras =   [22, 22, 27, 27, 27, 25, 40]
+        anchuras = [22, 22, 27, 27, 27, 25, 40]
         cell_height = 7
+
         for fila in onland:
-            # Obtener valores de cada campo
+            # Obtener valores de cada campo y formatear fechas
             fecha_ingreso = fila.get('dateOn', '')
             fecha_salida = fila.get('dateOff', '')
 
-            # Verificar y formatear si las fechas no están vacías
             fecha_ingreso = datetime.strptime(fecha_ingreso, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_ingreso else ''
             fecha_salida = datetime.strptime(fecha_salida, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_salida else ''
 
@@ -82,9 +83,8 @@ class Onshore:
             imo_numero = fila.get('rank/position', '')
             gt_hp = fila.get('reasonForLeaving', '')
             tipo_barco = fila.get('NAME OF CONTACT PERSON & TELEPHONE NUMBER', "")
-     
 
-            # Calcular el número de líneas necesarias en cada celda para multi_cells
+            # Calcular el número de líneas necesarias para cada campo
             nombre_empresa_lineas = pdf.multi_cell(anchuras[2], cell_height, nombre_empresa, border=0, align='L', split_only=True)
             nombre_barco_lineas = pdf.multi_cell(anchuras[3], cell_height, nombre_barco, border=0, align='L', split_only=True)
             tipo_barco_lineas = pdf.multi_cell(anchuras[6], cell_height, tipo_barco, border=0, align='L', split_only=True)
@@ -101,7 +101,7 @@ class Onshore:
             y_inicial = pdf.get_y()
             x_inicial = pdf.get_x()  # Posición X para la primera columna
 
-            # Dibujar cada celda de la fila con el ancho y altura ajustada
+            # Dibujar cada celda de la fila con la altura máxima
             pdf.set_xy(x_inicial, y_inicial)
             pdf.cell(anchuras[0], altura_fila, fecha_ingreso, border=1, align='C')
             pdf.set_xy(x_inicial + anchuras[0], y_inicial)
@@ -109,29 +109,20 @@ class Onshore:
             pdf.cell(anchuras[1], altura_fila, fecha_salida, border=1, align='C')
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1], y_inicial)
 
-            # Utilizar multi_cell para nombre_empresa ajustado a la altura máxima
             pdf.multi_cell(anchuras[2], cell_height, nombre_empresa, border=1, align='C')
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2], y_inicial)
 
-            # Utilizar multi_cell para nombre_barco ajustado a la altura máxima
             pdf.multi_cell(anchuras[3], cell_height, nombre_barco, border=1, align='C')
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_inicial)
 
-            # Utilizar cell para imo_numero
             pdf.cell(anchuras[4], altura_fila, imo_numero, border=1, align='C')
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4], y_inicial)
 
-            # Utilizar cell para gt_hp
             pdf.cell(anchuras[5], altura_fila, gt_hp, border=1, align='C')
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4] + anchuras[5], y_inicial)
 
-            # Utilizar multi_cell para tipo_barco ajustado a la altura máxima
             pdf.multi_cell(anchuras[6], cell_height, tipo_barco, border=1, align='C')
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4] + anchuras[5] + anchuras[6], y_inicial)
 
-            # Utilizar cell para posicion
-          
-
-            # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
+            # Ajustar la posición y para la siguiente fila
             pdf.set_y(y_inicial + altura_fila)
-
