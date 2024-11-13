@@ -21,6 +21,7 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
 
 class Onboard:
     def ab(self, pdf, database, uid):
+        pdf.ln(40)
         pdf.cell(0, 10, txt='3. WORK EXPERIENCE ONBOARD', align="L")
         pdf.ln(10)
 
