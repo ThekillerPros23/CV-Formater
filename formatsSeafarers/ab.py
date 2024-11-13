@@ -254,13 +254,17 @@ class Ab_OsSeafarers():
         
         pdf.cell(w=30, h=7, txt="LANGUAGES", border=1, align="C",fill=True)
         
-        pdf.cell(w=30, h=7, txt="SPANISH", border=1, align="L", fill=True)
-        spanish = database.marine_lang_span(uid) or ""
-        pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
+        
         pdf.cell(w=30, h=7, txt="ENGLISH", border=1, align="L",fill=True)
         english = database.marine_lang_engl(uid)
         pdf.cell(w=20, h=7, txt=str(english) + "%", border=1, align="R")
         
+        pdf.cell(w=30, h=7, txt="SPANISH", border=1, align="L", fill=True)
+        spanish = database.marine_lang_span(uid) or ""
+        pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
+
+
+
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill= True)
         
         pdf.cell(w=30, h=7, txt="%", border=1, align="R", ln=1)
@@ -320,7 +324,7 @@ class Ab_OsSeafarers():
         cell_height = 7  # Altura base para cada línea de texto
 
         # Anchos específicos para cada columna
-        anchuras = [40, 50, 60, 40]
+        anchuras = [30, 60, 50, 50]
 
         # Dibujar encabezado
         pdf.cell(w=anchuras[0], h=cell_height, txt="RELATIONSHIP", border=1, align='C', fill=True)
@@ -542,26 +546,7 @@ class Ab_OsSeafarers():
 
         # Mover a la siguiente línea después de completar la fila de encabezados
 
-        """""courses = [
-        "Basic Safety Maritime Training Course (BST)",
-        "Proficiency in personal Survival Techniques 1.19",
-        "Fire prevention and firefighting 1.20",
-        "Elementary First Aid 1.13",
-        "Personal Safety and Social Responsibilities 1.21",
-        "Security Awareness Training for All Seafarers Course 3.27",
-        "Security Awareness Training for All Seafarers with Designated Security Duties Course 3.26",
-        "Safety Training for Personnel Providing Direct Services to Passengers in Passenger Spaces 1.44",
-        "Passenger Ship Crowd Management Training 1.41",
-        "Passenger Ship Crisis Management Training 1.42",
-        "Passenger Safety, Cargo Safety and Hull Integrity Training 1.29",
-        "Proficiency in the Management of Survival Crafts and Rescue Boats Course 1.23",
-        "Basic Cargo Training Operations for Oil and Chemical Tanker Course 1.01",
-        "Advanced Fire Fighting 2.03",
-        "Engine Rating Course / WER",
-        "Able Engine Course",
-
-        ]
-        """""
+   
         course = AbCourses()
         courses = course.courses()
         # Agregar las celdas con los cursos

@@ -254,12 +254,15 @@ class FitterSeafarers():
         
         pdf.cell(w=30, h=7, txt="LANGUAGES", border=1, align="C",fill=True)
         
-        pdf.cell(w=30, h=7, txt="SPANISH", border=1, align="L", fill=True)
-        spanish = database.marine_lang_span(uid) or ""
-        pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
         pdf.cell(w=30, h=7, txt="ENGLISH", border=1, align="L",fill=True)
         english = database.marine_lang_engl(uid)
         pdf.cell(w=20, h=7, txt=str(english) + "%", border=1, align="R")
+        
+        pdf.cell(w=30, h=7, txt="SPANISH", border=1, align="L", fill=True)
+        spanish = database.marine_lang_span(uid) or ""
+        pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
+
+        
         
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill= True)
         
