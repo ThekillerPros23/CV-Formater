@@ -174,16 +174,26 @@ class OilerSeafarers():
         pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L', fill=True)
         pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
 
-        # Altura, peso y BMI
         pdf.set_xy(80, 105)
         height = database.marine_height(uid)
+        # Verifica si la altura es "0' 0''" o "nan", de ser así, muestra una celda vacía
+        if height == "0' 0''" or height == "nan":
+            height = ""
         pdf.cell(w=25, h=7, txt='HEIGHT (Ft/in)', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=height, border=1, align='C')
+
         weight = database.marine_weight(uid)
+        # Verifica si el peso es "0" o "nan", de ser así, muestra una celda vacía
+        if weight == "0" or weight == "nan":
+            weight = ""
         pdf.cell(w=22, h=7, txt='WEIGHT (Lb)', border=1, align='L', fill=True)
         pdf.cell(w=18, h=7, txt=weight, border=1, align='C')
+
         pdf.cell(w=15, h=7, txt='BMI', border=1, align='L', fill=True)
         bmi = database.marine_bmi(uid)
+        # Verifica si el BMI es "0" o "nan", de ser así, muestra una celda vacía
+        if str(bmi) == "0" or str(bmi) == "nan":
+            bmi = ""
         pdf.cell(w=20, h=7, txt=str(bmi), border=1, align='C', ln=1)
 
         # Configuración inicial
@@ -385,7 +395,7 @@ class OilerSeafarers():
 
         # Salto de línea adicional después de cada grupo de filas
         pdf.ln(30)
-        pdf.cell(0, 10, txt='4. Personal Documentation / Seafarer Documentation', align='L',ln=1)
+        pdf.cell(0, 10, txt='4. PERSONAL DOCUMENTATION / SEAFARER DOCUMENTATION', align='L',ln=1)
 
 
             

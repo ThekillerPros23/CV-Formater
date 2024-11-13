@@ -20,7 +20,8 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
 class Skills():
     def messman(self,pdf,database,uid):
         skill = database.marine_skills(uid)
-
+        pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
+        pdf.ln()
       # Lista de textos para cada fila
         textos = [
             "SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS",
@@ -36,16 +37,17 @@ class Skills():
 
         anchuras = [130, 30, 30]
         cell_height = 6
-
+        special_rows = [0] 
         # Dibujar cada fila de datos
         for index, fila in enumerate(textos):
-            # Obtener valores de cada campo
+            # Valores de las columnas según el índice
             nombre_completo = fila
-            telefono = "YES" if index == 0 else "YES"  # La primera fila usa "YES", las demás también pero sin "NO" en la última columna
-            direccion = "NO" if index == 0 else ""     # La primera fila usa "NO" en la última columna, las demás están vacías
+            telefono = "YES" if index in special_rows else "YES"  # Todas las filas tienen "YES" en la segunda columna
+            direccion = "NO" if index in special_rows else ""     # Solo las filas en `special_rows` tienen "NO" en la tercera columna
 
             # Calcular el número de líneas necesarias en la primera columna
-            nombre_lineas = pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=0, align='L', split_only=True)
+            align = 'C' if index in special_rows else 'L'
+            nombre_lineas = pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=0, align=align, split_only=True)
             max_lineas = len(nombre_lineas)
             altura_fila = cell_height * max_lineas
 
@@ -58,17 +60,17 @@ class Skills():
             x_inicial = pdf.get_x()  # Posición X para la primera columna
 
             # Definir si se aplica relleno a las columnas
-            fill = True if index == 0 else False
+            fill = True if index in special_rows else False
 
             # Columna de skills
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=1, align='L', fill=fill)
+            pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=1, align=align, fill=fill)
 
-            # Columna de "YES" en la primera fila, y sin relleno en las demás filas
+            # Columna de "YES"
             pdf.set_xy(x_inicial + anchuras[0], y_inicial)
             pdf.cell(anchuras[1], altura_fila, telefono, border=1, align='C', fill=fill)
 
-            # Columna de dirección, con "NO" solo en la primera fila y sin relleno en las demás
+            # Columna de "NO" solo en las filas especiales
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1], y_inicial)
             pdf.cell(anchuras[2], altura_fila, direccion, border=1, align='C', fill=fill)
 

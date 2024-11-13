@@ -7,6 +7,46 @@ from courses.ab import *
 from datetime import datetime
 from onboard.ab import *
 from onshore.onshore import *
+import phonenumbers
+from phonenumbers import PhoneNumberFormat, NumberParseException
+import re
+country_abbreviations = {
+    503: "SV",   # El Salvador
+    1: "US",     # Estados Unidos
+    44: "GB",
+    507:"PA"    # Reino Unido
+    # Agrega otros códigos de país necesarios
+}
+
+
+formatted_pattern = re.compile(r"^\+\w{2} \(\+\d{1,3}\) \d+")
+
+def format_phone_number(number):
+    try:
+        # Verifica si el número ya está en el formato deseado
+        if formatted_pattern.match(number):
+            return number  # Devuelve el número tal cual si ya está formateado
+
+        # Asegúrate de que el número tenga el prefijo "+"
+        if not number.startswith("+"):
+            number = f"+{number}"
+
+        # Parsear el número para detectar país y detalles
+        parsed_number = phonenumbers.parse(number, None)
+        country_code = parsed_number.country_code
+        national_number = phonenumbers.format_number(parsed_number, PhoneNumberFormat.NATIONAL)
+
+        # Obtener la abreviatura del país
+        country_abbr = country_abbreviations.get(country_code, "Unknown")
+
+        # Formatear como "+SV (+503) número"
+        formatted_number = f"+{country_abbr} (+{country_code}) {national_number}"
+        return formatted_number
+
+    except NumberParseException:
+        return "Número inválido"
+
+
 def descargar_imagen_firebase(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -175,13 +215,24 @@ class Ab_OsSeafarers():
         # Altura, peso y BMI
         pdf.set_xy(80, 105)
         height = database.marine_height(uid)
+        # Verifica si la altura es "0' 0''" o "nan", de ser así, muestra una celda vacía
+        if height == "0' 0''" or height == "nan":
+            height = ""
         pdf.cell(w=25, h=7, txt='HEIGHT (Ft/in)', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=height, border=1, align='C')
+
         weight = database.marine_weight(uid)
+        # Verifica si el peso es "0" o "nan", de ser así, muestra una celda vacía
+        if weight == "0" or weight == "nan":
+            weight = ""
         pdf.cell(w=22, h=7, txt='WEIGHT (Lb)', border=1, align='L', fill=True)
         pdf.cell(w=18, h=7, txt=weight, border=1, align='C')
+
         pdf.cell(w=15, h=7, txt='BMI', border=1, align='L', fill=True)
         bmi = database.marine_bmi(uid)
+        # Verifica si el BMI es "0" o "nan", de ser así, muestra una celda vacía
+        if str(bmi) == "0" or str(bmi) == "nan":
+            bmi = ""
         pdf.cell(w=20, h=7, txt=str(bmi), border=1, align='C', ln=1)
 
         # Configuración inicial
@@ -239,13 +290,12 @@ class Ab_OsSeafarers():
         
         pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
         cell = database.marine_cellphone(uid)
-        
-        pdf.cell(w=30, h=7, txt=cell, border=1, align="L")
-        
+        formatted_cell = format_phone_number(cell)
+
+        pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="L")
+
         pdf.cell(w=30, h=7, txt="WHATSAPP", border=1, align="C", fill=True)
-        
-        pdf.cell(w=30, h=7, txt=cell, border=1, align="C")
-        
+        pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="C")      
         pdf.cell(w=20, h=7, txt="E-MAIL", border=1, align="L", fill=True)
         
         pdf.cell(w=50, h=7, txt=email, border=1, align="C", ln=1)
@@ -382,7 +432,7 @@ class Ab_OsSeafarers():
 
         # Salto de línea adicional después de cada grupo de filas
         pdf.ln(30)
-        pdf.cell(0, 10, txt='4. Personal Documentation / Seafarer Documentation', align='L',ln=1)
+        pdf.cell(0, 10, txt='4. PERSONAL DOCUMENTATION / SEAFARER DOCUMENTATION', align='L',ln=1)
 
 
             

@@ -1,7 +1,8 @@
 class Skills():
     def fitter(self,pdf,database, uid):
         skill = database.marine_skills(uid)
-
+        pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
+        pdf.ln()
       # Lista de textos para cada fila
         textos = [
       "Mark the following skills / responsibilities / learning experience / achievements if you have knowledge, competence, and experience about:",

@@ -23,7 +23,8 @@ class Skills():
         ancho_columna_2 = 30   # Ancho de las columnas "YES" y "NO"
         altura_linea = 6       # Altura de cada línea de texto
         margen_inferior = 10   # Margen inferior para evitar que el contenido se corte
-
+        pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
+        pdf.ln()
         # Lista de textos para cada fila
         textos = [
             "FOR COOK",
@@ -85,7 +86,8 @@ class Skills():
             direccion = "NO" if index in special_rows else ""     # Solo las filas en `special_rows` tienen "NO" en la tercera columna
 
             # Calcular el número de líneas necesarias en la primera columna
-            nombre_lineas = pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=0, align='L', split_only=True)
+            align = 'C' if index in special_rows else 'L'
+            nombre_lineas = pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=0, align=align, split_only=True)
             max_lineas = len(nombre_lineas)
             altura_fila = cell_height * max_lineas
 
@@ -102,7 +104,7 @@ class Skills():
 
             # Columna de skills
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=1, align='L', fill=fill)
+            pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=1, align=align, fill=fill)
 
             # Columna de "YES"
             pdf.set_xy(x_inicial + anchuras[0], y_inicial)

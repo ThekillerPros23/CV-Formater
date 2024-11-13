@@ -23,7 +23,8 @@ class Skills():
         ancho_columna_2 = 30   # Ancho de las columnas "YES" y "NO"
         altura_linea = 6       # Altura de cada línea de texto
         margen_inferior = 10   # Margen inferior para evitar que el contenido se corte
-
+        pdf.cell(0,10, txt='9. SKILLS / RESPONSIBILITIES / LEARNING EXPERIENCE / ACHIEVEMENTS', align='L')
+        pdf.ln()
         # Lista de textos para cada fila
         textos = [
             "Mark the following skills/ responsibilities/ learning experience / achievements if you have knowledge, competence, and experience about:",
