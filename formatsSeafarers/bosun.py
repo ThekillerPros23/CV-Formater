@@ -743,7 +743,7 @@ class BosunSeafarers():
             # Si no hay datos, imprime una fila en blanco con el título "YELLOW FEVER"
             pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
             pdf.cell(w=40, h=6, txt="", border=1, align='C')  # País en blanco
-            pdf.cell(w=40, h=6, txt="", border=1, align='C', fill=True)  # Dosis en blanco
+            pdf.cell(w=30, h=6, txt="", border=1, align='C', fill=True)  # Dosis en blanco
             pdf.cell(w=50, h=6, txt="", border=1, align='C')  # Fecha en blanco
             pdf.cell(w=30, h=6, txt="", border=1, align='C', ln=1)  # Marca en blanco
         else:
