@@ -610,44 +610,45 @@ class Ab_OsSeafarers():
         certificates = database.marine_certificates(uid)
   
         print(certificates)
-        for i, course in enumerate(courses):
-            # Check if there's a matching certificate for the course
-            if i < len(certificates):
-                certificate_data = certificates[i].get('data', {})
-                
-                # Retrieve specific fields from each certificate data and format dates
+       # Assuming courses is a list of course names
+        certificates_dict = {
+        cert['data']['documentName']['name']: cert['data']
+        for cert in certificates if 'data' in cert and 'documentName' in cert['data']
+    }
+
+        pdf.set_font("calibri", "", 9)
+
+        for course_id, course_name in courses.items():
+        # Busca si existe un certificado correspondiente al nombre del curso
+            certificate_data = certificates_dict.get(course_name, None)
+
+            # Asigna valores de certificado o deja en blanco si no se encontró uno
+            if certificate_data:
                 country = certificate_data.get('country', {}).get('countryName', "")
                 number = certificate_data.get('certificateNumber', "")
-                
-                # Format issue_date to MM/DD/YYYY
                 issue_date = certificate_data.get('issueDate', "")
-                if issue_date:
-                    issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
-                
-                # Format expiry_date to MM/DD/YYYY
                 expiry_date = certificate_data.get('expirationDate', "")
-                if expiry_date:
-                    expiry_date = datetime.strptime(expiry_date, '%Y-%m-%d').strftime('%m/%d/%Y')
             else:
-                # Default values if no corresponding certificate data
                 country, number, issue_date, expiry_date = "", "", "", ""
 
-            # Split course name into lines if needed
-            lines = pdf.multi_cell(column_widths[0], cell_height, course, border=0, align='L', split_only=True, fill=True)
+            # Formato de fechas
+            if issue_date:
+                issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
+            if expiry_date:
+                expiry_date = datetime.strptime(expiry_date, '%Y-%m-%d').strftime('%m/%d/%Y')
+
+            # Ajuste de altura de celda según el texto del curso
+            lines = pdf.multi_cell(column_widths[0], cell_height, course_name, border=0, align='L', split_only=True, fill=True)
             num_lines = len(lines)
             adjusted_height = max(cell_height * num_lines, cell_height)
 
-            # Page break check
+            # Salto de página si es necesario
             if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
                 pdf.add_page()
 
-            # Course cell
-            pdf.multi_cell(column_widths[0], cell_height, course, border=1, align='L', fill=True)
-
-            # Set X position for the rest of the columns
+            # Celdas del PDF para cada columna
+            pdf.multi_cell(column_widths[0], cell_height, course_name, border=1, align='L', fill=True)
             pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
-
-            # Fill remaining columns with data from certificates
             pdf.cell(w=column_widths[1], h=adjusted_height, txt=country, border=1, align='C', ln=0)
             pdf.cell(w=column_widths[2], h=adjusted_height, txt=number, border=1, align='C', ln=0)
             pdf.cell(w=column_widths[3], h=adjusted_height, txt=issue_date, border=1, align='C', ln=0)
