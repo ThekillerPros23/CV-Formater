@@ -71,22 +71,46 @@ class Skills():
             "Do you know of how to deal with fires in kitchens, and the use of firefighting equipment?"
         ]
 
-        # Procesa cada texto en la primera columna
-        for idx, texto in enumerate(textos, start=1):
-            tiene_fondo = idx in [1, 2, 11, 16, 25, 29, 37, 39]
-            lineas_texto = ajustar_texto_a_altura(texto, ancho_columna_1, pdf)
-            altura_total = altura_linea * len(lineas_texto)
-            
-            if pdf.get_y() + altura_total + margen_inferior > pdf.page_break_trigger:
+        anchuras = [130, 30, 30]
+        cell_height = 6
+
+        # Índices de las filas que deben tener fill=True, "YES" en la segunda columna y "NO" en la tercera
+        special_rows = [0, 1, 10, 15, 24, 28, 36, 38]  # Nota: los índices en Python comienzan en 0
+
+        # Dibujar cada fila de datos
+        for index, fila in enumerate(textos):
+            # Valores de las columnas según el índice
+            nombre_completo = fila
+            telefono = "YES" if index in special_rows else "YES"  # Todas las filas tienen "YES" en la segunda columna
+            direccion = "NO" if index in special_rows else ""     # Solo las filas en `special_rows` tienen "NO" en la tercera columna
+
+            # Calcular el número de líneas necesarias en la primera columna
+            nombre_lineas = pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=0, align='L', split_only=True)
+            max_lineas = len(nombre_lineas)
+            altura_fila = cell_height * max_lineas
+
+            # Añadir una nueva página si la altura sobrepasa el límite
+            if pdf.get_y() + altura_fila > pdf.page_break_trigger:
                 pdf.add_page()
 
-            x, y = pdf.get_x(), pdf.get_y()
-            pdf.multi_cell(w=ancho_columna_1, h=altura_linea, txt="\n".join(lineas_texto), border=1, align="C", fill=tiene_fondo)
-            pdf.set_xy(x + ancho_columna_1, y)
-            
-            if tiene_fondo:
-                pdf.cell(w=ancho_columna_2, h=altura_total, txt="YES", border=1, align="C", fill=True)
-                pdf.cell(w=ancho_columna_2, h=altura_total, txt="NO", border=1, align="C", ln=1, fill=True)
-            else:
-                pdf.cell(w=ancho_columna_2, h=altura_total, txt="YES", border=1, align="C", fill=False)
-                pdf.cell(w=ancho_columna_2, h=altura_total, txt="", border=1, align="C", ln=1, fill=False)
+            # Guardar posición inicial Y
+            y_inicial = pdf.get_y()
+            x_inicial = pdf.get_x()  # Posición X para la primera columna
+
+            # Definir si se aplica relleno a las columnas
+            fill = True if index in special_rows else False
+
+            # Columna de skills
+            pdf.set_xy(x_inicial, y_inicial)
+            pdf.multi_cell(anchuras[0], cell_height, nombre_completo, border=1, align='L', fill=fill)
+
+            # Columna de "YES"
+            pdf.set_xy(x_inicial + anchuras[0], y_inicial)
+            pdf.cell(anchuras[1], altura_fila, telefono, border=1, align='C', fill=fill)
+
+            # Columna de "NO" solo en las filas especiales
+            pdf.set_xy(x_inicial + anchuras[0] + anchuras[1], y_inicial)
+            pdf.cell(anchuras[2], altura_fila, direccion, border=1, align='C', fill=fill)
+
+            # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
+            pdf.set_y(y_inicial + altura_fila)

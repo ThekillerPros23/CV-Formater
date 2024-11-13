@@ -1,29 +1,35 @@
 class Skills():
-    def fitter(self,pdf,database, uid):
+    def oiler(self,pdf,database,uid):
         skill = database.marine_skills(uid)
 
       # Lista de textos para cada fila
         textos = [
-      "Mark the following skills / responsibilities / learning experience / achievements if you have knowledge, competence, and experience about:",
-    "Have you contributed, supported, and performed all machinery space watches always following company´s procedures, rules, and regulations as fitter?",
-    "Do you have knowledge and experience in equipment maintenance?",
-    "Do you have a welding certificate by one of the following LR, ABS, DNV?",
-    "Do you have knowledge and experience in welding, including TIG and MIG?",
-    "Do you have knowledge in the handling and storage of the equipment used on board?",
-    "Have you worked under the supervision of various departments, for example the deck and engine department?",
-    "Are you aware that all overtime performed must be authorized and reported to the officer in charge, depending on the area and nature of the work performed?",
-    "Do you always follow all working routines and procedures associated with safety & environmental procedures?",
-    "Have you worked with supervisors and subordinates to understand and comply with the company´s environmental policies and be committed to safeguarding the environment?",
-    "Are you aware of the mechanisms to inform your superior about any situation on board that puts the environment at risk or the environmental system does not function properly onboard?",
-    "Are you aware that it is your responsibility to keep the equipment and tools in good working order?",
-    "I have carried out the procedures and supported all engine-planned maintenance including:",
-    "Do you have knowledge in overhauling of pumps?",
-    "Do you have knowledge in operating lathe machine?",
-    "Do you have knowledge in carrying out must steelwork, including stainless steel?",
-    "Do you have knowledge in pipe installation and fitting?",
-    "Do you have experience assisting with overhauling of diesel engines and auxiliary systems?",
-    "Do you have experience taking all readings on main engine and generators, and auxiliary equipment?",
-    "Do you always follow up on all working routines and procedures associated with entering and working in confined spaces, and donning hard helmets, safety belts, and other PPE?",
+     "For: Oiler",
+    "Mark the following skills / responsibilities / learning experience / achievements if you have knowledge, competence, and experience about:",
+    "I have contributed, supported, and performed all machinery space watches always following company´s procedures, rules, and regulations as motorman / oiler.",
+    "I was also responsible for the inspection, operation, and testing, as required, of all machinery and equipment under my responsibility, also assisting engineers during the machinery maintenance schedule.",
+    "Hard working team player and quick to learn individual.",
+    "I was also responsible for helping the EWO or Engineer advised regarding the status of the vessel and assigned equipment, always in compliance with the company´s environmental policies and be committed to safeguarding the environmental.",
+    "For: Wiper",
+    "Highly motivated and keen to learn from superiors.",
+    "As wiper always keeping all the machinery spaces clean, tidy, and sanitized at all times.",
+    "Also participating in maintenance work, under supervision. Washing and rinsing the floors on a daily basis, and painting at all times.",
+    "In the event something went wrong, it was reported immediately to the EOW. Ensures that relevant signs are posted, and advance notice was given when maintenance, repair, or cleaning operations.",
+    "Performed all related duties and worn the proper PPE as required at all times.",
+    "I have carried out the procedures and supported all engine planned maintenance including:",
+    "Main engine",
+    "Purifiers room",
+    "Auxiliary Engine and Generators",
+    "I.G. Fans",
+    "Central Coolers",
+    "Main Engine Air Coolers",
+    "Painting & Cleaning Engine room and tanks",
+    "Assisting on transferring and sounding fuel / oil / sludge",
+    "Assisting overhauling pumps, valves, and others.",
+    "Engine inventory and storing",
+    "Loading and unloading",
+    "Taking all readings on main engine and generators, and auxiliary equipment",
+    "Always followed all working routines and procedures associated with entering and working in confined spaces, and donning hard helmets, safety belts, and other PPE.",
     "Exceptional quality of work with outstanding results:",
     "Time management",
     "Team Worker",
@@ -31,15 +37,15 @@ class Skills():
     "Honest and hardworking",
     "Can you work effectively on a team or independently?",
     "Neat and well organized",
-    "Can effectively perform with less or without supervision",
+    "Can effectively perform with less or without supervision.",
     "Respect and good treatment towards my other colleagues.",
-    "Have you ever been nominated employee of the month?"        ]
+    "Have you ever been nominated employee of the month?"      ]
 
         anchuras = [130, 30, 30]
         cell_height = 6
 
         # Índices de las filas que deben tener fill=True, "YES" en la segunda columna y "NO" en la tercera
-        special_rows = [0, 8,  12, 20]  # Nota: los índices en Python comienzan en 0
+        special_rows = [0, 1, 6, 12, 26]  # Nota: los índices en Python comienzan en 0
 
         # Dibujar cada fila de datos
         for index, fila in enumerate(textos):

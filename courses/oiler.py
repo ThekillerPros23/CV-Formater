@@ -1,4 +1,4 @@
-class OfficerCourses():
+class OilerCourses():
         def courses(self):
             courses = [
                 "Basic Safety Maritime Training Course (BST)",

@@ -709,24 +709,24 @@ class Ab_OsSeafarers():
         # Assuming `vaccines` is populated from the database
         vaccines = database.marine_vaccines(uid) or {}
 
-        # Setting up the PDF structure
+      # Setting up the PDF structure
         pdf.cell(w=40, h=6, txt="TYPE OF VACCINE", border=1, align='C', fill=True)
         pdf.cell(w=40, h=6, txt="COUNTRY", border=1, align='C', fill=True)
-        pdf.cell(w=40, h=6, txt="DOZE", border=1, align='C', fill=True)
-        pdf.cell(w=40, h=6, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1, fill=True)
+        pdf.cell(w=30, h=6, txt="DOZE", border=1, align='C', fill=True)
+        pdf.cell(w=50, h=6, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1, fill=True)
         pdf.cell(w=30, h=6, txt='VACCINATION MARK', align='C', border=1, ln=1, fill=True)
 
         # Fill COVID vaccine data
         for card in vaccines.get('covid', {}).get('cards', []):
             pdf.cell(w=40, h=6, txt="COVID BOOK", border=1, align='C', fill=True)
             pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('CountryName', ''), border=1, align='C')
-            pdf.cell(w=40, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
+            pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
             
             # Formatear IssueDate
             issue_date = card.get('IssueDate', '')
             formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
             
-            pdf.cell(w=40, h=6, txt=formatted_issue_date, border=1, align='C')
+            pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
 
         # Datos de fiebre amarilla
@@ -736,22 +736,22 @@ class Ab_OsSeafarers():
             pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
             pdf.cell(w=40, h=6, txt="", border=1, align='C')  # País en blanco
             pdf.cell(w=40, h=6, txt="", border=1, align='C', fill=True)  # Dosis en blanco
-            pdf.cell(w=40, h=6, txt="", border=1, align='C')  # Fecha en blanco
+            pdf.cell(w=50, h=6, txt="", border=1, align='C')  # Fecha en blanco
             pdf.cell(w=30, h=6, txt="", border=1, align='C', ln=1)  # Marca en blanco
         else:
             # Si hay datos, imprime cada tarjeta
             for card in yellow_fever_cards:
                 pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
                 pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('CountryName', ''), border=1, align='C')
-                pdf.cell(w=40, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
+                pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
                 
                 # Formatear IssueDate
                 issue_date = card.get('IssueDate', '')
                 formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
                 
-                pdf.cell(w=40, h=6, txt=formatted_issue_date, border=1, align='C')
+                pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
                 pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
-            
+        
         pdf.ln(10)
         skills = Skills()
         skills.ab_os(pdf, database,uid)
