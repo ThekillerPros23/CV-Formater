@@ -620,8 +620,9 @@ class HotelStaffSeafarers():
         
         onland = Onshore()
         onland.ab(pdf,database,uid)
+        pdf.ln(40)
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
-        pdf.ln(20)
+        pdf.ln(25)
         
         pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
         anchuras_columnas  = [60,40,30,30,30]
