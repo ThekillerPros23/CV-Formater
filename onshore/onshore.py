@@ -71,6 +71,12 @@ class Onshore:
             # Obtener valores de cada campo
             fecha_ingreso = fila.get('dateOn', '')
             fecha_salida = fila.get('dateOff', '')
+
+            # Verificar y formatear si las fechas no están vacías
+            fecha_ingreso = datetime.strptime(fecha_ingreso, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_ingreso else ''
+            fecha_salida = datetime.strptime(fecha_salida, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_salida else ''
+
+            # Otros datos
             nombre_empresa = fila.get('companyName', '')
             nombre_barco = fila.get('dutiesOrResponsibilities', '')
             imo_numero = fila.get('rank/position', '')

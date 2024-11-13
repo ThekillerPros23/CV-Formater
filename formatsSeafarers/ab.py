@@ -622,17 +622,46 @@ class Ab_OsSeafarers():
         onland = Onshore()
         onland.ab(pdf,database,uid)
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
-        pdf.ln(10)
+        pdf.ln(20)
         
         pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
-        pdf.cell(w=60,h=7,txt='NAME OF EDUCATION INSTITUTION/TECHNICAL INSTITUTE/UNIVERSITY', align='C', border=1, fill=True)
-        pdf.cell(w=40,h=7,txt='OBTAINED TITLE OR GRADE', align='C', border=1, fill=True)
-        pdf.cell(w=30,h=7,txt='COUNTRY OF ISSUE', align='C', border=1, fill=True)
-        pdf.cell(w=30,h=7,txt='DATE ON(MM/DD/YYYY)', align='C', border=1, fill=True)
-        pdf.cell(w=30,h=7,txt='DATE OFF(MM/DD/YYYY)', align='C', border=1, fill=True)
+        anchuras_columnas  = [60,40,30,30,30]
+        titulos_columnas = [
+                'NAME OF EDUCATION INSTITUTION / TECHNICAL INSTITUTE / UNIVERSITY',
+                'OBTAINED TITLE OR GRADE',
+                'COUNTRY OF ISSUE',
+                'DATE ON(MM/DD/YYYY)',
+                'DATE OFF(MM/DD/YYYY)',
+            ]
+        align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
+        altura_linea = [8, 16, 16, 8, 8]  # Altura personalizada para cada celda de título
+        margen_inferior = 10  # Margen inferior para evitar que el contenido se corte
+
+        pdf.set_font('calibri', '', 9)
+
+        # Calcular el número de líneas para cada título
+        alturas_titulos = [
+            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulos_columnas[i], border=0, align=align_type[i], split_only=True)
+            for i in range(len(titulos_columnas))
+        ]
+
+        # Obtener el número de líneas en cada título y calcular la altura final para cada uno
+        alturas_finales_titulos = [len(lineas) * altura_linea[i] for i, lineas in enumerate(alturas_titulos)]
+
+        # Dibujar los encabezados de las columnas con alturas personalizadas
+        x_inicial = pdf.get_x()  # Posición inicial en X
+        y_inicial = pdf.get_y()  # Posición inicial en Y
+
+        # Dibujar cada título de columna en su respectiva celda
+        for i, titulo in enumerate(titulos_columnas):
+            pdf.set_xy(x_inicial + sum(anchuras_columnas[:i]), y_inicial)
+            
+            # Usar la altura específica calculada para cada título
+            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulo, border=1, align=align_type[i], fill=True)
+
         education = database.marine_otherskills(uid)
         print(education)
-        pdf.ln(7)
+     
    
         # Añadir los datos
 # Populate the table with data from the Firestore `education` document
@@ -668,7 +697,7 @@ class Ab_OsSeafarers():
             pdf.cell(w=30, h=7, txt=end_date, align='C', border=1)
             pdf.ln(7)
 
-        pdf.ln(5)
+        pdf.ln(10)
 
         pdf.cell(0,10, txt='8. VACCINATION BOOK', align='L')
         pdf.ln(10)
