@@ -82,7 +82,7 @@ class Onshore:
       # Ordenar los registros y definir anchuras y altura de celda
         onland = sorted(database.marine_onland(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
         anchuras = [22, 22, 27, 27, 27, 25, 40]
-        cell_height = 7
+        cell_height = 12
 
         for fila in onland:
             # Obtener valores de cada campo y formatear fechas
@@ -101,49 +101,54 @@ class Onshore:
             
             
             
-            
+           # Establecer altura base para las celdas sin contenido adicional
             fecha_ingreso_altura = cell_height
             fecha_salida_altura = cell_height
-            nombre_empresa_lineas = pdf.multi_cell(anchuras[2], cell_height, nombre_empresa, border=0, align='L', split_only=True)
-            nombre_empresa_altura = len(nombre_empresa_lineas) * cell_height
-            nombre_barco_lineas = pdf.multi_cell(anchuras[3], cell_height, nombre_barco, border=0, align='L', split_only=True)
-            nombre_barco_altura = len(nombre_barco_lineas) * cell_height
             imo_numero_altura = cell_height
             gt_hp_altura = cell_height
+
+            # Calcular la altura necesaria para cada celda que puede tener múltiples líneas
+            nombre_empresa_lineas = pdf.multi_cell(anchuras[2], cell_height, nombre_empresa, border=0, align='L', split_only=True)
+            nombre_empresa_altura = len(nombre_empresa_lineas) * cell_height
+
+            nombre_barco_lineas = pdf.multi_cell(anchuras[3], cell_height, nombre_barco, border=0, align='L', split_only=True)
+            nombre_barco_altura = len(nombre_barco_lineas) * cell_height
+
             tipo_barco_lineas = pdf.multi_cell(anchuras[6], cell_height, tipo_barco, border=0, align='L', split_only=True)
             tipo_barco_altura = len(tipo_barco_lineas) * cell_height
 
-            # Añadir una nueva página si cualquier altura excede el límite
-            altura_fila = max(fecha_ingreso_altura, fecha_salida_altura, nombre_empresa_altura,
-                            nombre_barco_altura, imo_numero_altura, gt_hp_altura, tipo_barco_altura)
+            # Determinar la altura de la fila basada en la celda con mayor altura
+            altura_fila = max(fecha_ingreso_altura, fecha_salida_altura, nombre_empresa_altura, nombre_barco_altura, imo_numero_altura, gt_hp_altura, tipo_barco_altura)
+
+            # Añadir una nueva página si la altura excede el límite de la página
             if pdf.get_y() + altura_fila > pdf.page_break_trigger:
                 pdf.add_page()
 
-            # Guardar posición inicial Y y X
+            # Guardar posición inicial de Y y X
             y_inicial = pdf.get_y()
             x_inicial = pdf.get_x()
 
-            # Dibujar cada celda individualmente con su altura ajustada
+            # Dibujar cada celda con la altura ajustada `altura_fila`
             pdf.set_xy(x_inicial, y_inicial)
-            pdf.cell(anchuras[0], fecha_ingreso_altura, fecha_ingreso, border=1, align='C')
+            pdf.cell(anchuras[0], altura_fila, fecha_ingreso if fecha_ingreso != "N/A" else "", border=1, align='C')
 
             pdf.set_xy(x_inicial + anchuras[0], y_inicial)
-            pdf.cell(anchuras[1], fecha_salida_altura, fecha_salida, border=1, align='C')
+            pdf.cell(anchuras[1], altura_fila, fecha_salida if fecha_salida != "N/A" else "", border=1, align='C')
 
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1], y_inicial)
-            pdf.multi_cell(anchuras[2], cell_height, nombre_empresa, border=1, align='L', fill=True)
+            pdf.multi_cell(anchuras[2], cell_height, nombre_empresa if nombre_empresa != "N/A" else "", border=1, align='L')
 
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2], y_inicial)
-            pdf.multi_cell(anchuras[3], cell_height, nombre_barco, border=1, align='L', fill=True)
+            pdf.multi_cell(anchuras[3], cell_height, nombre_barco if nombre_barco != "N/A" else "", border=1, align='L')
 
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_inicial)
-            pdf.cell(anchuras[4], imo_numero_altura, imo_numero, border=1, align='C')
+            pdf.cell(anchuras[4], altura_fila, imo_numero if imo_numero != "N/A" else "", border=1, align='C')
 
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4], y_inicial)
-            pdf.cell(anchuras[5], gt_hp_altura, gt_hp, border=1, align='C')
+            pdf.cell(anchuras[5], altura_fila, gt_hp if gt_hp != "N/A" else "", border=1, align='C')
 
             pdf.set_xy(x_inicial + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4] + anchuras[5], y_inicial)
-            pdf.multi_cell(anchuras[6], cell_height, tipo_barco, border=1, align='L', fill=True)
+            pdf.multi_cell(anchuras[6], cell_height, tipo_barco if tipo_barco != "N/A" else "", border=1, align='L')
 
-            # Saltar a la siguiente fila
+            # Mover a la próxima línea para la siguiente fila
             pdf.ln(altura_fila)
