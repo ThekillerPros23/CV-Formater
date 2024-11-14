@@ -7,6 +7,7 @@ from courses.hotel_staff import *
 from datetime import datetime
 from onboard.ab import *
 from onshore.onshore import *
+from training.hotel import *
 def descargar_imagen_firebase(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -495,142 +496,10 @@ class HotelStaffSeafarers():
             pdf.ln(max_altura)
 
 
-        pdf.ln(20)
-        pdf.set_font('calibri', '',9)
+        training = Training()
+        training.hotel_staff(pdf,database,uid)
 
-        pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')
-        pdf.ln(10)
-        
-        pdf.cell(w=0, h=7, txt='STCW CERTIFICATES', align='C', border=1, ln=1, fill=True)
 
-        # Definir los títulos de las columnas
-        titulos_columnas = [
-            "DESCRIPTION OF CERT / COURSE",
-            "COUNTRY OF ISSUE",
-            "NUMBER",
-            "DATE OF ISSUE (MM/DD/YYYY)",
-            "DATE OF EXPIRY (MM/DD/YYYY)"
-        ]
-
-        # Definir las anchuras de las columnas
-        anchuras_columnas = [40, 30, 20, 50, 50]
-
-        # Definir la altura de la fila
-        altura_fila = [7,14,14,14,14,14]  # Si tienes diferentes alturas, podrías cambiar esto a una lista
-
-        # Alineación por columna (en este caso se alinean al centro, puedes modificar si es necesario)
-        align_type = ['C', 'C', 'C', 'C', 'C']
-
-        # Coordenadas iniciales para comenzar a escribir
-        x_inicial = pdf.get_x()
-        y_inicial = pdf.get_y()
-
-        # Imprimir los encabezados
-        for i in range(len(titulos_columnas)):
-            pdf.set_xy(x_inicial, y_inicial)
-            
-            # Si la altura de la fila es una lista, selecciona la altura específica
-            if isinstance(altura_fila, list):
-                altura_actual = altura_fila[i]
-            else:
-                altura_actual = altura_fila
-
-            # Dividir el texto del título si es necesario (sin imprimir aún)
-            lines = pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=0, align=align_type[i], split_only=True, fill=True)
-            num_lines = len(lines)
-
-            # Ajustar la altura de la celda según el número de líneas
-            adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
-
-            # Verificar si se necesita un salto de página
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-                pdf.set_xy(x_inicial, y_inicial)
-
-            # Imprimir la celda del título con el ajuste de altura
-            pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=1, align=align_type[i], fill=True)
-
-            # Actualizar la posición x para la siguiente celda
-            x_inicial += anchuras_columnas[i]
-
-        # Mover a la siguiente línea después de completar la fila de encabezados
-
-        """""courses = [
-        "Basic Safety Maritime Training Course (BST)",
-        "Proficiency in personal Survival Techniques 1.19",
-        "Fire prevention and firefighting 1.20",
-        "Elementary First Aid 1.13",
-        "Personal Safety and Social Responsibilities 1.21",
-        "Security Awareness Training for All Seafarers Course 3.27",
-        "Security Awareness Training for All Seafarers with Designated Security Duties Course 3.26",
-        "Safety Training for Personnel Providing Direct Services to Passengers in Passenger Spaces 1.44",
-        "Passenger Ship Crowd Management Training 1.41",
-        "Passenger Ship Crisis Management Training 1.42",
-        "Passenger Safety, Cargo Safety and Hull Integrity Training 1.29",
-        "Proficiency in the Management of Survival Crafts and Rescue Boats Course 1.23",
-        "Basic Cargo Training Operations for Oil and Chemical Tanker Course 1.01",
-        "Advanced Fire Fighting 2.03",
-        "Engine Rating Course / WER",
-        "Able Engine Course",
-
-        ]
-        """""
-        course = HotelStaffCourses()
-        courses = course.courses()
-        # Agregar las celdas con los cursos
-        print(courses)
-        pdf.set_font("calibri","",9)
-        column_widths = [40, 30, 20, 50, 50]
-        cell_height = 7 
-        
-        # Retrieve certificates from the database
-        # Retrieve certificates from the database
-        certificates = database.marine_certificates(uid)
-  
-        print(certificates)
-        certificates_dict = {
-        cert['data']['documentName']['name']: cert['data']
-        for cert in certificates if 'data' in cert and 'documentName' in cert['data']
-    }
-
-        pdf.set_font("calibri", "", 9)
-
-        for course_id, course_name in courses.items():
-        # Busca si existe un certificado correspondiente al nombre del curso
-            certificate_data = certificates_dict.get(course_name, None)
-
-            # Asigna valores de certificado o deja en blanco si no se encontró uno
-            if certificate_data:
-                country = certificate_data.get('country', {}).get('countryName', "")
-                number = certificate_data.get('certificateNumber', "")
-                issue_date = certificate_data.get('issueDate', "")
-                expiry_date = certificate_data.get('expirationDate', "")
-            else:
-                country, number, issue_date, expiry_date = "", "", "", ""
-
-            # Formato de fechas
-            if issue_date:
-                issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
-            if expiry_date:
-                expiry_date = datetime.strptime(expiry_date, '%Y-%m-%d').strftime('%m/%d/%Y')
-
-            # Ajuste de altura de celda según el texto del curso
-            lines = pdf.multi_cell(column_widths[0], cell_height, course_name, border=0, align='L', split_only=True, fill=True)
-            num_lines = len(lines)
-            adjusted_height = max(cell_height * num_lines, cell_height)
-
-            # Salto de página si es necesario
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-
-            # Celdas del PDF para cada columna
-            pdf.multi_cell(column_widths[0], cell_height, course_name, border=1, align='L', fill=True)
-            pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
-            pdf.cell(w=column_widths[1], h=adjusted_height, txt=country, border=1, align='C', ln=0)
-            pdf.cell(w=column_widths[2], h=adjusted_height, txt=number, border=1, align='C', ln=0)
-            pdf.cell(w=column_widths[3], h=adjusted_height, txt=issue_date, border=1, align='C', ln=0)
-            pdf.cell(w=column_widths[4], h=adjusted_height, txt=expiry_date, border=1, align='C', ln=1)
-            
         onland = Onshore()
         onland.ab(pdf,database,uid)
         pdf.ln(40)

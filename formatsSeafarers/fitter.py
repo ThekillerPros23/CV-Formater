@@ -7,6 +7,11 @@ from courses.fitter import *
 from datetime import datetime
 from onboard.ab import *
 from onshore.onshore import *
+from training.fitter import *
+
+
+
+
 def descargar_imagen_firebase(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -495,142 +500,8 @@ class FitterSeafarers():
             pdf.ln(max_altura)
 
 
-        pdf.ln(20)
-        pdf.set_font('calibri', '',9)
-
-        pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')
-        pdf.ln(10)
-        
-        pdf.cell(w=0, h=7, txt='STCW CERTIFICATES', align='C', border=1, ln=1, fill=True)
-
-        # Definir los títulos de las columnas
-        titulos_columnas = [
-            "DESCRIPTION OF CERT / COURSE",
-            "COUNTRY OF ISSUE",
-            "NUMBER",
-            "DATE OF ISSUE (MM/DD/YYYY)",
-            "DATE OF EXPIRY (MM/DD/YYYY)"
-        ]
-
-        # Definir las anchuras de las columnas
-        anchuras_columnas = [40, 30, 20, 50, 50]
-
-        # Definir la altura de la fila
-        altura_fila = [7,14,14,14,14,14]  # Si tienes diferentes alturas, podrías cambiar esto a una lista
-
-        # Alineación por columna (en este caso se alinean al centro, puedes modificar si es necesario)
-        align_type = ['C', 'C', 'C', 'C', 'C']
-
-        # Coordenadas iniciales para comenzar a escribir
-        x_inicial = pdf.get_x()
-        y_inicial = pdf.get_y()
-
-        # Imprimir los encabezados
-        for i in range(len(titulos_columnas)):
-            pdf.set_xy(x_inicial, y_inicial)
-            
-            # Si la altura de la fila es una lista, selecciona la altura específica
-            if isinstance(altura_fila, list):
-                altura_actual = altura_fila[i]
-            else:
-                altura_actual = altura_fila
-
-            # Dividir el texto del título si es necesario (sin imprimir aún)
-            lines = pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=0, align=align_type[i], split_only=True, fill=True)
-            num_lines = len(lines)
-
-            # Ajustar la altura de la celda según el número de líneas
-            adjusted_height = max(altura_actual, altura_actual / 2 * num_lines)
-
-            # Verificar si se necesita un salto de página
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-                pdf.set_xy(x_inicial, y_inicial)
-
-            # Imprimir la celda del título con el ajuste de altura
-            pdf.multi_cell(anchuras_columnas[i], altura_actual / 2, titulos_columnas[i], border=1, align=align_type[i], fill=True)
-
-            # Actualizar la posición x para la siguiente celda
-            x_inicial += anchuras_columnas[i]
-
-        # Mover a la siguiente línea después de completar la fila de encabezados
-
-        """""courses = [
-        "Basic Safety Maritime Training Course (BST)",
-        "Proficiency in personal Survival Techniques 1.19",
-        "Fire prevention and firefighting 1.20",
-        "Elementary First Aid 1.13",
-        "Personal Safety and Social Responsibilities 1.21",
-        "Security Awareness Training for All Seafarers Course 3.27",
-        "Security Awareness Training for All Seafarers with Designated Security Duties Course 3.26",
-        "Safety Training for Personnel Providing Direct Services to Passengers in Passenger Spaces 1.44",
-        "Passenger Ship Crowd Management Training 1.41",
-        "Passenger Ship Crisis Management Training 1.42",
-        "Passenger Safety, Cargo Safety and Hull Integrity Training 1.29",
-        "Proficiency in the Management of Survival Crafts and Rescue Boats Course 1.23",
-        "Basic Cargo Training Operations for Oil and Chemical Tanker Course 1.01",
-        "Advanced Fire Fighting 2.03",
-        "Engine Rating Course / WER",
-        "Able Engine Course",
-
-        ]
-        """""
-        course = FitterCourses()
-        courses = course.courses()
-        # Agregar las celdas con los cursos
-
-        pdf.set_font("calibri","",9)
-        column_widths = [40, 30, 20, 50, 50]
-        cell_height = 7 
-        
-        # Retrieve certificates from the database
-        # Retrieve certificates from the database
-        certificates = database.marine_certificates(uid)
-  
-        print(certificates)
-        for i, course in enumerate(courses):
-            # Check if there's a matching certificate for the course
-            if i < len(certificates):
-                certificate_data = certificates[i].get('data', {})
-                
-                # Retrieve specific fields from each certificate data and format dates
-                country = certificate_data.get('country', {}).get('countryName', "")
-                number = certificate_data.get('certificateNumber', "")
-                
-                # Format issue_date to MM/DD/YYYY
-                issue_date = certificate_data.get('issueDate', "")
-                if issue_date:
-                    issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
-                
-                # Format expiry_date to MM/DD/YYYY
-                expiry_date = certificate_data.get('expirationDate', "")
-                if expiry_date:
-                    expiry_date = datetime.strptime(expiry_date, '%Y-%m-%d').strftime('%m/%d/%Y')
-            else:
-                # Default values if no corresponding certificate data
-                country, number, issue_date, expiry_date = "", "", "", ""
-
-            # Split course name into lines if needed
-            lines = pdf.multi_cell(column_widths[0], cell_height, course, border=0, align='L', split_only=True, fill=True)
-            num_lines = len(lines)
-            adjusted_height = max(cell_height * num_lines, cell_height)
-
-            # Page break check
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-
-            # Course cell
-            pdf.multi_cell(column_widths[0], cell_height, course, border=1, align='L', fill=True)
-
-            # Set X position for the rest of the columns
-            pdf.set_xy(pdf.get_x() + column_widths[0], pdf.get_y() - adjusted_height)
-
-            # Fill remaining columns with data from certificates
-            pdf.cell(w=column_widths[1], h=adjusted_height, txt=country, border=1, align='C', ln=0)
-            pdf.cell(w=column_widths[2], h=adjusted_height, txt=number, border=1, align='C', ln=0)
-            pdf.cell(w=column_widths[3], h=adjusted_height, txt=issue_date, border=1, align='C', ln=0)
-            pdf.cell(w=column_widths[4], h=adjusted_height, txt=expiry_date, border=1, align='C', ln=1)
-
+        training = Training()
+        training.fitter(pdf,database,uid)
         
         onland = Onshore()
         onland.ab(pdf,database,uid)
