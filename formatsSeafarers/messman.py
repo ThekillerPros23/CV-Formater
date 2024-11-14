@@ -427,7 +427,7 @@ class MessmanSeafarers():
             # Ajustar la posición y para la siguiente fila, considerando la altura máxima calculada
             pdf.set_y(y_inicial + altura_fila)
             
-        pdf.ln(20)
+        pdf.ln(5)
 
         onboard = Onboard()
         onboard.ab(pdf,database,uid)
