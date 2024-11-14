@@ -1,15 +1,9 @@
 from fpdf import FPDF
-from skill.ab import *
-import requests
-from io import BytesIO
-from PIL import Image
+
+
 from courses.ab import *
 from datetime import datetime
-from onboard.ab import *
-from onshore.onshore import *
-import phonenumbers
-from phonenumbers import PhoneNumberFormat, NumberParseException
-import re
+
 
 
 class Training():

@@ -1,5 +1,5 @@
 from fpdf import FPDF
-from skill.bosun import *
+from formatskill.bosun import *
 import requests
 from io import BytesIO
 from PIL import Image
@@ -9,6 +9,13 @@ from onboard.ab import *
 from onshore.onshore import *
 from training.bosun import *
 from number import *
+import phonenumbers
+from phonenumbers import PhoneNumberFormat, NumberParseException
+import re
+from training.bosun import *
+
+
+
 number = Number()
 country_abbreviations = number.number()
 
@@ -668,6 +675,7 @@ class BosunSeafarers():
         
         pdf.ln(10)
         skills = Skills()
+        
         skills.bosun(pdf, database,uid)
         #skills.messman(pdf)
         pdf.ln(10)

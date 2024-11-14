@@ -1,5 +1,5 @@
 from fpdf import FPDF
-from skill.ab import *
+from formatskill.ab import *
 import requests
 from io import BytesIO
 from PIL import Image

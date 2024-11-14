@@ -1,5 +1,5 @@
 from fpdf import FPDF
-from skill.fitter import *
+from formatskill.fitter import *
 import requests
 from io import BytesIO
 from PIL import Image
@@ -9,6 +9,11 @@ from onboard.ab import *
 from onshore.onshore import *
 from training.fitter import *
 from number import *
+import phonenumbers
+from phonenumbers import PhoneNumberFormat, NumberParseException
+import re
+
+
 number = Number()
 country_abbreviations = number.number()
 

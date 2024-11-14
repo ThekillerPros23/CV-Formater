@@ -1,5 +1,5 @@
 from fpdf import FPDF
-from skill.cook import *
+from formatskill.cook import *
 import requests
 from io import BytesIO
 from PIL import Image
@@ -7,9 +7,14 @@ from courses.cook import *
 from datetime import datetime
 from onboard.ab import *
 from onshore.onshore import *
+import phonenumbers
+from phonenumbers import PhoneNumberFormat, NumberParseException
+import re
+
 
 from training.cook import *
 from number import *
+
 number = Number()
 country_abbreviations = number.number()
 
