@@ -120,6 +120,10 @@ class Training():
                 expiry_date = certificate_data.get('expirationDate', "")
             else:
                 country, number, issue_date, expiry_date = "", "", "", ""
+            country = "" if country == "N/A" else country
+            number = "" if number == "N/A" else number
+            issue_date = "" if issue_date == "N/A" else issue_date
+            expiry_date = "" if expiry_date == "N/A" else expiry_date
 
             # Formatear las fechas si existen
             if issue_date:
@@ -201,6 +205,10 @@ class Training():
                 number = certificate_data.get('certificateNumber', "")
                 issue_date = certificate_data.get('issueDate', "")
                 expiry_date = certificate_data.get('expirationDate', "")
+                country = "" if country == "N/A" else country
+                number = "" if number == "N/A" else number
+                issue_date = "" if issue_date == "N/A" else issue_date
+                expiry_date = "" if expiry_date == "N/A" else expiry_date
 
                 # Formatear las fechas si existen
                 if issue_date:
