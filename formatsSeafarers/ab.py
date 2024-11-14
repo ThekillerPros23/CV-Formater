@@ -11,14 +11,9 @@ import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
 from training.ab import *
-
-country_abbreviations = {
-    503: "SV",   # El Salvador
-    1: "US",     # Estados Unidos
-    44: "GB",
-    507:"PA"    # Reino Unido
-    # Agrega otros códigos de país necesarios
-}
+from number import *
+number = Number()
+country_abbreviations = number.number()
 
 
 formatted_pattern = re.compile(r"^\+\w{2} \(\+\d{1,3}\) \d+")

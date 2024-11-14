@@ -8,7 +8,37 @@ from datetime import datetime
 from onboard.ab import *
 from onshore.onshore import *
 from training.fitter import *
+from number import *
+number = Number()
+country_abbreviations = number.number()
 
+
+formatted_pattern = re.compile(r"^\+\w{2} \(\+\d{1,3}\) \d+")
+
+def format_phone_number(number):
+    try:
+        # Verifica si el número ya está en el formato deseado
+        if formatted_pattern.match(number):
+            return number  # Devuelve el número tal cual si ya está formateado
+
+        # Asegúrate de que el número tenga el prefijo "+"
+        if not number.startswith("+"):
+            number = f"+{number}"
+
+        # Parsear el número para detectar país y detalles
+        parsed_number = phonenumbers.parse(number, None)
+        country_code = parsed_number.country_code
+        national_number = phonenumbers.format_number(parsed_number, PhoneNumberFormat.NATIONAL)
+
+        # Obtener la abreviatura del país
+        country_abbr = country_abbreviations.get(country_code, "Unknown")
+
+        # Formatear como "+SV (+503) número"
+        formatted_number = f"+{country_abbr} (+{country_code}) {national_number}"
+        return formatted_number
+
+    except NumberParseException:
+        return "Número inválido"
 
 
 
@@ -254,13 +284,13 @@ class FitterSeafarers():
         
         pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
         cell = database.marine_cellphone(uid)
-        
-        pdf.cell(w=30, h=7, txt=cell, border=1, align="L")
-        
+        formatted_cell = format_phone_number(cell)
+
+        pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="L")
+
         pdf.cell(w=30, h=7, txt="WHATSAPP", border=1, align="C", fill=True)
-        
-        pdf.cell(w=30, h=7, txt=cell, border=1, align="C")
-        
+        pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="C")      
+
         pdf.cell(w=20, h=7, txt="E-MAIL", border=1, align="L", fill=True)
         
         pdf.cell(w=50, h=7, txt=email, border=1, align="C", ln=1)
