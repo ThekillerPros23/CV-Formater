@@ -48,7 +48,7 @@ class HotelStaffPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 05', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
@@ -70,7 +70,7 @@ class AbPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 02', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
@@ -92,7 +92,7 @@ class CookPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 02', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
@@ -114,7 +114,7 @@ class BosunPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 02', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 class OilerPDF(FPDF):
@@ -135,7 +135,7 @@ class OilerPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 02', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
@@ -157,7 +157,7 @@ class MessmanPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 02', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
@@ -179,7 +179,7 @@ class FitterPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 02', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
@@ -201,7 +201,7 @@ class OfficerPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3.5, 'Revision: 02', ln=True, align='R')
         self.set_x(-60)
-        self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
+        self.cell(0, 3, 'Date: November 07 2024', ln=True, align='R')
         self.set_x(-30)
         self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 

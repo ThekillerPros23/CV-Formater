@@ -444,12 +444,12 @@ class CookSeafarers():
         pdf.set_font('Calibri', '', 9)
        # Títulos de las columnas
         titulos_columnas = [
-            "TYPE OF DOCUMENT / ID",
+           "TYPE OF DOCUMENT / ID",
             "COUNTRY OF ISSUE",
             "NO.",
             "ISSUED AT (PLACE)",
-            "DATE OF ISSUE (MM / DD / YYYY)",
-            "VALID UNTIL (MM / DD / YYYY)"
+            "DATE OF ISSUE \n(MM / DD / YYYY)",
+            "VALID UNTIL \n(MM / DD / YYYY)"
         ]
 
         height_first_columns = 12
@@ -675,7 +675,7 @@ class CookSeafarers():
         # Fill COVID vaccine data
         for card in vaccines.get('covid', {}).get('cards', []):
             pdf.cell(w=40, h=6, txt="COVID BOOK", border=1, align='C', fill=True)
-            pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('CountryName', ''), border=1, align='C')
+            pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('value', ''), border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
             
             # Formatear IssueDate
@@ -698,7 +698,7 @@ class CookSeafarers():
             # Si hay datos, imprime cada tarjeta
             for card in yellow_fever_cards:
                 pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
-                pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('CountryName', ''), border=1, align='C')
+                pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('value', ''), border=1, align='C')
                 pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
                 
                 # Formatear IssueDate

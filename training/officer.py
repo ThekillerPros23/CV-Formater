@@ -19,8 +19,8 @@ class Training():
             "DESCRIPTION OF CERT / COURSE",
             "COUNTRY OF ISSUE",
             "NUMBER",
-            "DATE OF ISSUE (MM/DD/YYYY)",
-            "DATE OF EXPIRY (MM/DD/YYYY)"
+            "DATE OF ISSUE \n(MM/DD/YYYY)",
+            "DATE OF EXPIRY \n(MM/DD/YYYY)"
         ]
 
         # Definir las anchuras de las columnas
@@ -112,14 +112,17 @@ class Training():
 
             # Asignar valores del certificado o dejarlos en blanco si no hay coincidencia
             if certificate_data:
-                country = certificate_data.get('country', {}).get('countryName', "")
+                country = certificate_data.get('country', {}).get('value', "")
                 number = certificate_data.get('certificateNumber', "")
                 issue_date = certificate_data.get('issueDate', "")
                 expiry_date = certificate_data.get('expirationDate', "")
             else:
                 country, number, issue_date, expiry_date = "", "", "", ""
-
-            # Formatear las fechas si existen
+            country = "" if country == "N/A" else country
+            number = "" if number == "N/A" else number
+            issue_date = "" if issue_date == "N/A" else issue_date
+            expiry_date = "" if expiry_date == "N/A" else expiry_date
+                    # Formatear las fechas si existen
             if issue_date:
                 issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
             if expiry_date:
@@ -195,12 +198,15 @@ class Training():
             # Si el curso no está en la lista de cursos de referencia, agregarlo
             if course_id not in courses:
                 course_name = certificate_data.get('documentName', {}).get('name', "Curso Desconocido")
-                country = certificate_data.get('country', {}).get('countryName', "")
+                country = certificate_data.get('country', {}).get('value', "")
                 number = certificate_data.get('certificateNumber', "")
                 issue_date = certificate_data.get('issueDate', "")
                 expiry_date = certificate_data.get('expirationDate', "")
-
-                # Formatear las fechas si existen
+                country = "" if country == "N/A" else country
+                number = "" if number == "N/A" else number
+                issue_date = "" if issue_date == "N/A" else issue_date
+                expiry_date = "" if expiry_date == "N/A" else expiry_date
+                            # Formatear las fechas si existen
                 if issue_date:
                     issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
                 if expiry_date:
