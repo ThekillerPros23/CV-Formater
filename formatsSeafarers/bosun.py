@@ -203,7 +203,7 @@ class BosunSeafarers():
         pdf.set_xy(120, 82)
         pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
         # Nacionalidad
-        nationality = database.marine_nationality(uid)
+        nationality = database.marine_nationality(uid) or ""
         pdf.set_xy(80, 91)
         pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
         pdf.cell(w=80, h=height, txt=nationality, border=1, align='C', ln=1)

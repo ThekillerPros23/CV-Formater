@@ -46,7 +46,7 @@ class FirebaseDataSeafarers():
 
     def marine_nationality(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data['seafarerData']['seafarerProfile']['profile']['countryBirth'].get('value') if doc_data else ""
+        return doc_data['seafarerData']['seafarerProfile']['profile']['countryBirth'].get('CountryName') if doc_data else ""
 
     def marine_cellphone(self, id):
         doc_data = self.get_document_by_uid(id)
