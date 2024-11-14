@@ -115,52 +115,44 @@ class Training():
             # Ajuste de altura de la celda basado en el texto del curso
       # Ajuste de altura de la celda basado en el texto del número del certificado
             # Paso 1: Calcular el número de líneas para cada celda y determinar la altura máxima de la fila
-        lines_course_name = pdf.multi_cell(column_widths[0], cell_height, course_name, border=0, align='L', split_only=True)
-        lines_number = pdf.multi_cell(column_widths[2], cell_height, number, border=0, align='C', split_only=True)
+            lines_course_name = pdf.multi_cell(column_widths[0], cell_height, course_name, border=0, align='L', split_only=True)
+            lines_number = pdf.multi_cell(column_widths[2], cell_height, number, border=0, align='C', split_only=True)
 
-        # Calcular la altura en función del número de líneas en `course_name` y `number`
-        height_course_name = len(lines_course_name) * cell_height
-        height_number = len(lines_number) * cell_height
+            # Calcular la altura en función del número de líneas en `course_name` y `number`
+            height_course_name = len(lines_course_name) * cell_height
+            height_number = len(lines_number) * cell_height
 
-        # Determinar la altura ajustada en función de las celdas que lo necesiten
-        if height_number < height_course_name:
-            adjusted_height = height_course_name  # Ajustar `number` a la altura de `course_name`
-        else:
-            adjusted_height = height_number  # Si `number` es mayor, usamos su altura
+            # Determinar la altura ajustada en función de la celda más alta
+            adjusted_height = max(height_course_name, height_number, cell_height)
 
-        # Comparar con otras celdas fijas (country, issue_date, expiry_date) que solo tienen una línea
-        min_cell_height = cell_height
-        if adjusted_height < min_cell_height:
-            adjusted_height = min_cell_height  # Asegura un mínimo de una línea de altura
+            # Verificar si se necesita un salto de página
+            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+                pdf.add_page()
 
-        # Verificar si es necesario un salto de página
-        if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-            pdf.add_page()
+            # Posición inicial de `x` e `y` para esta fila
+            x_start = pdf.get_x()
+            y_start = pdf.get_y()
 
-        # Posición inicial de `x` e `y` para esta fila
-        x_start = pdf.get_x()
-        y_start = pdf.get_y()
+            # Dibujar cada celda con la altura ajustada
+            # Celda de Course Name
+            pdf.set_xy(x_start, y_start)
+            pdf.multi_cell(column_widths[0], cell_height, course_name, border=1, align='L', fill=True)
 
-        # Dibujar cada celda con la altura ajustada
-        # Celda de Course Name
-        pdf.set_xy(x_start, y_start)
-        pdf.multi_cell(column_widths[0], cell_height, course_name, border=1, align='L', fill=True)
+            # Celda de Country (ajustada a la altura de la fila)
+            pdf.set_xy(x_start + column_widths[0], y_start)
+            pdf.cell(w=column_widths[1], h=adjusted_height, txt=country, border=1, align='C')
 
-        # Celda de Country (ajustada)
-        pdf.set_xy(x_start + column_widths[0], y_start)
-        pdf.cell(w=column_widths[1], h=adjusted_height, txt=country, border=1, align='C')
+            # Celda de Number (ajustada a la altura de la fila)
+            pdf.set_xy(x_start + column_widths[0] + column_widths[1], y_start)
+            pdf.multi_cell(w=column_widths[2], h=cell_height, txt=number, border=1, align='C')
 
-        # Celda de Number (ajustada a la altura de `course_name` si es necesario)
-        pdf.set_xy(x_start + column_widths[0] + column_widths[1], y_start)
-        pdf.cell(w=column_widths[2], h=adjusted_height, txt=number, border=1, align='C', fill=True)
+            # Celda de Issue Date (ajustada a la altura de la fila)
+            pdf.set_xy(x_start + column_widths[0] + column_widths[1] + column_widths[2], y_start)
+            pdf.cell(w=column_widths[3], h=adjusted_height, txt=issue_date, border=1, align='C')
 
-        # Celda de Issue Date (ajustada)
-        pdf.set_xy(x_start + column_widths[0] + column_widths[1] + column_widths[2], y_start)
-        pdf.cell(w=column_widths[3], h=adjusted_height, txt=issue_date, border=1, align='C')
-
-        # Celda de Expiry Date (ajustada)
-        pdf.set_xy(x_start + column_widths[0] + column_widths[1] + column_widths[2] + column_widths[3], y_start)
-        pdf.cell(w=column_widths[4], h=adjusted_height, txt=expiry_date, border=1, align='C', ln=1)
+            # Celda de Expiry Date (ajustada a la altura de la fila)
+            pdf.set_xy(x_start + column_widths[0] + column_widths[1] + column_widths[2] + column_widths[3], y_start)
+            pdf.cell(w=column_widths[4], h=adjusted_height, txt=expiry_date, border=1, align='C', ln=1)
         
         for course_id, certificate_data in certificates_dict.items():
             # Si el curso no está en la lista de cursos de referencia, agregarlo
@@ -180,6 +172,7 @@ class Training():
                 # Ajuste de altura de la celda basado en el texto del curso
     # Ajuste de altura de la celda basado en el texto del número del certificado
             # Paso 1: Calcular el número de líneas para cada celda y determinar la altura máxima de la fila
+                # Calcular las líneas y alturas de las celdas que pueden tener varias líneas
                 lines_course_name = pdf.multi_cell(column_widths[0], cell_height, course_name, border=0, align='L', split_only=True)
                 lines_number = pdf.multi_cell(column_widths[2], cell_height, number, border=0, align='C', split_only=True)
 
@@ -187,18 +180,10 @@ class Training():
                 height_course_name = len(lines_course_name) * cell_height
                 height_number = len(lines_number) * cell_height
 
-                # Determinar la altura ajustada en función de las celdas que lo necesiten
-                if height_number < height_course_name:
-                    adjusted_height = height_course_name  # Ajustar `number` a la altura de `course_name`
-                else:
-                    adjusted_height = height_number  # Si `number` es mayor, usamos su altura
+                # Determinar la altura ajustada en función de la celda más alta
+                adjusted_height = max(height_course_name, height_number, cell_height)
 
-                # Comparar con otras celdas fijas (country, issue_date, expiry_date) que solo tienen una línea
-                min_cell_height = cell_height
-                if adjusted_height < min_cell_height:
-                    adjusted_height = min_cell_height  # Asegura un mínimo de una línea de altura
-
-                # Verificar si es necesario un salto de página
+                # Verificar si se necesita un salto de página
                 if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
                     pdf.add_page()
 
@@ -211,18 +196,18 @@ class Training():
                 pdf.set_xy(x_start, y_start)
                 pdf.multi_cell(column_widths[0], cell_height, course_name, border=1, align='L', fill=True)
 
-                # Celda de Country (ajustada)
+                # Celda de Country (ajustada a la altura de la fila)
                 pdf.set_xy(x_start + column_widths[0], y_start)
                 pdf.cell(w=column_widths[1], h=adjusted_height, txt=country, border=1, align='C')
 
-                # Celda de Number (ajustada a la altura de `course_name` si es necesario)
+                # Celda de Number (ajustada a la altura de la fila)
                 pdf.set_xy(x_start + column_widths[0] + column_widths[1], y_start)
-                pdf.cell(w=column_widths[2], h=adjusted_height, txt=number, border=1, align='C', fill=True)
+                pdf.multi_cell(w=column_widths[2], h=cell_height, txt=number, border=1, align='C')
 
-                # Celda de Issue Date (ajustada)
+                # Celda de Issue Date (ajustada a la altura de la fila)
                 pdf.set_xy(x_start + column_widths[0] + column_widths[1] + column_widths[2], y_start)
                 pdf.cell(w=column_widths[3], h=adjusted_height, txt=issue_date, border=1, align='C')
 
-                # Celda de Expiry Date (ajustada)
+                # Celda de Expiry Date (ajustada a la altura de la fila)
                 pdf.set_xy(x_start + column_widths[0] + column_widths[1] + column_widths[2] + column_widths[3], y_start)
                 pdf.cell(w=column_widths[4], h=adjusted_height, txt=expiry_date, border=1, align='C', ln=1)

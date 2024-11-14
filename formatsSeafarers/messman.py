@@ -450,16 +450,46 @@ class MessmanSeafarers():
             "VALID UNTIL (MM / DD / YYYY)"
         ]
 
+        height_first_columns = 12
+        height_other_columns = 12
+        height_last_columns = 6  # Altura para las últimas dos columnas
+
         # Definir las anchuras de las columnas
         anchuras_columnas = [40, 30, 30, 30, 30, 30]
+        align_type = ['C', 'C', 'C', 'L', 'C', 'C']
 
         # Altura de la fila
         altura_fila = 7
-        
-        # Imprimir los encabezados de la tabla
+
+        # Paso 1: Dibujar los títulos de las columnas
         for i, titulo in enumerate(titulos_columnas):
-            pdf.cell(w=anchuras_columnas[i], h=altura_fila, txt=titulo, border=1, align='C', fill=True)
-        pdf.ln(altura_fila)
+            # Determinar la altura para el título dependiendo de la columna
+            if i < len(anchuras_columnas) - 2:  # Las primeras columnas excepto las últimas dos
+                cell_height = height_first_columns if i < 2 else height_other_columns
+            else:  # Últimas dos columnas
+                cell_height = height_last_columns
+
+            # Obtener el número de líneas necesarias para el título y ajustar la altura
+            lines = pdf.multi_cell(anchuras_columnas[i], cell_height, titulo, border=0, align=align_type[i], split_only=True)
+            num_lines = len(lines)
+            adjusted_height = max(cell_height * num_lines, cell_height)  # Ajustar altura en base a las líneas necesarias
+
+            # Verificar si es necesario un salto de página antes de dibujar el título
+            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+                pdf.add_page()
+
+            # Establecer la posición inicial de cada título de columna
+            x_start = pdf.get_x()
+            y_start = pdf.get_y()
+            pdf.set_xy(x_start, y_start)
+
+            # Dibujar cada título de columna con su altura ajustada y alineación
+            pdf.multi_cell(anchuras_columnas[i], cell_height, titulo, border=1, align=align_type[i], fill=True)
+            pdf.set_xy(x_start + anchuras_columnas[i], y_start)  # Mover el cursor hacia abajo después de los títulos, usando la altura máxima entre todas las celdas
+
+        # Agregar un salto de línea para moverse al siguiente contenido
+        pdf.ln(max(height_first_columns, height_other_columns, height_last_columns))
+
 
         # Obtener los documentos
         personalDocuments = database.marine_personaldocumention(uid)

@@ -37,33 +37,47 @@ class Onshore:
            
         ]
         align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
-        altura_linea = [8, 8, 24, 12, 24, 12, 12, 6]  # Altura personalizada para cada celda de título
+          # Altura personalizada para cada celda de título
         margen_inferior = 10  # Margen inferior para evitar que el contenido se corte
 
         pdf.set_font('calibri', '', 9)
+       # Definir las alturas específicas para cada grupo de columnas
+        height_first_columns = 8
+        height_large_columns = 24
+        height_other_columns = 12
 
-        # Calcular el número de líneas para cada título
-        alturas_titulos = [
-            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulos_columnas[i], border=0, align=align_type[i], split_only=True)
-            for i in range(len(titulos_columnas))
-        ]
-
-        # Obtener el número de líneas en cada título y calcular la altura final para cada uno
-        alturas_finales_titulos = [len(lineas) * altura_linea[i] for i, lineas in enumerate(alturas_titulos)]
-
-        # Dibujar los encabezados de las columnas con alturas personalizadas
-        x_inicial = pdf.get_x()  # Posición inicial en X
-        y_inicial = pdf.get_y()  # Posición inicial en Y
-
-        # Dibujar cada título de columna en su respectiva celda
         for i, titulo in enumerate(titulos_columnas):
-            pdf.set_xy(x_inicial + sum(anchuras_columnas[:i]), y_inicial)
-            
-            # Usar la altura específica calculada para cada título
-            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulo, border=1, align=align_type[i], fill=True)
+            # Determinar la altura para cada columna
+            if i < 2:
+                cell_height = height_first_columns  # Altura para las primeras dos columnas
+            elif i == 2 or i == 4:
+                cell_height = height_large_columns  # Altura para las columnas 3 y 5
+            else:
+                cell_height = height_other_columns  # Altura para las columnas restantes (4 y 6)
 
-        # Mover el cursor hacia abajo después de los títulos, usando la altura máxima entre todas las celdas
-        
+            # Obtener el número de líneas necesarias para el título y ajustar la altura
+            lines = pdf.multi_cell(anchuras_columnas[i], cell_height, titulo, border=0, align=align_type[i], split_only=True)
+            num_lines = len(lines)
+            adjusted_height = max(cell_height * num_lines, cell_height)  # Ajustar altura en base a las líneas necesarias
+
+            # Verificar si es necesario un salto de página antes de dibujar el título
+            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+                pdf.add_page()
+
+            # Establecer la posición inicial de cada título de columna
+            x_start = pdf.get_x()
+            y_start = pdf.get_y()
+            pdf.set_xy(x_start, y_start)
+
+            # Dibujar cada título de columna con su altura ajustada y alineación
+            pdf.multi_cell(anchuras_columnas[i], cell_height, titulo, border=1, align=align_type[i], fill=True)
+
+            # Mover el cursor hacia la siguiente posición en la fila
+            pdf.set_xy(x_start + anchuras_columnas[i], y_start)  
+
+        # Mover el cursor hacia abajo después de dibujar todos los títulos
+        pdf.ln(max(height_first_columns, height_large_columns, height_other_columns))
+
                 # Cargar y ordenar datos
       # Ordenar los registros y definir anchuras y altura de celda
         onland = sorted(database.marine_onland(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
