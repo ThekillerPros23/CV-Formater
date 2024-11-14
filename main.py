@@ -50,7 +50,7 @@ class HotelStaffPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
 class AbPDF(FPDF):
     def header(self):
@@ -72,7 +72,7 @@ class AbPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
 class CookPDF(FPDF):
     def header(self):
@@ -94,7 +94,7 @@ class CookPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
 class BosunPDF(FPDF):
     def header(self):
@@ -116,7 +116,7 @@ class BosunPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 class OilerPDF(FPDF):
     def header(self):
         self.set_font('calibri', 'B', 26)
@@ -137,7 +137,7 @@ class OilerPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
 class MessmanPDF(FPDF):
     def header(self):
@@ -159,7 +159,7 @@ class MessmanPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
 class FitterPDF(FPDF):
     def header(self):
@@ -181,7 +181,7 @@ class FitterPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
 class OfficerPDF(FPDF):
     def header(self):
@@ -203,7 +203,7 @@ class OfficerPDF(FPDF):
         self.set_x(-60)
         self.cell(0, 3, 'Date: 07 November 2024', ln=True, align='R')
         self.set_x(-30)
-        self.cell(0, 3, f'Page {self.page_no()} de {{nb}}', ln=True, align='R')
+        self.cell(0, 3, f'Page {self.page_no()} of {{nb}}', ln=True, align='R')
 
 
 def dividir_texto(texto, pdf, ancho_celda):
