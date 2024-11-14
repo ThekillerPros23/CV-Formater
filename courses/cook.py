@@ -15,7 +15,6 @@ class CookCourses():
             24: "Proficiency in Survival Craft and Rescue Boats other than Fast Rescue Boats IMO 1.23",
             9: "Basic Training for Oil and Chemical cargo tanker Operations IMO 1.01",
             13: "Advanced Training in Fire Fighting IMO 2.03",
-            16: "Ratings Forming Part of a Navigational Watch",
             9: "Basic Training for Oil and Chemical Cargo Tanker Operations IMO 1.01",
             8: "SHIP COOK MLC 2006 Certificate"
         }
