@@ -570,7 +570,7 @@ class MessmanSeafarers():
 
         training = Training()
         training.messman(pdf,database,uid)
-        pdf.ln(40)
+       
         onland = Onshore()
         onland.ab(pdf,database,uid)
         

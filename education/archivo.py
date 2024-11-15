@@ -43,6 +43,12 @@ def sanitize_text(text):
 
 class Education():
     def educations(self,pdf,database,uid):
+        
+        
+        
+        needed_height = 50  # Altura estimada que necesitas para la sección inicial (puedes ajustar este valor según el diseño)
+        if pdf.get_y() + needed_height > pdf.page_break_trigger:
+            pdf.add_page()
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
         pdf.ln(10)
         

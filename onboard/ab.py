@@ -52,7 +52,8 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
 
 class Onboard:
     def ab(self, pdf, database, uid):
-        pdf.ln(5)
+        if pdf.get_y() + 40 > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
+            pdf.add_page()
         pdf.cell(0, 10, txt='3. WORK EXPERIENCE ONBOARD', align="L")
         pdf.ln(10)
 

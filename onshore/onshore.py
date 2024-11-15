@@ -35,7 +35,8 @@ def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
         
 class Onshore:
     def ab(self, pdf, database, uid):
-        pdf.ln(5)
+        if pdf.get_y() + 80 > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
+            pdf.add_page()
         pdf.cell(0, 10, txt='6. WORK EXPERIENCE ONSHORE', align="L")
         pdf.ln(10)
         anchuras_columnas =     [22, 22, 27, 35, 27, 25, 40]

@@ -567,7 +567,7 @@ class FitterSeafarers():
 
         training = Training()
         training.fitter(pdf,database,uid)
-        pdf.ln(40)
+       
         onland = Onshore()
         onland.ab(pdf,database,uid)
         
