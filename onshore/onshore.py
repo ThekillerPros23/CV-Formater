@@ -110,7 +110,7 @@ class Onshore:
             nombre_barco = fila.get('dutiesOrResponsibilities', '')
             imo_numero = fila.get('rank/position', '')
             gt_hp = fila.get('reasonForLeaving', '')
-            tipo_barco = fila.get('nameOfContactPersonAndTelephoneNumbe', "")
+            tipo_barco = fila.get('nameOfContactPersonAndTelephoneNumber', "")
 
             # Generar las líneas para cada celda
             lines_fecha_ingreso = pdf.multi_cell(anchuras[0], cell_height, fecha_ingreso, border=0, align='L', split_only=True)
