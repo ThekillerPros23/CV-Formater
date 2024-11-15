@@ -11,7 +11,7 @@ import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
 
-from education.educations import *
+from education.archivo import *
 from training.cook import *
 from number import *
 

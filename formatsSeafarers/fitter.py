@@ -12,7 +12,7 @@ from number import *
 import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
-from education.educations import *
+from education.archivo import *
 
 number = Number()
 country_abbreviations = number.number()

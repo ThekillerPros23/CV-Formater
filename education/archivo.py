@@ -31,6 +31,15 @@ def draw_text_in_cell(pdf, x, y, width, height, text, font_size=10):
         if i < max_lines:
             pdf.text(x + 1, y + 3 + i * line_height, line)
         
+def sanitize_text(text):
+    """Reemplaza caracteres no soportados por equivalentes en latin1."""
+    if not text:
+        return ""
+    try:
+        return text.encode("latin1").decode("latin1")  # Verifica si es compatible con latin1
+    except UnicodeEncodeError:
+        # Reemplazar caracteres no compatibles con '?' o eliminarlos
+        return text.encode("latin1", errors="replace").decode("latin1")
 
 class Education():
     def educations(self,pdf,database,uid):
@@ -98,12 +107,10 @@ class Education():
         # Añadir los datos
 # Populate the table with data from the Firestore `education` document
         for record in education:
-            institution = record.get('educationInstitution', '')
-            title = record.get('certificateName', '')
-            
-            # Asegurarse de que el país sea una cadena de texto
-            country_data = record.get('certificateCountry', '')
-            country = country_data if isinstance(country_data, str) else ""
+            institution = sanitize_text(record.get('educationInstitution', ''))
+            title = sanitize_text(record.get('certificateName', ''))
+            country = sanitize_text(record.get('certificateCountry', ''))
+
 
             # Convertir fechas al formato MM-DD-YYYY
             start_date = record.get('startDate', '')
