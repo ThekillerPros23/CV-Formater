@@ -109,8 +109,11 @@ class Education():
         for record in education:
             institution = sanitize_text(record.get('educationInstitution', ''))
             title = sanitize_text(record.get('certificateName', ''))
-            country = sanitize_text(record.get('certificateCountry', ''))
-
+            country_data = record.get('certificateCountry', '')
+            if isinstance(country_data, str):
+                country = sanitize_text(country_data)
+            else:
+                country = ""
 
             # Convertir fechas al formato MM-DD-YYYY
             start_date = record.get('startDate', '')
