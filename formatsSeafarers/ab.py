@@ -566,7 +566,7 @@ class Ab_OsSeafarers():
         training = Training()
         training.ab(pdf,database,uid)
       
-        
+        pdf.ln(40)
         onland = Onshore()
         onland.ab(pdf,database,uid)
         

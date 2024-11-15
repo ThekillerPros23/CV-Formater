@@ -109,7 +109,7 @@ class Education():
         for record in education:
             institution = sanitize_text(record.get('educationInstitution', ''))
             title = sanitize_text(record.get('certificateName', ''))
-            country_data = record.get('certificateCountry', '')
+            country_data = record.get('certificateCountry', '').get('value',"")
             if isinstance(country_data, str):
                 country = sanitize_text(country_data)
             else:
