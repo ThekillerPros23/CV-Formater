@@ -1,12 +1,12 @@
 from datetime import datetime
 
 # Función para ajustar el texto a la altura especificada dentro de una celda
-def draw_text_in_cell(pdf, x, y, width, height, text, font_size=10):
+def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
     """
     Función para escribir texto ajustado dentro de una celda.
     """
     pdf.set_xy(x, y)
-    pdf.set_font("Arial", size=font_size)
+    pdf.set_font("calibri", size=font_size)
     line_height = pdf.font_size + 1
     max_lines = int(height // line_height)
 

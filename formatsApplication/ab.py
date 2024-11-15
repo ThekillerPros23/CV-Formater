@@ -1,19 +1,18 @@
 from fpdf import FPDF
-from formatskill.fitter import *
+from formatskill.ab import *
 import requests
 from io import BytesIO
 from PIL import Image
-from courses.fitter import *
+from courses.ab import *
 from datetime import datetime
 from onboard.ab import *
 from onshore.onshore import *
-from training.fitter import *
-from number import *
 import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
+from training.ab import *
+from number import *
 from education.archivo import *
-
 number = Number()
 country_abbreviations = number.number()
 
@@ -44,7 +43,6 @@ def format_phone_number(number):
 
     except NumberParseException:
         return "Número inválido"
-
 
 
 def descargar_imagen_firebase(url):
@@ -78,9 +76,9 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
     return lineas
 
 
-class FitterSeafarers():
-    def format_fitter(self, pdf, database, uid,version):
-   
+class Ab_OsSeafarers():
+    def format_ab_os(self, pdf, database, uid,version):
+        
         pdf.set_fill_color(142,170,219)
         anchuras = [40, 50, 60, 40]
         pdf.add_page()
@@ -198,7 +196,7 @@ class FitterSeafarers():
         pdf.set_xy(120, 82)
         pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
         # Nacionalidad
-        nationality = database.marine_nationality(uid)
+        nationality = database.marine_nationality(uid) or ""
         pdf.set_xy(80, 91)
         pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
         pdf.cell(w=80, h=height, txt=nationality, border=1, align='C', ln=1)
@@ -212,6 +210,7 @@ class FitterSeafarers():
         pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L', fill=True)
         pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
 
+        # Altura, peso y BMI
         pdf.set_xy(80, 105)
         height = database.marine_height(uid)
         # Verifica si la altura es "0' 0''" o "nan", de ser así, muestra una celda vacía
@@ -295,7 +294,6 @@ class FitterSeafarers():
 
         pdf.cell(w=30, h=7, txt="WHATSAPP", border=1, align="C", fill=True)
         pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="C")      
-
         pdf.cell(w=20, h=7, txt="E-MAIL", border=1, align="L", fill=True)
         
         pdf.cell(w=50, h=7, txt=email, border=1, align="C", ln=1)
@@ -303,6 +301,7 @@ class FitterSeafarers():
         # Tercera fila con "LANGUAGES"
         
         pdf.cell(w=30, h=7, txt="LANGUAGES", border=1, align="C",fill=True)
+        
         
         pdf.cell(w=30, h=7, txt="ENGLISH", border=1, align="L",fill=True)
         english = database.marine_lang_engl(uid)
@@ -312,8 +311,8 @@ class FitterSeafarers():
         spanish = database.marine_lang_span(uid) or ""
         pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
 
-        
-        
+
+
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill= True)
         
         pdf.cell(w=30, h=7, txt="%", border=1, align="R", ln=1)
@@ -439,7 +438,7 @@ class FitterSeafarers():
         pdf.set_font('Calibri', '', 9)
        # Títulos de las columnas
         titulos_columnas = [
-           "TYPE OF DOCUMENT / ID",
+            "TYPE OF DOCUMENT / ID",
             "COUNTRY OF ISSUE",
             "NO.",
             "ISSUED AT (PLACE)",
@@ -564,9 +563,9 @@ class FitterSeafarers():
             # Mover a la siguiente línea
             pdf.ln(max_altura)
 
-
         training = Training()
-        training.fitter(pdf,database,uid)
+        training.ab(pdf,database,uid)
+      
         pdf.ln(40)
         onland = Onshore()
         onland.ab(pdf,database,uid)
@@ -586,8 +585,7 @@ class FitterSeafarers():
 
         # Assuming `vaccines` is populated from the database
         vaccines = database.marine_vaccines(uid) or {}
-
-        # Setting up the PDF structure
+ # Setting up the PDF structure
         pdf.cell(w=40, h=6, txt="TYPE OF VACCINE", border=1, align='C', fill=True)
         pdf.cell(w=40, h=6, txt="COUNTRY", border=1, align='C', fill=True)
         pdf.cell(w=30, h=6, txt="DOZE", border=1, align='C', fill=True)
@@ -632,7 +630,9 @@ class FitterSeafarers():
         
         pdf.ln(10)
         skills = Skills()
-        skills.fitter(pdf, database,uid)
+        skills.ab_os(pdf, database,uid)
         #skills.messman(pdf)
         pdf.ln(10)
    
+
+
