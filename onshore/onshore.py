@@ -100,17 +100,28 @@ class Onshore:
         for fila in onland:
             # Obtener valores de cada campo y formatear fechas
             fecha_ingreso = fila.get('dateOn', '')
-            fecha_salida = fila.get('dateOff', '')
-
+            fecha_ingreso = '' if fecha_ingreso in ('NA', 'N/A') else fecha_ingreso
             fecha_ingreso = datetime.strptime(fecha_ingreso, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_ingreso else ''
+
+            fecha_salida = fila.get('dateOff', '')
+            fecha_salida = '' if fecha_salida in ('NA', 'N/A') else fecha_salida
             fecha_salida = datetime.strptime(fecha_salida, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_salida else ''
 
             # Otros datos
             nombre_empresa = fila.get('companyName', '')
+            nombre_empresa = '' if nombre_empresa in ('NA', 'N/A') else nombre_empresa
+
             nombre_barco = fila.get('dutiesOrResponsibilities', '')
+            nombre_barco = '' if nombre_barco in ('NA', 'N/A') else nombre_barco
+
             imo_numero = fila.get('rank/position', '')
+            imo_numero = '' if imo_numero in ('NA', 'N/A') else imo_numero
+
             gt_hp = fila.get('reasonForLeaving', '')
-            tipo_barco = fila.get('nameOfContactPersonAndTelephoneNumber', "")
+            gt_hp = '' if gt_hp in ('NA', 'N/A') else gt_hp
+
+            tipo_barco = fila.get('nameOfContactPersonAndTelephoneNumber', '')
+            tipo_barco = '' if tipo_barco in ('NA', 'N/A') else tipo_barco
 
             # Generar las líneas para cada celda
             lines_fecha_ingreso = pdf.multi_cell(anchuras[0], cell_height, fecha_ingreso, border=0, align='L', split_only=True)
