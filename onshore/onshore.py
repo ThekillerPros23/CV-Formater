@@ -39,13 +39,13 @@ class Onshore:
         pdf.cell(0, 10, txt='6. WORK EXPERIENCE ONSHORE', align="L")
         pdf.ln(10)
 
-        anchuras_columnas =     [22, 22, 27, 27, 27, 25, 40]
+        anchuras_columnas =     [22, 22, 27, 35, 27, 25, 40]
         titulos_columnas = [
-            'DATE ON(MM/DD/YYYY)',
-            'DATE OFF(MM/DD/YYYY)',
+            'DATE ON\n(MM/DD/YYYY)',
+            'DATE OFF\n(MM/DD/YYYY)',
             'COMPANY NAME',
             'DUTIES OR RESPONSIBILITIES',
-            'RANK / POSITION',
+            'RANK /POSITION',
             'REASON FOR LEAVING',
             'NAME OF CONTACT PERSON & TELEPHONE NUMBER',
            
@@ -56,7 +56,7 @@ class Onshore:
 
         pdf.set_font('calibri', '', 9)
        # Definir las alturas específicas para cada grupo de columnas
-        height_first_columns = 8
+        height_first_columns = 12
         height_large_columns = 24
         height_other_columns = 12
 
@@ -95,34 +95,23 @@ class Onshore:
                 # Cargar y ordenar datos
       # Ordenar los registros y definir anchuras y altura de celda
         onland = sorted(database.marine_onland(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
-        anchuras = [22, 22, 27, 27, 27, 25, 40]
+        anchuras = [22, 22, 27, 35, 27, 25, 40]
         cell_height = 6
 
         for fila in onland:
             # Obtener valores de cada campo y formatear fechas
             fecha_ingreso = fila.get('dateOn', '')
-            fecha_ingreso = '' if fecha_ingreso in ('NA', 'N/A') else fecha_ingreso
-            fecha_ingreso = datetime.strptime(fecha_ingreso, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_ingreso else ''
-
             fecha_salida = fila.get('dateOff', '')
-            fecha_salida = '' if fecha_salida in ('NA', 'N/A') else fecha_salida
+
+            fecha_ingreso = datetime.strptime(fecha_ingreso, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_ingreso else ''
             fecha_salida = datetime.strptime(fecha_salida, '%Y-%m-%d').strftime('%m-%d-%Y') if fecha_salida else ''
 
             # Otros datos
             nombre_empresa = fila.get('companyName', '')
-            nombre_empresa = '' if nombre_empresa in ('NA', 'N/A') else nombre_empresa
-
             nombre_barco = fila.get('dutiesOrResponsibilities', '')
-            nombre_barco = '' if nombre_barco in ('NA', 'N/A') else nombre_barco
-
             imo_numero = fila.get('rank/position', '')
-            imo_numero = '' if imo_numero in ('NA', 'N/A') else imo_numero
-
             gt_hp = fila.get('reasonForLeaving', '')
-            gt_hp = '' if gt_hp in ('NA', 'N/A') else gt_hp
-
-            tipo_barco = fila.get('nameOfContactPersonAndTelephoneNumber', '')
-            tipo_barco = '' if tipo_barco in ('NA', 'N/A') else tipo_barco
+            tipo_barco = fila.get('nameOfContactPersonAndTelephoneNumbe', "")
 
             # Generar las líneas para cada celda
             lines_fecha_ingreso = pdf.multi_cell(anchuras[0], cell_height, fecha_ingreso, border=0, align='L', split_only=True)
@@ -179,6 +168,7 @@ class Onshore:
             draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4], y_start, anchuras[5], adjusted_height, gt_hp)
 
             pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4] + anchuras[5], y_start)
-            pdf.cell(anchuras[6], adjusted_height, border=1,ln=1)
+            pdf.cell(anchuras[6], adjusted_height, border=1)
             draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4] + anchuras[5], y_start, anchuras[6], adjusted_height, tipo_barco)
-            pdf.set_y(y_start + adjusted_height)
+
+            pdf.ln()
