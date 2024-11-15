@@ -44,7 +44,7 @@ def sanitize_text(text):
 class Education():
     def educations(self,pdf,database,uid):
         pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
-        pdf.ln(5)
+        pdf.ln(10)
         
         pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
         anchuras_columnas  = [60,40,30,30,30]
