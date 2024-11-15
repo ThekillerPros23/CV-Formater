@@ -37,7 +37,7 @@ class Onshore:
     def ab(self, pdf, database, uid):
         pdf.ln(5)
         pdf.cell(0, 10, txt='6. WORK EXPERIENCE ONSHORE', align="L")
-        
+        pdf.ln(5)
         anchuras_columnas =     [22, 22, 27, 35, 27, 25, 40]
         titulos_columnas = [
             'DATE ON\n(MM/DD/YYYY)',
