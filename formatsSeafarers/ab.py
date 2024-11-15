@@ -12,6 +12,7 @@ from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
 from training.ab import *
 from number import *
+from education.educations import *
 number = Number()
 country_abbreviations = number.number()
 
@@ -568,97 +569,10 @@ class Ab_OsSeafarers():
         
         onland = Onshore()
         onland.ab(pdf,database,uid)
-        pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
-        pdf.ln(20)
         
-        pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
-        anchuras_columnas  = [60,40,30,30,30]
-        titulos_columnas = [
-                'NAME OF EDUCATION INSTITUTION / TECHNICAL INSTITUTE / UNIVERSITY',
-                'OBTAINED TITLE OR GRADE',
-                'COUNTRY OF ISSUE',
-                'DATE ON(MM/DD/YYYY)',
-                'DATE OFF(MM/DD/YYYY)',
-            ]
-        align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
-          # Altura personalizada para cada celda de título
-        margen_inferior = 10  # Margen inferior para evitar que el contenido se corte
+        education = Education()
+        education.educations(pdf,database,uid)
 
-        pdf.set_font('calibri', '', 9)
-
-        height_first_columns = 8
-        height_large_columns = 24
-        height_other_columns = 12
-
-        for i, titulo in enumerate(titulos_columnas):
-            # Determinar la altura para cada columna
-            if i < 2:
-                cell_height = height_first_columns  # Altura para las primeras dos columnas
-            elif i == 2 or i == 4:
-                cell_height = height_large_columns  # Altura para las columnas 3 y 5
-            else:
-                cell_height = height_other_columns  # Altura para las columnas restantes (4 y 6)
-
-            # Obtener el número de líneas necesarias para el título y ajustar la altura
-            lines = pdf.multi_cell(anchuras_columnas[i], cell_height, titulo, border=0, align=align_type[i], split_only=True)
-            num_lines = len(lines)
-            adjusted_height = max(cell_height * num_lines, cell_height)  # Ajustar altura en base a las líneas necesarias
-
-            # Verificar si es necesario un salto de página antes de dibujar el título
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
-
-            # Establecer la posición inicial de cada título de columna
-            x_start = pdf.get_x()
-            y_start = pdf.get_y()
-            pdf.set_xy(x_start, y_start)
-
-            # Dibujar cada título de columna con su altura ajustada y alineación
-            pdf.multi_cell(anchuras_columnas[i], cell_height, titulo, border=1, align=align_type[i], fill=True)
-
-            # Mover el cursor hacia la siguiente posición en la fila
-            pdf.set_xy(x_start + anchuras_columnas[i], y_start)  
-
-        # Mover el cursor hacia abajo después de dibujar todos los títulos
-        pdf.ln(max(height_first_columns, height_large_columns, height_other_columns))
-
-        education = database.marine_otherskills(uid)
-        print(education)
-     
-   
-        # Añadir los datos
-# Populate the table with data from the Firestore `education` document
-        for record in education:
-            institution = record.get('educationInstitution', '')
-            title = record.get('certificateName', '')
-            
-            # Asegurarse de que el país sea una cadena de texto
-            country_data = record.get('certificateCountry', '')
-            country = country_data if isinstance(country_data, str) else ""
-
-            # Convertir fechas al formato MM-DD-YYYY
-            start_date = record.get('startDate', '')
-            end_date = record.get('endDate', '')
-
-            try:
-                if start_date:
-                    start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass  # Si la fecha tiene un formato inesperado, se deja tal cual
-
-            try:
-                if end_date:
-                    end_date = datetime.strptime(end_date, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass
-
-            # Imprimir celdas con el formato de fecha actualizado
-            pdf.cell(w=60, h=7, txt=institution, align='C', border=1)
-            pdf.cell(w=40, h=7, txt=title, align='C', border=1)
-            pdf.cell(w=30, h=7, txt=country, align='C', border=1)
-            pdf.cell(w=30, h=7, txt=start_date, align='C', border=1)
-            pdf.cell(w=30, h=7, txt=end_date, align='C', border=1)
-            pdf.ln(7)
 
         pdf.ln(10)
 

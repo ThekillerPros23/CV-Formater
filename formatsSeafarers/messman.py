@@ -12,7 +12,7 @@ from number import *
 import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
-
+from education.educations import *
 
 number = Number()
 country_abbreviations = number.number()
@@ -573,81 +573,9 @@ class MessmanSeafarers():
         
         onland = Onshore()
         onland.ab(pdf,database,uid)
-        pdf.cell(0,10, txt='7. HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='L')
-        pdf.ln(20)
         
-        pdf.cell(w=0, h=7,txt='HIGHEST LEVEL OF EDUCATION / OTHER TRAINING OR CERTIFICATE', align='C', border=1, ln=1, fill=True)
-        anchuras_columnas  = [60,40,30,30,30]
-        titulos_columnas = [
-                'NAME OF EDUCATION INSTITUTION / TECHNICAL INSTITUTE / UNIVERSITY',
-                'OBTAINED TITLE OR GRADE',
-                'COUNTRY OF ISSUE',
-                'DATE ON(MM/DD/YYYY)',
-                'DATE OFF(MM/DD/YYYY)',
-            ]
-        align_type = ['C', 'C', 'C', 'L', 'C', 'L', 'C', 'C']
-        altura_linea = [8, 16, 16, 8, 8]  # Altura personalizada para cada celda de título
-        margen_inferior = 10  # Margen inferior para evitar que el contenido se corte
-
-        pdf.set_font('calibri', '', 9)
-
-        # Calcular el número de líneas para cada título
-        alturas_titulos = [
-            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulos_columnas[i], border=0, align=align_type[i], split_only=True)
-            for i in range(len(titulos_columnas))
-        ]
-
-        # Obtener el número de líneas en cada título y calcular la altura final para cada uno
-        alturas_finales_titulos = [len(lineas) * altura_linea[i] for i, lineas in enumerate(alturas_titulos)]
-
-        # Dibujar los encabezados de las columnas con alturas personalizadas
-        x_inicial = pdf.get_x()  # Posición inicial en X
-        y_inicial = pdf.get_y()  # Posición inicial en Y
-
-        # Dibujar cada título de columna en su respectiva celda
-        for i, titulo in enumerate(titulos_columnas):
-            pdf.set_xy(x_inicial + sum(anchuras_columnas[:i]), y_inicial)
-            
-            # Usar la altura específica calculada para cada título
-            pdf.multi_cell(anchuras_columnas[i], altura_linea[i], titulo, border=1, align=align_type[i], fill=True)
-
-        education = database.marine_otherskills(uid)
-        print(education)
-     
-   
-        # Añadir los datos
-# Populate the table with data from the Firestore `education` document
-        for record in education:
-            institution = record.get('educationInstitution', '')
-            title = record.get('certificateName', '')
-            
-            # Asegurarse de que el país sea una cadena de texto
-            country_data = record.get('certificateCountry', '')
-            country = country_data if isinstance(country_data, str) else ""
-
-            # Convertir fechas al formato MM-DD-YYYY
-            start_date = record.get('startDate', '')
-            end_date = record.get('endDate', '')
-
-            try:
-                if start_date:
-                    start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass  # Si la fecha tiene un formato inesperado, se deja tal cual
-
-            try:
-                if end_date:
-                    end_date = datetime.strptime(end_date, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                pass
-
-            # Imprimir celdas con el formato de fecha actualizado
-            pdf.cell(w=60, h=7, txt=institution, align='C', border=1)
-            pdf.cell(w=40, h=7, txt=title, align='C', border=1)
-            pdf.cell(w=30, h=7, txt=country, align='C', border=1)
-            pdf.cell(w=30, h=7, txt=start_date, align='C', border=1)
-            pdf.cell(w=30, h=7, txt=end_date, align='C', border=1)
-            pdf.ln(7)
+        education = Education()
+        education.educations(pdf,database,uid)
 
         pdf.ln(10)
 
