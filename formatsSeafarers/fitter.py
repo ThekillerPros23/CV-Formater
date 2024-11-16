@@ -542,7 +542,7 @@ class FitterSeafarers():
             "SEAMAN'S BOOK (NATIONAL)",
             "US VISA C1-D"
         ]
-
+        anchuras = [40, 30, 30, 30, 30, 30]
         for document_name in documents:
             # Guardar posición inicial
             x_inicial = pdf.get_x()
