@@ -38,7 +38,8 @@ def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
 
 class Training():
     def cook(self,pdf,database,uid):
-        pdf.ln(20)
+        if pdf.get_y() + 80 > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
+            pdf.add_page()
         pdf.set_font('calibri', '',9)
 
         pdf.cell(0, 10, txt='5. TRAINING AND CERTIFICATION.', align='L')

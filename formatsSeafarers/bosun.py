@@ -21,7 +21,43 @@ country_abbreviations = number.number()
 
 
 formatted_pattern = re.compile(r"^\+\w{2} \(\+\d{1,3}\) \d+")
+def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
+    """
+    Función para escribir texto ajustado dentro de una celda, manejando palabras largas y saltos de línea.
+    """
+    pdf.set_xy(x, y)
+    pdf.set_font("calibri", size=font_size)
+    line_height = pdf.font_size + 1
+    max_lines = int(height // line_height)
 
+    # Dividir el texto en palabras o fragmentos si son demasiado largas
+    words = []
+    for word in text.split():
+        while pdf.get_string_width(word) > width - 2:  # Si la palabra es demasiado larga, dividirla
+            words.append(word[:len(word)//2])
+            word = word[len(word)//2:]
+        words.append(word)
+
+    lines = []
+    current_line = ""
+
+    for word in words:
+        test_line = current_line + " " + word if current_line else word
+        if pdf.get_string_width(test_line) <= width - 2:
+            current_line = test_line
+        else:
+            lines.append(current_line)
+            current_line = word
+        if len(lines) == max_lines:
+            break
+
+    if current_line:
+        lines.append(current_line)
+
+    # Dibujar las líneas dentro de la celda
+    for i, line in enumerate(lines):
+        if i < max_lines:
+            pdf.text(x + 1, y + 3 + i * line_height, line)
 def format_phone_number(number):
     try:
         # Verifica si el número ya está en el formato deseado
@@ -551,21 +587,60 @@ class BosunSeafarers():
                     break  # Detener la búsqueda una vez encontrado el documento correspondiente
 
             # Contenido de cada columna en la fila actual
-            columnas = [document_name, country, document_number, issued_at, date_of_issue, valid_until]
+            lines_doc_name = pdf.multi_cell(anchuras[0], cell_height, document_name, border=0, align='L', split_only=True)
+            lines_country = pdf.multi_cell(anchuras[1], cell_height, country, border=0, align='L', split_only=True)
+            lines_number = pdf.multi_cell(anchuras[2], cell_height, document_number, border=0, align='L', split_only=True)
+            lines_issued_at = pdf.multi_cell(anchuras[3], cell_height, issued_at, border=0, align='L', split_only=True)
+            lines_issue_date = pdf.multi_cell(anchuras[4], cell_height, date_of_issue, border=0, align='L', split_only=True)
+            lines_expiry_date = pdf.multi_cell(anchuras[5], cell_height, valid_until, border=0, align='L', split_only=True)
 
-            # Calcular la altura máxima de la fila
-            alturas = [pdf.get_string_width(valor) / anchuras_columnas[i] * altura_fila for i, valor in enumerate(columnas)]
-            max_altura = max(altura_fila, *alturas)
+            # Calcular la altura de cada celda
+            height_doc_name = len(lines_doc_name) * cell_height if document_name else cell_height
+            height_country = len(lines_country) * cell_height if country else cell_height
+            height_number = len(lines_number) * cell_height if document_number else cell_height
+            height_issued_at = len(lines_issued_at) * cell_height if issued_at else cell_height
+            height_issue_date = len(lines_issue_date) * cell_height if date_of_issue else cell_height
+            height_expiry_date = len(lines_expiry_date) * cell_height if valid_until else cell_height
 
-            # Imprimir la primera columna con fondo (fill)
-            pdf.cell(w=anchuras_columnas[0], h=max_altura, txt=str(columnas[0]), border=1, align='C', fill=True)
+            # Ajustar las alturas para que todas sean iguales a la mayor
+            adjusted_height = max(height_doc_name, height_country, height_number, height_issued_at, height_issue_date, height_expiry_date)
 
-            # Imprimir las demás celdas sin fondo
-            for i in range(1, len(columnas)):
-                pdf.cell(w=anchuras_columnas[i], h=max_altura, txt=str(columnas[i]), border=1, align='C', fill=False)
+            # Verificar si es necesario un salto de página
+            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+                pdf.add_page()
 
-            # Mover a la siguiente línea
-            pdf.ln(max_altura)
+            # Posición inicial de `x` e `y` para esta fila
+            x_start = pdf.get_x()
+            y_start = pdf.get_y()
+
+            # Dibujar la columna de documentos con color
+            # Color azul claro
+            pdf.set_xy(x_start, y_start)
+            pdf.cell(anchuras[0], adjusted_height, border=1, fill=True)
+            draw_text_in_cell(pdf, x_start, y_start, anchuras[0], adjusted_height, document_name)
+
+            # Dibujar las demás columnas sin color
+            pdf.set_xy(x_start + anchuras[0], y_start)
+            pdf.cell(anchuras[1], adjusted_height, border=1)
+            draw_text_in_cell(pdf, x_start + anchuras[0], y_start, anchuras[1], adjusted_height, country)
+
+            pdf.set_xy(x_start + anchuras[0] + anchuras[1], y_start)
+            pdf.cell(anchuras[2], adjusted_height, border=1)
+            draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1], y_start, anchuras[2], adjusted_height, document_number)
+
+            pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2], y_start)
+            pdf.cell(anchuras[3], adjusted_height, border=1)
+            draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2], y_start, anchuras[3], adjusted_height, issued_at)
+
+            pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_start)
+            pdf.cell(anchuras[4], adjusted_height, border=1)
+            draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_start, anchuras[4], adjusted_height, date_of_issue)
+
+            pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4], y_start)
+            pdf.cell(anchuras[5], adjusted_height, border=1)
+            draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3] + anchuras[4], y_start, anchuras[5], adjusted_height, valid_until)
+
+            pdf.ln()
 
         training = Training()
         training.bosun(pdf,database,uid)
