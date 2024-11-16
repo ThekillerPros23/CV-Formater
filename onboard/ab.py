@@ -103,6 +103,7 @@ class Onboard:
         pdf.ln(max(height_first_columns, height_other_columns))
                 # Cargar y ordenar datos
         onboard = sorted(database.marine_onboard(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
+        print(onboard)
         anchuras =  [25, 25, 32, 25, 18, 20, 25, 28]
         cell_height = 7
         for fila in onboard:
@@ -124,7 +125,9 @@ class Onboard:
             nombre_barco = fila.get('vesselName', '')
             imo_numero = fila.get('imo#', '')
             gt_hp = fila.get('gt/hp', '')
-            tipo_barco = fila.get('typeOfVessel', [{}])[0].get('name', '') if fila.get('typeOfVessel') else ''
+            tipo_barco = fila.get('typeOfVessel', [])
+            tipo_barco = tipo_barco[0].get('name', '') if isinstance(tipo_barco, list) and tipo_barco else ''
+
             posicion = fila.get('rank/position', '')
 
             # Calcular el número de líneas necesarias en cada celda para multi_cells
