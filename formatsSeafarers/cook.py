@@ -500,7 +500,7 @@ class CookSeafarers():
 # Lista de documentos predeterminada
 # Lista de documentos predeterminada
         documents = [
-            "COC VI/",
+            "COC VI/1",
             "COC COOK",
             "B1/ B2",
             "FLAG CERTIFICATES",
