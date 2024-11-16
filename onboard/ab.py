@@ -57,7 +57,7 @@ class Onboard:
         pdf.cell(0, 10, txt='3. WORK EXPERIENCE ONBOARD', align="L")
         pdf.ln(10)
 
-        anchuras_columnas = [25, 25, 32, 25, 18, 15, 30, 28]
+        anchuras_columnas = [25, 25, 32, 25, 18, 20, 25, 28]
         titulos_columnas = [
             'DATE ON (MM/DD/YYYY)',
             'DATE OFF (MM/DD/YYYY)',
@@ -103,7 +103,7 @@ class Onboard:
         pdf.ln(max(height_first_columns, height_other_columns))
                 # Cargar y ordenar datos
         onboard = sorted(database.marine_onboard(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
-        anchuras = [25, 25, 32, 25, 18, 15, 30, 28]
+        anchuras =  [25, 25, 32, 25, 18, 20, 25, 28]
         cell_height = 7
         for fila in onboard:
         # Obtener valores de cada campo y formatear las fechas

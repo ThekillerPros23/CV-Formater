@@ -376,7 +376,7 @@ class OilerSeafarers():
         cell_height = 7  # Altura base para cada línea de texto
 
         # Anchos específicos para cada columna
-        anchuras = [30, 60, 50, 50]
+        anchuras = [30, 60, 50, 55]
 
         # Dibujar encabezado
         pdf.cell(w=anchuras[0], h=cell_height, txt="RELATIONSHIP", border=1, align='C', fill=True)
@@ -499,8 +499,8 @@ class OilerSeafarers():
 # Lista de documentos predeterminada
 # Lista de documentos predeterminada
         documents = [
-            "COC II/5",
-            "COC II/4",
+            "COC III/5",
+            "COC III/4",
             "B1/ B2",
             "FLAG CERTIFICATES",
             "FLAG SEAMANBOOK",
