@@ -35,7 +35,8 @@ def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
         
 class Onshore:
     def ab(self, pdf, database, uid):
-        if pdf.get_y() +150  > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
+        onland = sorted(database.marine_onland(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
+        if pdf.get_y() + (150 if onland else 40) > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
             pdf.add_page()
         pdf.cell(0, 10, txt='6. WORK EXPERIENCE ONSHORE', align="L")
         pdf.ln(10)
@@ -94,7 +95,7 @@ class Onshore:
 
                 # Cargar y ordenar datos
       # Ordenar los registros y definir anchuras y altura de celda
-        onland = sorted(database.marine_onland(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
+        
         anchuras = [22, 22, 27, 35, 27, 25, 40]
         cell_height = 6
 
