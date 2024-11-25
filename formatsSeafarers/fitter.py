@@ -660,7 +660,7 @@ class FitterSeafarers():
 
         # Assuming `vaccines` is populated from the database
         vaccines = database.marine_vaccines(uid) or {}
-
+        print(vaccines)
         # Setting up the PDF structure
         pdf.cell(w=40, h=6, txt="TYPE OF VACCINE", border=1, align='C', fill=True)
         pdf.cell(w=40, h=6, txt="COUNTRY", border=1, align='C', fill=True)
@@ -679,9 +679,14 @@ class FitterSeafarers():
             formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
             
             pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
-            pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
 
-        # Datos de fiebre amarilla
+            # Verificar que VaccineBrand es un diccionario antes de acceder a 'name'
+            vaccine_brand = card.get('VaccineBrand', {})
+            brand_name = vaccine_brand.get('name', '') if isinstance(vaccine_brand, dict) else ''
+            
+            pdf.cell(w=30, h=6, txt=brand_name, align='C', border=1, ln=1)
+
+        # Llenar datos de fiebre amarilla
         yellow_fever_cards = vaccines.get('yellowFever', {}).get('cards', [])
         if not yellow_fever_cards:
             # Si no hay datos, imprime una fila en blanco con el título "YELLOW FEVER"
@@ -702,8 +707,12 @@ class FitterSeafarers():
                 formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
                 
                 pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
-                pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
-        
+
+                # Verificar que VaccineBrand es un diccionario antes de acceder a 'name'
+                vaccine_brand = card.get('VaccineBrand', {})
+                brand_name = vaccine_brand.get('name', '') if isinstance(vaccine_brand, dict) else ''
+                
+                pdf.cell(w=30, h=6, txt=brand_name, align='C', border=1, ln=1)
         pdf.ln(10)
         skills = Skills()
         skills.fitter(pdf, database,uid)
