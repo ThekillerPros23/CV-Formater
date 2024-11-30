@@ -76,7 +76,7 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
     return lineas
 
 
-class Ab_OsSeafarers():
+class Ab_OsApplication():
     def format_ab_os(self, pdf, database, uid,version):
         
         pdf.set_fill_color(142,170,219)
@@ -97,7 +97,7 @@ class Ab_OsSeafarers():
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
         pdf.set_xy(135, 40)
-        position = database.marine_position(uid)
+        position = database.marine_position(uid,version)
         position_name = position[0].get('name', "") if position else ""
         pdf.cell(6,10, position_name)
 
@@ -346,8 +346,8 @@ class Ab_OsSeafarers():
 
         # Datos principales
         pdf.cell(w=60, h=7, txt=str(marlins['PercentageTotal']) + "%", border=1, align="R")
-        pdf.cell(w=60, h=7, txt=marlins['IssueDate'], border=1, align="C")
-        pdf.cell(w=70, h=7, txt=marlins['PlaceIssue'], border=1, align="C", ln=1)
+        pdf.cell(w=60, h=7, txt=marlins['IssueDate'] or "", border=1, align="C")
+        pdf.cell(w=70, h=7, txt=marlins['PlaceIssue'] or "", border=1, align="C", ln=1)
 
         # Encabezados de secciones de habilidades
         pdf.cell(w=30, h=7, txt='LISTENING', border=1, align='L', fill=True)

@@ -84,40 +84,40 @@ class FirebaseDataSeafarers():
         return doc_data['seafarerData'].get('seafarerCertificates') if doc_data else { }
     def marine_lang_engl(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("ENGLISH", {}).get("PercentageSpeak", "")
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("ENGLISH", {}).get("PercentageSpeak", "") if doc_data else {}
 
     def marine_lang_span(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("SPANISH", {}).get("PercentageSpeak", "") 
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("SPANISH", {}).get("PercentageSpeak", "")  if doc_data else {}
     def marine_weight(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("profile", {}).get("weight", {}).get("lb", {})
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("profile", {}).get("weight", {}).get("lb", {}) if doc_data else {}
     
     def marine_height(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("profile", {}).get("height", {}).get("format", {})
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("profile", {}).get("height", {}).get("format", {}) if doc_data else {}
 
     def marine_bmi(self, id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("profile", {}).get("bmi", {})
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("profile", {}).get("bmi", {}) if doc_data else {}
 
     def marine_certificates(self,id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerCertificates", {})
+        return doc_data.get("seafarerData", {}).get("seafarerCertificates", {}) if doc_data else {}
     def marine_marlins(self,id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("marlins", {}) 
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("marlins", {}) if doc_data else {}
 
 
     def marine_skills(self,id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("skills", {}).get("skill", {})
+        return doc_data.get("seafarerData", {}).get("skills", {}).get("skill", {}) if doc_data else {}
     def marine_identification(self,id):
         doc_data = self.get_document_by_uid(id)
         return doc_data['seafarerData'].get('seafarerDocument') if doc_data else {}
     def marine_otherskills(self,id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("additionalCertificates", {})
+        return doc_data.get("seafarerData", {}).get("additionalCertificates", {}) if doc_data else {}
     def marine_position(self,id):
         doc_data = self.get_document_by_uid(id)
-        return doc_data.get("seafarerData", {}).get("position", {})
+        return doc_data.get("seafarerData", {}).get("position", {}) if doc_data else {}

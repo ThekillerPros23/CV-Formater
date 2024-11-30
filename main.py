@@ -230,44 +230,63 @@ app = Flask(__name__)
 
 @app.route('/pdf_render/applications', methods=['GET','POST'])
 def pdf_render():
-    pdf = PDF(orientation='P', unit='mm', format='A4')
-    
+    uid = request.args.get('id')
+    formatId = request.args.get('formatId')
+    version = request.args.get("version")
+    if int(formatId) == 1:
+        pdf = HotelStaffPDF(orientation='P', unit='mm', format='A4')
+
+    elif int(formatId) == 2:
+        pdf = AbPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 3:
+        pdf = CookPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 4:
+        pdf = BosunPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 5:
+            pdf = OilerPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 6:
+            pdf = MessmanPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 7:
+            pdf = FitterPDF(orientation='P', unit='mm', format='A4')
+    elif int(formatId) == 8:
+            pdf = OfficerPDF(orientation='P', unit='mm', format='A4')
+
     pdf.add_font('calibri', '', 'calibri.ttf', uni=True)
     pdf.add_font('calibri', 'I','calibrii.ttf',uni=True)
     pdf.add_font('calibri', 'BU','calibri.ttf',uni=True)
     pdf.add_font('calibri', 'B','calibrib.ttf',uni=True)
-    formatId = request.args.get('formatId')
-    uid = request.args.get('id')
-    version = request.args.get('version')
-    footer_data = {}
+
     if int(formatId) == 1:
+        #from 
         hotel = HotelStaffApplication()
-        hotel.format_hotel(pdf, databaseApplication, uid) 
+        hotel.format_hotel(pdf, databaseApplication, uid,version) 
         
     elif int(formatId) == 2:
-        ab_os = Ab_OsApplication()
-        ab_os.format_ab_os(pdf,databaseApplication,uid)
+     
+        ab_os = Ab_OsSeafarers()
+        ab_os.format_ab_os(pdf,databaseApplication,uid,version)
+      
     elif int(formatId) == 3:
-        cook = CookApplication()
-        cook.format_cook(pdf, databaseApplication, uid)
+        cook = CookSeafarers()
+        cook.format_cook(pdf,databaseApplication,uid,version)
     elif int(formatId) == 4:
-        bosun = BosunApplication()
-        bosun.format_bosun(pdf,databaseApplication, uid)
+        bosun = BosunSeafarers()
+        bosun.format_bosun(pdf,databaseApplication,uid,version)
     elif int(formatId) == 5:
-        oiler = OilerApplication()
-        oiler.format_oiler(pdf,databaseApplication, uid)
+        oiler = OilerSeafarers()
+        oiler.format_oiler(pdf,databaseApplication, uid,version)
     elif int(formatId) == 6:
-        messman = MessmanApplication()
-        messman.format_messman(pdf,databaseApplication, uid)
+        messman = MessmanSeafarers()
+        messman.format_messman(pdf,databaseApplication, uid,version)
     elif int(formatId) == 7:
-        fitter = FitterApplication()
-        fitter.format_fitter(pdf,databaseApplication, uid)
+        fitter = FitterSeafarers()
+        fitter.format_fitter(pdf,databaseApplication, uid,version)
     elif int(formatId) == 8:
-        officer = OfficerApplication()
-        officer.format_officer(pdf,databaseApplication,uid)
+        officer = OfficerSeafarers()
+        officer.format_officer(pdf,databaseApplication,uid,version)
     
     pdf_buffer = io.BytesIO()
-
+    
     # Generar el contenido del PDF como cadena
     pdf_output = pdf.output(dest='S').encode('latin1')  # 'S' significa 'return as string'
     
@@ -276,8 +295,7 @@ def pdf_render():
     
     # Colocamos el cursor al inicio del buffer para que se pueda leer
     pdf_buffer.seek(0)
-
-    # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
+       # Devolver el PDF como respuesta HTTP con el tipo de contenido adecuado
     return Response(pdf_buffer, mimetype='application/pdf', headers={
         'Content-Disposition': 'inline'  
     })
@@ -355,6 +373,6 @@ def pdf_render_seafarers():
     })
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',port=4000)
 
 

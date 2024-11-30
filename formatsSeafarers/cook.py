@@ -684,7 +684,12 @@ class CookSeafarers():
 
         for card in vaccines.get('covid', {}).get('cards', []):
             pdf.cell(w=40, h=6, txt="COVID BOOK", border=1, align='C', fill=True)
-            pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('value', ''), border=1, align='C')
+            country_issue = card.get('CountryIssue', {})
+            if isinstance(country_issue, dict):
+                value = country_issue.get('value', '')
+            else:
+                value = str(country_issue)
+            pdf.cell(w=40, h=6, txt=value, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
             
             # Formatear IssueDate
