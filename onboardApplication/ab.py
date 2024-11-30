@@ -51,7 +51,7 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
     return lineas
 
 class Onboard:
-    def ab(self, pdf, database, uid):
+    def ab(self, pdf, database, uid,version):
         if pdf.get_y() + 40 > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
             pdf.add_page()
         pdf.cell(0, 10, txt='3. WORK EXPERIENCE ONBOARD', align="L")
@@ -102,7 +102,7 @@ class Onboard:
         
         pdf.ln(max(height_first_columns, height_other_columns))
                 # Cargar y ordenar datos
-        onboard = sorted(database.marine_onboard(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
+        onboard = sorted(database.marine_onboard(uid,version), key=lambda x: x.get('dateOn', ''), reverse=True)
         print(onboard)
         anchuras =  [25, 25, 32, 25, 18, 20, 25, 28]
         cell_height = 7

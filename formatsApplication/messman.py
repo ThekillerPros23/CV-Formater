@@ -5,14 +5,14 @@ from io import BytesIO
 from PIL import Image
 from courses.messman import *
 from datetime import datetime
-from onboard.ab import *
-from onshore.onshore import *
-from training.messman import *
+from onboardApplication.ab import *
+from onshoreApplication.onshore import *
+from trainingApplication.messman import *
 from number import *
 import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
-from education.archivo import *
+from educationApplication.archivo import *
 
 number = Number()
 country_abbreviations = number.number()

@@ -25,102 +25,106 @@ class FirebaseDataApplication():
         doc_data = self.get_document_by_uid(id, version)
         return doc_data.get('photoURL') if doc_data and doc_data.get('photoURL') else "https://static.vecteezy.com/system/resources/previews/005/545/335/non_2x/user-sign-icon-person-symbol-human-avatar-isolated-on-white-backogrund-vector.jpg"
 
-    def marine_firstname_seafarers(self, id, version, ):
+    def marine_firstname_seafarers(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile'].get('firstName') if doc_data else None
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('firstName', "")
 
-    def marine_lastname_seafarers(self, id, version, ):
+    def marine_lastname_seafarers(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile'].get('lastName') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('lastName', "")
 
-    def marine_dateOfBirthSeafarers(self, id, version, ):
+    def marine_dateOfBirthSeafarers(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile'].get('dateBirth') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('dateBirth', "")
 
-    def marine_contact(self, id, version, ):
+    def marine_contact(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['contacts'].get('contact') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('contacts', {}).get('contact', "")
 
-    def marine_onland(self, id, version, ):
+    def marine_onland(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['skills'].get('onland') if doc_data else {}
+        return doc_data.get('version', {}).get('skills', {}).get('onland', {})
 
-    def marine_onboard(self, id, version, ):
+    def marine_onboard(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['skills'].get('onboard') if doc_data else {}
+        return doc_data.get('version', {}).get('skills', {}).get('onboard', {})
 
-    def marine_nationality(self, id, version, ):
+    def marine_nationality(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile']['countryBirth'].get('CountryName') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('countryBirth', {}).get('CountryName', "")
 
-    def marine_cellphone(self, id, version, ):
+    def marine_cellphone(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile']["phone"].get("value") if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('phone', {}).get('value', "")
 
-    def marine_gender(self, id, version, ):
+    def marine_gender(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile']['gender'].get('name') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('gender', {}).get('name', "")
 
-    def marine_vaccines(self, id, version, ):
+    def marine_vaccines(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile'].get('vaccines') if doc_data else {}
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('vaccines', {})
 
-    def marine_marital(self, id, version, ):
+    def marine_marital(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile']['maritalStatus'].get('name') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('maritalStatus', {}).get('name', "")
 
-    def marine_home_address(self, id, version, ):
+    def marine_home_address(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile'].get('address') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('address', "")
 
-    def marine_airport(self, id, version, ):
+    def marine_airport(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version']['applicationProfile']['profile'].get('airport') if doc_data else ""
+        return doc_data.get('version', {}).get('applicationProfile', {}).get('profile', {}).get('airport', "")
 
-    def marine_email(self, id, version, ):
+    def marine_email(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get('email') if doc_data else ""
+        return doc_data.get('email', "")
 
-    def marine_personaldocumention(self, id, version, ):
+    def marine_personaldocumention(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version'].get('seafarerDocument') if doc_data else {}
+        return doc_data.get('version', {}).get('applicationDocument', {})
 
-    def marine_certificates(self, id, version, ):
+    def marine_certificates(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data['version'].get('seafarerCertificates') if doc_data else {}
+        return doc_data.get('version', {}).get('applicationCertificates', {})
 
-    def marine_lang_engl(self, id, version, ):
+    def marine_lang_engl(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("lang", {}).get("ENGLISH", {}).get("PercentageSpeak", "")
+        return doc_data.get('version', {}).get('lang', {}).get("default", {}).get('ENGLISH', {}).get('PercentageSpeak', "")
 
-    def marine_lang_span(self, id, version, ):
+    def marine_lang_span(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("lang", {}).get("SPANISH", {}).get("PercentageSpeak", "") 
+        return doc_data.get('version', {}).get('lang', {}).get('SPANISH', {}).get('PercentageSpeak', "")
 
-    def marine_weight(self, id, version, ):
+    def marine_weight(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("profile", {}).get("weight", {}).get("lb", {})
+        return doc_data.get('version', {}).get('profile', {}).get('weight', {}).get('lb', "")
 
-    def marine_height(self, id, version, ):
+    def marine_height(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("profile", {}).get("height", {}).get("format", {})
+        return doc_data.get('version', {}).get('profile', {}).get('height', {}).get('format', "")
 
-    def marine_bmi(self, id, version, ):
+    def marine_bmi(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("profile", {}).get("bmi", {})
+        return doc_data.get('version', {}).get('profile', {}).get('bmi', "")
 
-    def marine_marlins(self, id, version, ):
+    def marine_marlins(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("lang", {}).get("marlins", {}) 
+        return doc_data.get('version', {}).get('lang', {}).get('marlins', "")
 
-    def marine_skills(self, id, version, ):
+    def marine_skills(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("skills", {}).get("skill", {})
+        return doc_data.get('version', {}).get('skills', {}).get('skill', "")
 
-    def marine_otherskills(self, id, version, ):
+    def marine_otherskills(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("additionalCertificates", {})
+        return doc_data.get('version', {}).get('additionalCertificates', "")
 
-    def marine_position(self, id, version, ):
+    def marine_position(self, id, version):
         doc_data = self.get_document_by_uid(id, version)
-        return doc_data.get("version", {}).get("startApplication", {}).get("position", {})
+        return doc_data.get('version', {}).get('startApplication', {}).get('position', "")
+
+    def marine_identification(self, id, version):
+        doc_data = self.get_document_by_uid(id, version)
+        return doc_data.get('version', {}).get('applicationDocument', {})

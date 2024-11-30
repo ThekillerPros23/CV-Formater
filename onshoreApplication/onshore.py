@@ -34,8 +34,8 @@ def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
             pdf.text(x + 1, y + 3 + i * line_height, line)
         
 class Onshore:
-    def ab(self, pdf, database, uid):
-        onland = sorted(database.marine_onland(uid) or [], key=lambda x: x.get('dateOn', ''), reverse=True)
+    def ab(self, pdf, database, uid,version):
+        onland = sorted(database.marine_onland(uid,version) or [], key=lambda x: x.get('dateOn', ''), reverse=True)
 
         if pdf.get_y() + (150 if onland else 40) > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
             pdf.add_page()

@@ -263,7 +263,7 @@ def pdf_render():
         
     elif int(formatId) == 2:
      
-        ab_os = Ab_OsSeafarers()
+        ab_os = Ab_OsApplication()
         ab_os.format_ab_os(pdf,databaseApplication,uid,version)
       
     elif int(formatId) == 3:

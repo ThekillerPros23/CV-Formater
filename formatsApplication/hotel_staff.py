@@ -5,14 +5,14 @@ from io import BytesIO
 from PIL import Image
 from courses.hotel_staff import *
 from datetime import datetime
-from onboard.ab import *
-from onshore.onshore import *
-from training.hotel import *
+from onboardApplication.ab import *
+from onshoreApplication.onshore import *
+from trainingApplication.hotel import *
 from number import *
 import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
-from education.archivo import *
+from educationApplication.archivo import *
 
 
 number = Number()
@@ -604,7 +604,12 @@ class HotelStaffApplication():
         # Fill COVID vaccine data
         for card in vaccines.get('covid', {}).get('cards', []):
             pdf.cell(w=40, h=6, txt="COVID BOOK", border=1, align='C', fill=True)
-            pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('value', ''), border=1, align='C')
+            country_issue = card.get('CountryIssue', {})
+            if isinstance(country_issue, dict):
+                value = country_issue.get('value', '')
+            else:
+                value = str(country_issue)
+            pdf.cell(w=40, h=6, txt=value, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
             
             # Formatear IssueDate
@@ -612,7 +617,13 @@ class HotelStaffApplication():
             formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
             
             pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
-            pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
+            vaccine_brand = card.get('VaccineBrand', {})
+            if isinstance(vaccine_brand, dict):
+                vaccine_name = vaccine_brand.get('name', '')
+            else:
+                vaccine_name = str(vaccine_brand)
+
+            pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
 
         # Datos de fiebre amarilla
         yellow_fever_cards = vaccines.get('yellowFever', {}).get('cards', [])
