@@ -730,6 +730,9 @@ class MessmanSeafarers():
                 brand_name = vaccine_brand.get('name', '') if isinstance(vaccine_brand, dict) else ''
                 
                 pdf.cell(w=30, h=6, txt=brand_name, align='C', border=1, ln=1)
+
+
+                
         pdf.ln(10)
         skills = Skills()
         skills.messman(pdf, database,uid)

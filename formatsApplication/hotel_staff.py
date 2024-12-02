@@ -604,7 +604,6 @@ class HotelStaffApplication():
         pdf.cell(w=50, h=6, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1, fill=True)
         pdf.cell(w=30, h=6, txt='VACCINATION MARK', align='C', border=1, ln=1, fill=True)
 
-        # Fill COVID vaccine data
         for card in vaccines.get('covid', {}).get('cards', []):
             pdf.cell(w=40, h=6, txt="COVID BOOK", border=1, align='C', fill=True)
             country_issue = card.get('CountryIssue', {})
@@ -614,35 +613,23 @@ class HotelStaffApplication():
                 value = str(country_issue)
             pdf.cell(w=40, h=6, txt=value, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
-            
-            # Formatear IssueDate
+
+            # Formatear IssueDate con validación
             issue_date = card.get('IssueDate', '')
-            if isinstance(issue_date, str) and issue_date.strip():
-                try:
-                    # Valida que el año tenga exactamente 4 dígitos
-                    year = issue_date.split('-')[0]
-                    if len(year) == 4 and year.isdigit():
-                        # Intenta formatear la fecha si cumple con el formato esperado
-                        formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
-                    else:
-                        # Si el año no tiene 4 dígitos, usa una cadena vacía
-                        formatted_issue_date = ''
-                except ValueError:
-                    # Si la fecha no coincide con el formato, usa una cadena vacía
-                    formatted_issue_date = ''
-            else:
-                # Si issue_date no es una cadena válida, usa una cadena vacía
+            try:
+                formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+            except ValueError:
                 formatted_issue_date = ''
+            
+            pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
 
+            # Verificar que VaccineBrand es un diccionario antes de acceder a 'name'
             vaccine_brand = card.get('VaccineBrand', {})
-            if isinstance(vaccine_brand, dict):
-                vaccine_name = vaccine_brand.get('name', '')
-            else:
-                vaccine_name = str(vaccine_brand)
+            brand_name = vaccine_brand.get('name', '') if isinstance(vaccine_brand, dict) else ''
+            
+            pdf.cell(w=30, h=6, txt=brand_name, align='C', border=1, ln=1)
 
-            pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
-
-        # Datos de fiebre amarilla
+        # Llenar datos de fiebre amarilla
         yellow_fever_cards = vaccines.get('yellowFever', {}).get('cards', [])
         if not yellow_fever_cards:
             # Si no hay datos, imprime una fila en blanco con el título "YELLOW FEVER"
@@ -655,28 +642,25 @@ class HotelStaffApplication():
             # Si hay datos, imprime cada tarjeta
             for card in yellow_fever_cards:
                 pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
-                pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('value', ''), border=1, align='C')
+                country_issue = card.get('CountryIssue', {})
+                if isinstance(country_issue, dict):
+                    value = country_issue.get('value', '')
+                else:
+                    value = str(country_issue)
+                pdf.cell(w=40, h=6, txt=value, border=1, align='C')
                 pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
                 
-                # Formatear IssueDate
+                # Formatear IssueDate con validación
                 issue_date = card.get('IssueDate', '')
-                if isinstance(issue_date, str) and issue_date.strip():
-                    try:
-                        # Valida que el año tenga exactamente 4 dígitos
-                        year = issue_date.split('-')[0]
-                        if len(year) == 4 and year.isdigit():
-                            # Intenta formatear la fecha si cumple con el formato esperado
-                            formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y')
-                        else:
-                            # Si el año no tiene 4 dígitos, usa una cadena vacía
-                            formatted_issue_date = ''
-                    except ValueError:
-                        # Si la fecha no coincide con el formato, usa una cadena vacía
-                        formatted_issue_date = ''
-                else:
-                    # Si issue_date no es una cadena válida, usa una cadena vacía
+                try:
+                    formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+                except ValueError:
                     formatted_issue_date = ''
-
+                
                 pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
-                pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
-        
+
+                # Verificar que VaccineBrand es un diccionario antes de acceder a 'name'
+                vaccine_brand = card.get('VaccineBrand', {})
+                brand_name = vaccine_brand.get('name', '') if isinstance(vaccine_brand, dict) else ''
+                
+                pdf.cell(w=30, h=6, txt=brand_name, align='C', border=1, ln=1)

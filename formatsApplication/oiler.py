@@ -599,7 +599,6 @@ class OilerApplication():
         pdf.cell(w=50, h=6, txt='DATE OF ISSUE (MM / DD / YYYY)', align='C', border=1, fill=True)
         pdf.cell(w=30, h=6, txt='VACCINATION MARK', align='C', border=1, ln=1, fill=True)
 
-        # Fill COVID vaccine data
         for card in vaccines.get('covid', {}).get('cards', []):
             pdf.cell(w=40, h=6, txt="COVID BOOK", border=1, align='C', fill=True)
             country_issue = card.get('CountryIssue', {})
@@ -609,21 +608,23 @@ class OilerApplication():
                 value = str(country_issue)
             pdf.cell(w=40, h=6, txt=value, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
-            
-            # Formatear IssueDate
+
+            # Formatear IssueDate con validación
             issue_date = card.get('IssueDate', '')
-            formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+            try:
+                formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+            except ValueError:
+                formatted_issue_date = ''
             
             pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
+
+            # Verificar que VaccineBrand es un diccionario antes de acceder a 'name'
             vaccine_brand = card.get('VaccineBrand', {})
-            if isinstance(vaccine_brand, dict):
-                vaccine_name = vaccine_brand.get('name', '')
-            else:
-                vaccine_name = str(vaccine_brand)
+            brand_name = vaccine_brand.get('name', '') if isinstance(vaccine_brand, dict) else ''
+            
+            pdf.cell(w=30, h=6, txt=brand_name, align='C', border=1, ln=1)
 
-            pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
-
-        # Datos de fiebre amarilla
+        # Llenar datos de fiebre amarilla
         yellow_fever_cards = vaccines.get('yellowFever', {}).get('cards', [])
         if not yellow_fever_cards:
             # Si no hay datos, imprime una fila en blanco con el título "YELLOW FEVER"
@@ -644,18 +645,24 @@ class OilerApplication():
                 pdf.cell(w=40, h=6, txt=value, border=1, align='C')
                 pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
                 
-                # Formatear IssueDate
+                # Formatear IssueDate con validación
                 issue_date = card.get('IssueDate', '')
-                formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+                try:
+                    formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+                except ValueError:
+                    formatted_issue_date = ''
                 
                 pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
-                vaccine_brand = card.get('VaccineBrand', {})
-                if isinstance(vaccine_brand, dict):
-                    vaccine_name = vaccine_brand.get('name', '')
-                else:
-                    vaccine_name = str(vaccine_brand)
 
-                pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
+                # Verificar que VaccineBrand es un diccionario antes de acceder a 'name'
+                vaccine_brand = card.get('VaccineBrand', {})
+                brand_name = vaccine_brand.get('name', '') if isinstance(vaccine_brand, dict) else ''
+                
+                pdf.cell(w=30, h=6, txt=brand_name, align='C', border=1, ln=1)
+
+
+
+
         pdf.ln(10)
         skills = Skills()
         skills.oiler(pdf, database,uid,version)
