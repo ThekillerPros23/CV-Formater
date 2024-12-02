@@ -1,18 +1,18 @@
 from fpdf import FPDF
-from formatskill.fitter import *
+from formatskillApplication.fitter import *
 import requests
 from io import BytesIO
 from PIL import Image
 from courses.fitter import *
 from datetime import datetime
-from onboard.ab import *
-from onshore.onshore import *
-from training.fitter import *
+from onboardApplication.ab import *
+from onshoreApplication.onshore import *
+from trainingApplication.fitter import *
 from number import *
 import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
-from education.archivo import *
+from educationApplication.archivo import *
 
 number = Number()
 country_abbreviations = number.number()
@@ -99,11 +99,11 @@ class FitterApplication():
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
         pdf.set_xy(135, 40)
-        position = database.marine_position(uid)
+        position = database.marine_position(uid,version)
         position_name = position[0].get('name', "") if position else ""
         pdf.cell(6,10, position_name)
 
-        image = database.marine_image_seafarers(uid)
+        image = database.marine_image_seafarers(uid,version)
         imagen = descargar_imagen_firebase(image)
         guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
        # Agregar imagen al PDF con tamaño ajustado
@@ -124,8 +124,8 @@ class FitterApplication():
         pdf.set_font('calibri', '', 9) 
         # Encabezado para Nombres
 
-        fullnames = database.marine_firstname_seafarers(uid)
-        fullLastname = database.marine_lastname_seafarers(uid)
+        fullnames = database.marine_firstname_seafarers(uid,version)
+        fullLastname = database.marine_lastname_seafarers(uid,version)
         # Obtener un solo nombre y apellido de la base de datos
 
         # Altura de la celda
@@ -158,7 +158,7 @@ class FitterApplication():
         pdf.set_xy(80, 69)
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(MM-DD-YYY)', border=1, align='L', fill=True)
     
-        date = database.marine_dateOfBirthSeafarers(uid) or ""
+        date = database.marine_dateOfBirthSeafarers(uid,version) or ""
 
         # Formatear la fecha en caso de que esté en un formato diferente
         if date:
@@ -178,7 +178,7 @@ class FitterApplication():
         # Número de identificación
         pdf.set_xy(80, 82)
         pdf.multi_cell(w=40, h=14, txt='IDENTIFICATION NUMBER', border=1, align='L', fill=True)
-        identification_data = database.marine_identification(uid) or []
+        identification_data = database.marine_identification(uid,version) or []
 
         # Busca primero "Identification (ID, NID, etc.)", si no existe, busca "Passport"
         identification_number = next(
@@ -198,29 +198,29 @@ class FitterApplication():
         pdf.set_xy(120, 82)
         pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
         # Nacionalidad
-        nationality = database.marine_nationality(uid)
+        nationality = database.marine_nationality(uid,version)
         pdf.set_xy(80, 91)
         pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
         pdf.cell(w=80, h=height, txt=nationality, border=1, align='C', ln=1)
 
         # Sexo y Estado Civil
-        gender = database.marine_gender(uid)
+        gender = database.marine_gender(uid,version)
         pdf.set_xy(80, 98)
         pdf.cell(w=40, h=7, txt='SEX', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=gender, border=1, align='C')
-        marital = database.marine_marital(uid)
+        marital = database.marine_marital(uid,version)
         pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L', fill=True)
         pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
 
         pdf.set_xy(80, 105)
-        height = database.marine_height(uid)
+        height = database.marine_height(uid,version)
         # Verifica si la altura es "0' 0''" o "nan", de ser así, muestra una celda vacía
         if height == "0' 0''" or height == "nan":
             height = ""
         pdf.cell(w=25, h=7, txt='HEIGHT (Ft/in)', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=height, border=1, align='C')
 
-        weight = database.marine_weight(uid)
+        weight = database.marine_weight(uid,version)
         # Verifica si el peso es "0" o "nan", de ser así, muestra una celda vacía
         if weight == "0" or weight == "nan":
             weight = ""
@@ -228,7 +228,7 @@ class FitterApplication():
         pdf.cell(w=18, h=7, txt=weight, border=1, align='C')
 
         pdf.cell(w=15, h=7, txt='BMI', border=1, align='L', fill=True)
-        bmi = database.marine_bmi(uid)
+        bmi = database.marine_bmi(uid,version)
         # Verifica si el BMI es "0" o "nan", de ser así, muestra una celda vacía
         if str(bmi) == "0" or str(bmi) == "nan":
             bmi = ""
@@ -249,7 +249,7 @@ class FitterApplication():
         pdf.multi_cell(w=40, h=7, txt="COMPLETE HOME ADDRESS", border=0)  # Sin border para solo medir altura
         height_complete_home = pdf.get_y() - y_inicial
 
-        home = database.marine_home_address(uid) or ""
+        home = database.marine_home_address(uid,version) or ""
         pdf.set_xy(x_inicial + 40, y_inicial)
         pdf.multi_cell(w=50, h=7, txt=home, border=0)
         height_home_address = pdf.get_y() - y_inicial
@@ -258,7 +258,7 @@ class FitterApplication():
         pdf.multi_cell(w=50, h=7, txt="NEARLY AIRPORT", border=0)
         height_nearly_airport = pdf.get_y() - y_inicial
 
-        airport = database.marine_airport(uid) or ""
+        airport = database.marine_airport(uid,version) or ""
         pdf.set_xy(x_inicial + 140, y_inicial)
         pdf.multi_cell(w=50, h=7, txt=airport, border=0)
         height_airport = pdf.get_y() - y_inicial
@@ -285,10 +285,10 @@ class FitterApplication():
 
 
         # Segunda fila con "PHONE/CELL" y demás datos
-        email = database.marine_email(uid,)
+        email = database.marine_email(uid,version,)
         
         pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
-        cell = database.marine_cellphone(uid)
+        cell = database.marine_cellphone(uid,version)
         formatted_cell = format_phone_number(cell)
 
         pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="L")
@@ -305,11 +305,11 @@ class FitterApplication():
         pdf.cell(w=30, h=7, txt="LANGUAGES", border=1, align="C",fill=True)
         
         pdf.cell(w=30, h=7, txt="ENGLISH", border=1, align="L",fill=True)
-        english = database.marine_lang_engl(uid)
+        english = database.marine_lang_engl(uid,version)
         pdf.cell(w=20, h=7, txt=str(english) + "%", border=1, align="R")
         
         pdf.cell(w=30, h=7, txt="SPANISH", border=1, align="L", fill=True)
-        spanish = database.marine_lang_span(uid) or ""
+        spanish = database.marine_lang_span(uid,version) or ""
         pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
 
         
@@ -320,7 +320,7 @@ class FitterApplication():
 
         pdf.ln(5)
         pdf.set_font('calibri','',9)
-        marlin = database.marine_marlins(uid) or []
+        marlin = database.marine_marlins(uid,version) or []
 
         if isinstance(marlin, list) and marlin:
             marlins = marlin[0]  # Accede al primer elemento si la lista no está vacía
@@ -368,7 +368,7 @@ class FitterApplication():
         pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN", border=0, align='L')
         pdf.ln(10)
  
-        datos = database.marine_contact(uid,)
+        datos = database.marine_contact(uid,version,)
         # Dibujar cada fila de datos
         cell_height = 7  # Altura base para cada línea de texto
 
@@ -427,7 +427,7 @@ class FitterApplication():
         pdf.ln(5)
 
         onboard = Onboard()
-        onboard.ab(pdf,database,uid)
+        onboard.ab(pdf,database,uid,version)
 
         # Salto de línea adicional después de cada grupo de filas
         pdf.ln(30)
@@ -489,7 +489,7 @@ class FitterApplication():
 
 
         # Obtener los documentos
-        personalDocuments = database.marine_personaldocumention(uid)
+        personalDocuments = database.marine_personaldocumention(uid,version)
       
 # Lista de documentos solo en la primera columna de la primera fila
        ## Lista de documentos predeterminada
@@ -525,7 +525,7 @@ class FitterApplication():
                 
                 # Comparar el nombre actual de `documents` con el nombre en `personalDocuments`
                 if doc_name == document_name.upper():
-                    country = document.get('data', {}).get('country', {}).get('value', '')
+                    country = document.get('data', {}).get('countryName', {}).get('value', '')
                     document_number = document.get('data', {}).get('documentNumber', '')
                     issued_at = document.get('data', {}).get('placeIssue', '')
 
@@ -566,13 +566,13 @@ class FitterApplication():
 
 
         training = Training()
-        training.fitter(pdf,database,uid)
+        training.fitter(pdf,database,uid,version)
         pdf.ln(40)
         onland = Onshore()
-        onland.ab(pdf,database,uid)
+        onland.ab(pdf,database,uid,version)
         
         education = Education()
-        education.educations(pdf,database,uid)
+        education.educations(pdf,database,uid,version)
 
 
         pdf.ln(10)
@@ -585,7 +585,7 @@ class FitterApplication():
         pdf.set_font('calibri','',9)
 
         # Assuming `vaccines` is populated from the database
-        vaccines = database.marine_vaccines(uid) or {}
+        vaccines = database.marine_vaccines(uid,version) or {}
 
         # Setting up the PDF structure
         pdf.cell(w=40, h=6, txt="TYPE OF VACCINE", border=1, align='C', fill=True)
@@ -597,7 +597,12 @@ class FitterApplication():
         # Fill COVID vaccine data
         for card in vaccines.get('covid', {}).get('cards', []):
             pdf.cell(w=40, h=6, txt="COVID BOOK", border=1, align='C', fill=True)
-            pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('value', ''), border=1, align='C')
+            country_issue = card.get('CountryIssue', {})
+            if isinstance(country_issue, dict):
+                value = country_issue.get('value', '')
+            else:
+                value = str(country_issue)
+            pdf.cell(w=40, h=6, txt=value, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
             
             # Formatear IssueDate
@@ -605,7 +610,13 @@ class FitterApplication():
             formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
             
             pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
-            pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
+            vaccine_brand = card.get('VaccineBrand', {})
+            if isinstance(vaccine_brand, dict):
+                vaccine_name = vaccine_brand.get('name', '')
+            else:
+                vaccine_name = str(vaccine_brand)
+
+            pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
 
         # Datos de fiebre amarilla
         yellow_fever_cards = vaccines.get('yellowFever', {}).get('cards', [])
@@ -632,7 +643,7 @@ class FitterApplication():
         
         pdf.ln(10)
         skills = Skills()
-        skills.fitter(pdf, database,uid)
+        skills.fitter(pdf, database,uid,version)
         #skills.messman(pdf)
         pdf.ln(10)
    

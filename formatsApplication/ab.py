@@ -524,7 +524,10 @@ class Ab_OsApplication():
                 
                 # Comparar el nombre actual de `documents` con el nombre en `personalDocuments`
                 if doc_name == document_name.upper():
-                    country = document.get('data', {}).get('countryName', {}).get('value', '')
+                    if isinstance(document, dict):
+                        country = document.get('data', {}).get('countryName', {}).get('value', '')
+                    else:
+                        country = ''
                     document_number = document.get('data', {}).get('documentNumber', '')
                     issued_at = document.get('data', {}).get('placeIssue', '')
 

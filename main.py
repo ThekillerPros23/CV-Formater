@@ -267,22 +267,22 @@ def pdf_render():
         ab_os.format_ab_os(pdf,databaseApplication,uid,version)
       
     elif int(formatId) == 3:
-        cook = CookSeafarers()
+        cook = CookApplication()
         cook.format_cook(pdf,databaseApplication,uid,version)
     elif int(formatId) == 4:
-        bosun = BosunSeafarers()
+        bosun = BosunApplication()
         bosun.format_bosun(pdf,databaseApplication,uid,version)
     elif int(formatId) == 5:
-        oiler = OilerSeafarers()
+        oiler = OilerApplication()
         oiler.format_oiler(pdf,databaseApplication, uid,version)
     elif int(formatId) == 6:
-        messman = MessmanSeafarers()
+        messman = MessmanApplication()
         messman.format_messman(pdf,databaseApplication, uid,version)
     elif int(formatId) == 7:
-        fitter = FitterSeafarers()
+        fitter = FitterApplication()
         fitter.format_fitter(pdf,databaseApplication, uid,version)
     elif int(formatId) == 8:
-        officer = OfficerSeafarers()
+        officer = OfficerApplication()
         officer.format_officer(pdf,databaseApplication,uid,version)
     
     pdf_buffer = io.BytesIO()
