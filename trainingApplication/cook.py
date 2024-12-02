@@ -37,7 +37,7 @@ def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
 
 
 class Training():
-    def cook(self,pdf,database,uid):
+    def cook(self,pdf,database,uid,version):
         if pdf.get_y() + 80 > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
             pdf.add_page()
         pdf.set_font('calibri', '',9)
@@ -123,7 +123,7 @@ class Training():
         
         # Retrieve certificates from the database
         # Retrieve certificates from the database
-        certificates = database.marine_certificates(uid)
+        certificates = database.marine_certificates(uid,version)
   
         print(certificates)
         certificates_dict = {
