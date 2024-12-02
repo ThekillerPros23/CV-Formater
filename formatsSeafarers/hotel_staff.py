@@ -656,6 +656,8 @@ class HotelStaffSeafarers():
 
         pdf.ln(10)
 
+        if pdf.get_y() + (150 if onland else 40) > pdf.page_break_trigger:  # Verificar si hay espacio suficiente para el título
+            pdf.add_page()
         pdf.cell(0,10, txt='8. VACCINATION BOOK', align='L')
         pdf.ln(10)
         
@@ -680,11 +682,15 @@ class HotelStaffSeafarers():
                 value = country_issue.get('value', '')
             else:
                 value = str(country_issue)
+            pdf.cell(w=40, h=6, txt=value, border=1, align='C')
             pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
-            
-            # Formatear IssueDate
+
+            # Formatear IssueDate con validación
             issue_date = card.get('IssueDate', '')
-            formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+            try:
+                formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+            except ValueError:
+                formatted_issue_date = ''
             
             pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
 
@@ -715,9 +721,12 @@ class HotelStaffSeafarers():
                 pdf.cell(w=40, h=6, txt=value, border=1, align='C')
                 pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
                 
-                # Formatear IssueDate
+                # Formatear IssueDate con validación
                 issue_date = card.get('IssueDate', '')
-                formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+                try:
+                    formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
+                except ValueError:
+                    formatted_issue_date = ''
                 
                 pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
 

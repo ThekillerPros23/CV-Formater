@@ -636,7 +636,12 @@ class OilerApplication():
             # Si hay datos, imprime cada tarjeta
             for card in yellow_fever_cards:
                 pdf.cell(w=40, h=6, txt="YELLOW FEVER", border=1, align='C', fill=True)
-                pdf.cell(w=40, h=6, txt=card.get('CountryIssue', {}).get('value', ''), border=1, align='C')
+                country_issue = card.get('CountryIssue', {})
+                if isinstance(country_issue, dict):
+                    value = country_issue.get('value', '')
+                else:
+                    value = str(country_issue)
+                pdf.cell(w=40, h=6, txt=value, border=1, align='C')
                 pdf.cell(w=30, h=6, txt=card.get('Doze', ''), border=1, align='C', fill=True)
                 
                 # Formatear IssueDate
@@ -644,8 +649,13 @@ class OilerApplication():
                 formatted_issue_date = datetime.strptime(issue_date, '%Y-%m-%d').strftime('%m/%d/%Y') if issue_date else ''
                 
                 pdf.cell(w=50, h=6, txt=formatted_issue_date, border=1, align='C')
-                pdf.cell(w=30, h=6, txt=card.get('VaccineBrand', {}).get('name', ''), align='C', border=1, ln=1)
-        
+                vaccine_brand = card.get('VaccineBrand', {})
+                if isinstance(vaccine_brand, dict):
+                    vaccine_name = vaccine_brand.get('name', '')
+                else:
+                    vaccine_name = str(vaccine_brand)
+
+                pdf.cell(w=30, h=6, txt=vaccine_name, align='C', border=1, ln=1)
         pdf.ln(10)
         skills = Skills()
         skills.oiler(pdf, database,uid,version)
