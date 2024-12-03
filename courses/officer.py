@@ -13,7 +13,7 @@ class OfficerCourses:
             7: "Medical Care IMO 1.15",
             51: "Engine Resources Management",
             52: "Engine Room Simulator IMO 2.07",
-            21: "Medical First Aid 1.14",
+            21: "Medical First Aid IMO 1.14",
             30: "High Voltage Installations",
             22: "Marine Environmental Awareness IMO 1.38",
             12: "Leadership and Teamwork IMO 1.39",
