@@ -11,7 +11,7 @@ class MessmanCourses:
             10: "Safety Training for Personnel Providing Direct Services to Passenger in Passenger Spaces IMO 1.44",
             11: "Passenger Ship Crowd Management Training IMO 1.41",
             25: "Passenger Ship Crisis Management Training IMO 1.42",
-            26: "Passenger Safety, Cargo Safety and Hull Integrity Training IMO 1.29",
+            26: "Passenger Safety, Cargo Safety and Hull Integrity Training IMO 1.46",
             24: "Proficiency in Survival Craft and Rescue Boats other than Fast Rescue Boats IMO 1.23",
             9: "Basic Training for Oil and Chemical Cargo Tanker Operations IMO 1.01",
             13: "Advanced Fire Fighting IMO 2.03",
