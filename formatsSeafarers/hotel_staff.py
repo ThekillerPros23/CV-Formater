@@ -401,6 +401,7 @@ class HotelStaffSeafarers():
         pdf.cell(w=40, h=7, txt=str(marlins.get('PercentageVocabulary', "")) + '%', border=1, align='R')
         pdf.cell(w=40, h=7, txt=str(marlins.get('PercentageNumbers', "")) + '%', border=1, align='R')
         pdf.cell(w=40, h=7, txt=str(marlins.get('PercentageReading', "")) + '%', border=1, align='R')
+        pdf.ln(10)
         pdf.set_font('calibri','',9)
         pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN", border=0, align='L')
         pdf.ln(10)

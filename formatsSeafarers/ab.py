@@ -132,113 +132,102 @@ class Ab_OsSeafarers():
         pdf.set_font('calibri', '', 14)
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
-        pdf.set_xy(70, 50)
+        
+        
+        # Ajustar posición inicial
+        pdf.set_xy(70, 60)  # Mover hacia abajo el rank
         position = database.marine_position(uid)
         position_name = position[0].get('name', "") if position else ""
-        pdf.cell(0, 5, position_name)
 
+        # Calcular altura de la celda para centrar el rank
+        pdf.set_font('calibri', '', 12)
+        rank_height = 10  # Altura de la celda para el rank
+        rank_y_position = 60 + (rank_height / 2) - (pdf.get_string_width(position_name) / 2)  # Centrando verticalmente
+        pdf.set_xy(70, rank_y_position)
+        pdf.cell(0, rank_height, position_name, align='C')
+
+        # Imagen: Mover hacia abajo
         image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)
         guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
-        # Agregar imagen al PDF con tamaño ajustado
-        pdf.set_xy(30, 60)
-        pdf.image("imagen_descargada.png", x=20, y=60, w=50, h=50)
+        pdf.set_xy(30, 80)  # Ajustar posición y
+        pdf.image("imagen_descargada.png", x=20, y=80, w=50, h=50)
 
-        pdf.set_xy(20, 50)
+        # Información personal: Ajustar hacia abajo
+        pdf.set_xy(20, 70)
         pdf.set_font('calibri', '', 12)
         pdf.cell(55, 10, '1. PERSONAL INFORMATION')
 
+        # Ajustar cada sección hacia abajo
         pdf.set_font('calibri', '', 9)
-        pdf.set_xy(80, 55)
-
-        # Definir anchos para alineación
+        pdf.set_xy(80, 75)
         cell_width = 50
         big_cell_width = 100
         height = 7
-        pdf.set_font('calibri', '', 9)
-        # Encabezado para Nombres
 
+        # Procesar nombres y apellidos
         fullnames = database.marine_firstname_seafarers(uid)
         fullLastname = database.marine_lastname_seafarers(uid)
 
-        # Dividir el nombre en primer y segundo nombre si existe
-        nombres = fullnames.split(' ', 1)  # Divide en el primer espacio
-        primer_nombre = nombres[0]  # Primer nombre
-        segundo_nombre = nombres[1] if len(nombres) > 1 else ''  # Segundo nombre (si existe)
+        nombres = fullnames.split(' ', 1)
+        primer_nombre = nombres[0]
+        segundo_nombre = nombres[1] if len(nombres) > 1 else ''
 
-        # Dividir los apellidos en primer y segundo apellido si existe
-        apellidos = fullLastname.split(' ', 1)  # Divide en el primer espacio
-        primer_apellido = apellidos[0]  # Primer apellido
-        segundo_apellido = apellidos[1] if len(apellidos) > 1 else ''  # Segundo apellido (si existe)
+        apellidos = fullLastname.split(' ', 1)
+        primer_apellido = apellidos[0]
+        segundo_apellido = apellidos[1] if len(apellidos) > 1 else ''
 
-        # Nombre y apellidos
-        pdf.cell(w=40, h=height, txt='NAME', border=1, align='L', fill=True)  # Etiqueta de "NAME"
-        pdf.cell(w=40, h=height, txt=primer_nombre, border=1, align='C')  # Primer nombre
-        pdf.cell(w=40, h=height, txt=segundo_nombre, border=1, align='C', ln=1)  # Segundo nombre (si existe)
-        pdf.set_font('calibri', '', 9)
+        # Ajustar posición y etiquetas
+        pdf.cell(w=40, h=height, txt='NAME', border=1, align='L', fill=True)
+        pdf.cell(w=40, h=height, txt=primer_nombre, border=1, align='C')
+        pdf.cell(w=40, h=height, txt=segundo_nombre, border=1, align='C', ln=1)
 
-        # Dibujar la celda de "SURNAMES" con primer y segundo apellido
-        pdf.set_xy(80, 62)  # Ajustar la posición para los apellidos
-        pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L', fill=True)  # Etiqueta de "SURNAMES"
-        pdf.cell(w=40, h=height, txt=primer_apellido, border=1, align='C')  # Primer apellido
-        pdf.cell(w=40, h=height, txt=segundo_apellido, border=1, align='C', ln=1)  # Segundo apellido (si existe)
-        pdf.set_font('calibri', '', 9)
+        pdf.set_xy(80, 82)  # Más abajo
+        pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L', fill=True)
+        pdf.cell(w=40, h=height, txt=primer_apellido, border=1, align='C')
+        pdf.cell(w=40, h=height, txt=segundo_apellido, border=1, align='C', ln=1)
 
         # Fecha de nacimiento
-        pdf.set_xy(80, 69)
+        pdf.set_xy(80, 89)
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(MM-DD-YYY)', border=1, align='L', fill=True)
 
         date = database.marine_dateOfBirthSeafarers(uid) or ""
-
-        if date:
-            try:
-                formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%m-%d-%Y")
-            except ValueError:
-                formatted_date = date
-        else:
-            formatted_date = ""
-
-        pdf.set_xy(120, 69)
+        formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%m-%d-%Y") if date else ""
+        pdf.set_xy(120, 89)
         pdf.cell(w=80, h=13, txt=formatted_date, border=1, align='C', ln=1)
 
-        # Número de identificación
-        pdf.set_xy(80, 82)
+        # Ajustar las demás secciones (Ejemplo: Identificación)
+        pdf.set_xy(80, 102)
         pdf.multi_cell(w=40, h=14, txt='IDENTIFICATION NUMBER', border=1, align='L', fill=True)
         identification_data = database.marine_identification(uid) or []
 
         identification_number = next(
             (doc['data']['documentNumber'] for doc in identification_data
             if doc.get('data', {}).get('documentName', {}).get('name') == "Identification (ID, NID, etc.)"),
-            None
+            ""
         )
-
-        if identification_number is None:
-            identification_number = next(
-                (doc['data']['documentNumber'] for doc in identification_data
-                if doc.get('data', {}).get('documentName', {}).get('name') == "Passport"),
-                ""
-            )
-
-        pdf.set_xy(120, 82)
+        pdf.set_xy(120, 102)
         pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
 
-        # Nacionalidad
-        nationality = database.marine_nationality(uid) or ""
-        pdf.set_xy(80, 91)
+        # Nacionalidad, Sexo, Estado Civil, Altura, Peso y BMI
+        pdf.set_xy(80, 115)
         pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
+        nationality = database.marine_nationality(uid) or ""
         pdf.cell(w=80, h=height, txt=nationality, border=1, align='C', ln=1)
 
-        # Sexo y Estado Civil
+        # Sexo
         gender = database.marine_gender(uid)
-        pdf.set_xy(80, 98)
+        pdf.set_xy(80, 122)
         pdf.cell(w=40, h=7, txt='SEX', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=gender, border=1, align='C')
+
+        # Estado Civil
         marital = database.marine_marital(uid)
         pdf.cell(w=30, h=7, txt='CIVIL STATUS', border=1, align='L', fill=True)
         pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
 
         # Altura, peso y BMI
-        pdf.set_xy(80, 105)
+        pdf.set_xy(80, 129)
         height = database.marine_height(uid)
         if height == "0' 0''" or height == "nan":
             height = ""
@@ -256,6 +245,7 @@ class Ab_OsSeafarers():
         if str(bmi) == "0" or str(bmi) == "nan":
             bmi = ""
         pdf.cell(w=20, h=7, txt=str(bmi), border=1, align='C', ln=1)
+
 
         # Configuración inicial
         pdf.ln(5)
