@@ -140,7 +140,7 @@ class Training():
         
         
         for course_id, course_name in courses.items():
-    # Buscar si existe un certificado para el ID del curso
+            # Buscar si existe un certificado para el ID del curso
             certificate_data = certificates_dict.get(course_id, None)
 
             # Asignar valores del certificado o dejarlos en blanco si no hay coincidencia
@@ -151,6 +151,12 @@ class Training():
                 expiry_date = certificate_data.get('expirationDate', "")
             else:
                 country, number, issue_date, expiry_date = "", "", "", ""
+
+            # Reemplazar "N/A" con cadenas vacías
+            country = "" if country == "N/A" else country
+            number = "" if number == "N/A" else number
+            issue_date = "" if issue_date == "N/A" else issue_date
+            expiry_date = "" if expiry_date == "N/A" else expiry_date
 
             # Formatear las fechas si existen
             if issue_date:
