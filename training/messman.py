@@ -151,10 +151,6 @@ class Training():
                 expiry_date = certificate_data.get('expirationDate', "")
             else:
                 country, number, issue_date, expiry_date = "", "", "", ""
-            country = "" if country == "N/A" else country
-            number = "" if number == "N/A" else number
-            issue_date = "" if issue_date == "N/A" else issue_date
-            expiry_date = "" if expiry_date == "N/A" else expiry_date
 
             # Formatear las fechas si existen
             if issue_date:
@@ -163,13 +159,6 @@ class Training():
                 expiry_date = datetime.strptime(expiry_date, '%Y-%m-%d').strftime('%m/%d/%Y')
 
             # Ajuste de altura de la celda basado en el texto del curso
-      # Ajuste de altura de la celda basado en el texto del número del certificado
-            # Paso 1: Calcular el número de líneas para cada celda y determinar la altura máxima de la fila
-            # Obtener las líneas y alturas de las celdas de `course_name` y `number`
-            # Obtener las líneas y alturas de las celdas de `course_name` y `number`
-# Obtener las# Definir una altura mínima para `number`
-            # Definir una altura mínima para `number`
-           # Definir una altura mínima para `number`
             lines_course_name = pdf.multi_cell(anchuras[0], cell_height, course_name, border=0, align='L', split_only=True)
             lines_country = pdf.multi_cell(anchuras[1], cell_height, country, border=0, align='L', split_only=True)
             lines_number = pdf.multi_cell(anchuras[2], cell_height, number, border=0, align='L', split_only=True)
@@ -195,13 +184,11 @@ class Training():
             y_start = pdf.get_y()
 
             # Dibujar la columna de cursos con color
-            # Color azul claro
             pdf.set_xy(x_start, y_start)
             pdf.cell(anchuras[0], adjusted_height, border=1, fill=True)
             draw_text_in_cell(pdf, x_start, y_start, anchuras[0], adjusted_height, course_name)
 
             # Dibujar las demás columnas sin color
-        # Color blanco (sin relleno)
             pdf.set_xy(x_start + anchuras[0], y_start)
             pdf.cell(anchuras[1], adjusted_height, border=1)
             draw_text_in_cell(pdf, x_start + anchuras[0], y_start, anchuras[1], adjusted_height, country)
@@ -219,6 +206,8 @@ class Training():
             draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_start, anchuras[4], adjusted_height, expiry_date)
 
             pdf.ln()
+
+
 
         for course_id, certificate_data in certificates_dict.items():
             # Si el curso no está en la lista de cursos de referencia, agregarlo
