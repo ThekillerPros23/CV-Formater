@@ -328,18 +328,18 @@ class BosunSeafarers():
         # Segunda fila con "PHONE/CELL" y demás datos
         email = database.marine_email(uid,)
         
-        pdf.cell(w=30, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
+        
+        pdf.cell(w=18, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
         cell = database.marine_cellphone(uid)
         formatted_cell = format_phone_number(cell)
 
-        pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="L")
+        pdf.cell(w=45, h=7, txt=formatted_cell, border=1, align="L")
 
-        pdf.cell(w=30, h=7, txt="WHATSAPP", border=1, align="C", fill=True)
-        pdf.cell(w=30, h=7, txt=formatted_cell, border=1, align="C")      
-
-        pdf.cell(w=20, h=7, txt="E-MAIL", border=1, align="L", fill=True)
+        pdf.cell(w=18, h=7, txt="WHATSAPP", border=1, align="C", fill=True)
+        pdf.cell(w=45, h=7, txt=formatted_cell, border=1, align="L")      
+        pdf.cell(w=12, h=7, txt="E-MAIL", border=1, align="L", fill=True)
         
-        pdf.cell(w=50, h=7, txt=email, border=1, align="C", ln=1)
+        pdf.cell(w=52, h=7, txt=email, border=1, align="C", ln=1)
 
         # Tercera fila con "LANGUAGES"
         

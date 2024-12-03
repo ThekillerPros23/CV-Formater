@@ -135,12 +135,12 @@ class Ab_OsSeafarers():
         pdf.set_xy(70, 50)
         position = database.marine_position(uid)
         position_name = position[0].get('name', "") if position else ""
-        pdf.cell(0,5, position_name)
+        pdf.cell(0, 5, position_name)
 
         image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)
         guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
-       # Agregar imagen al PDF con tamaño ajustado
+        # Agregar imagen al PDF con tamaño ajustado
         pdf.set_xy(30, 60)
         pdf.image("imagen_descargada.png", x=20, y=60, w=50, h=50)
 
@@ -148,22 +148,18 @@ class Ab_OsSeafarers():
         pdf.set_font('calibri', '', 12)
         pdf.cell(55, 10, '1. PERSONAL INFORMATION')
 
-        pdf.set_font('calibri', '', 9) 
+        pdf.set_font('calibri', '', 9)
         pdf.set_xy(80, 55)
 
         # Definir anchos para alineación
         cell_width = 50
         big_cell_width = 100
         height = 7
-        pdf.set_font('calibri', '', 9) 
+        pdf.set_font('calibri', '', 9)
         # Encabezado para Nombres
 
         fullnames = database.marine_firstname_seafarers(uid)
         fullLastname = database.marine_lastname_seafarers(uid)
-        # Obtener un solo nombre y apellido de la base de datos
-
-        # Altura de la celda
-        height = 7
 
         # Dividir el nombre en primer y segundo nombre si existe
         nombres = fullnames.split(' ', 1)  # Divide en el primer espacio
@@ -175,7 +171,7 @@ class Ab_OsSeafarers():
         primer_apellido = apellidos[0]  # Primer apellido
         segundo_apellido = apellidos[1] if len(apellidos) > 1 else ''  # Segundo apellido (si existe)
 
-            # Nombre y apellidos
+        # Nombre y apellidos
         pdf.cell(w=40, h=height, txt='NAME', border=1, align='L', fill=True)  # Etiqueta de "NAME"
         pdf.cell(w=40, h=height, txt=primer_nombre, border=1, align='C')  # Primer nombre
         pdf.cell(w=40, h=height, txt=segundo_nombre, border=1, align='C', ln=1)  # Segundo nombre (si existe)
@@ -191,21 +187,17 @@ class Ab_OsSeafarers():
         # Fecha de nacimiento
         pdf.set_xy(80, 69)
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(MM-DD-YYY)', border=1, align='L', fill=True)
-    
+
         date = database.marine_dateOfBirthSeafarers(uid) or ""
 
-        # Formatear la fecha en caso de que esté en un formato diferente
         if date:
             try:
-                # Intentar convertir la fecha al formato MM-DD-YYYY
                 formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%m-%d-%Y")
             except ValueError:
-                # Si la fecha no está en el formato esperado, mantén el valor original o muestra un mensaje
                 formatted_date = date
         else:
             formatted_date = ""
 
-        # Usar el valor formateado en el PDF
         pdf.set_xy(120, 69)
         pdf.cell(w=80, h=13, txt=formatted_date, border=1, align='C', ln=1)
 
@@ -214,14 +206,12 @@ class Ab_OsSeafarers():
         pdf.multi_cell(w=40, h=14, txt='IDENTIFICATION NUMBER', border=1, align='L', fill=True)
         identification_data = database.marine_identification(uid) or []
 
-        # Busca primero "Identification (ID, NID, etc.)", si no existe, busca "Passport"
         identification_number = next(
             (doc['data']['documentNumber'] for doc in identification_data
             if doc.get('data', {}).get('documentName', {}).get('name') == "Identification (ID, NID, etc.)"),
             None
         )
 
-        # Si no se encontró identificación, intenta con "Passport"
         if identification_number is None:
             identification_number = next(
                 (doc['data']['documentNumber'] for doc in identification_data
@@ -231,6 +221,7 @@ class Ab_OsSeafarers():
 
         pdf.set_xy(120, 82)
         pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
+
         # Nacionalidad
         nationality = database.marine_nationality(uid) or ""
         pdf.set_xy(80, 91)
@@ -249,14 +240,12 @@ class Ab_OsSeafarers():
         # Altura, peso y BMI
         pdf.set_xy(80, 105)
         height = database.marine_height(uid)
-        # Verifica si la altura es "0' 0''" o "nan", de ser así, muestra una celda vacía
         if height == "0' 0''" or height == "nan":
             height = ""
         pdf.cell(w=25, h=7, txt='HEIGHT (Ft/in)', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=height, border=1, align='C')
 
         weight = database.marine_weight(uid)
-        # Verifica si el peso es "0" o "nan", de ser así, muestra una celda vacía
         if weight == "0" or weight == "nan":
             weight = ""
         pdf.cell(w=22, h=7, txt='WEIGHT (Lb)', border=1, align='L', fill=True)
@@ -264,7 +253,6 @@ class Ab_OsSeafarers():
 
         pdf.cell(w=15, h=7, txt='BMI', border=1, align='L', fill=True)
         bmi = database.marine_bmi(uid)
-        # Verifica si el BMI es "0" o "nan", de ser así, muestra una celda vacía
         if str(bmi) == "0" or str(bmi) == "nan":
             bmi = ""
         pdf.cell(w=20, h=7, txt=str(bmi), border=1, align='C', ln=1)
