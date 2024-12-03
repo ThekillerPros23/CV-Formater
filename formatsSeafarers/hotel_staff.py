@@ -535,6 +535,7 @@ class HotelStaffSeafarers():
 # Lista de documentos predeterminada
         documents = [
             "COC VI/1",
+            "COC II/4"
             "B1/ B2",
             "FLAG CERTIFICATES",
             "FLAG SEAMANBOOK",
