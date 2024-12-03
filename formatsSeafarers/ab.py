@@ -132,10 +132,10 @@ class Ab_OsSeafarers():
         pdf.set_font('calibri', '', 14)
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
-        pdf.set_xy(135, 40)
+        pdf.set_xy(70, 50)
         position = database.marine_position(uid)
         position_name = position[0].get('name', "") if position else ""
-        pdf.cell(6,10, position_name)
+        pdf.cell(0,5, position_name)
 
         image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)

@@ -13,7 +13,7 @@ class OfficerCourses:
             7: "Medical Care IMO 1.15",
             51: "Engine Resources Management",
             52: "Engine Room Simulator IMO 2.07",
-            55: "Ship Simulator and Bridge Teamwork IMO 1.22",
+
             30: "High Voltage Installations",
             22: "Marine Environmental Awareness IMO 1.38",
             12: "Leadership and Teamwork IMO 1.39",
@@ -25,6 +25,6 @@ class OfficerCourses:
             10: "Safety Training for Personnel Providing Direct Service to Passengers in Passenger Spaces IMO 1.44",
             11: "Passenger Ship Crowd Management Training IMO 1.41",
             25: "Passenger Ship Crisis Management Training IMO 1.42",
-            26: "Passenger Safety, Cargo Safety and Hull Integrity Training IMO 1.29"
+            26: "Passenger Safety, Cargo Safety and Hull Integrity Training IMO 1.46"
         }
         return courses
