@@ -385,9 +385,9 @@ class MessmanSeafarers():
         pdf.cell(w=70, h=7, txt="PLACE OF ISSUE", border=1, align="C", ln=1, fill=True)
 
         # Datos principales
-        pdf.cell(w=60, h=7, txt=str(marlins['PercentageTotal']) + "%", border=1, align="R")
-        pdf.cell(w=60, h=7, txt=marlins['IssueDate'], border=1, align="C")
-        pdf.cell(w=70, h=7, txt=marlins['PlaceIssue'], border=1, align="C", ln=1)
+        pdf.cell(w=60, h=7, txt=str(marlins.get('PercentageTotal', "")) + "%", border=1, align="R")
+        pdf.cell(w=60, h=7, txt=marlins.get('IssueDate', ""), border=1, align="C")
+        pdf.cell(w=70, h=7, txt=marlins.get('PlaceIssue', ""), border=1, align="C", ln=1)
 
         # Encabezados de secciones de habilidades
         pdf.cell(w=30, h=7, txt='LISTENING', border=1, align='L', fill=True)
@@ -397,11 +397,11 @@ class MessmanSeafarers():
         pdf.cell(w=40, h=7, txt='READING', border=1, align='L', ln=1, fill=True)
 
         # Datos de habilidades individuales
-        pdf.cell(w=30, h=7, txt=str(marlins['PercentageListening']) + '%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt=str(marlins['PercentageGrammar']) + '%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt=str(marlins['PercentageVocabulary']) + '%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt=str(marlins['PercentageNumbers']) + '%', border=1, align='R')
-        pdf.cell(w=40, h=7, txt=str(marlins['PercentageReading']) + '%', border=1, align='R')
+        pdf.cell(w=30, h=7, txt=str(marlins.get('PercentageListening', "")) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins.get('PercentageGrammar', "")) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins.get('PercentageVocabulary', "")) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins.get('PercentageNumbers', "")) + '%', border=1, align='R')
+        pdf.cell(w=40, h=7, txt=str(marlins.get('PercentageReading', "")) + '%', border=1, align='R')
         pdf.ln(10)
         pdf.set_font('calibri','',9)
         pdf.cell(0,10,txt="2. EMERGENCY CONTACT / NEXT OF KIN", border=0, align='L')
