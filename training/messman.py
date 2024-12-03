@@ -249,51 +249,51 @@ class Training():
                    # Definir una altura mínima para `number`
 # Definir una altura mínima para `number`
                 lines_course_name = pdf.multi_cell(anchuras[0], cell_height, course_name, border=0, align='L', split_only=True)
-            lines_country = pdf.multi_cell(anchuras[1], cell_height, country, border=0, align='L', split_only=True)
-            lines_number = pdf.multi_cell(anchuras[2], cell_height, number, border=0, align='L', split_only=True)
-            lines_issue_date = pdf.multi_cell(anchuras[3], cell_height, issue_date, border=0, align='L', split_only=True)
-            lines_expiry_date = pdf.multi_cell(anchuras[4], cell_height, expiry_date, border=0, align='L', split_only=True)
+                lines_country = pdf.multi_cell(anchuras[1], cell_height, country, border=0, align='L', split_only=True)
+                lines_number = pdf.multi_cell(anchuras[2], cell_height, number, border=0, align='L', split_only=True)
+                lines_issue_date = pdf.multi_cell(anchuras[3], cell_height, issue_date, border=0, align='L', split_only=True)
+                lines_expiry_date = pdf.multi_cell(anchuras[4], cell_height, expiry_date, border=0, align='L', split_only=True)
 
-            # Calcular la altura de cada celda
-            height_course_name = len(lines_course_name) * cell_height if course_name else cell_height
-            height_country = len(lines_country) * cell_height if country else cell_height
-            height_number = len(lines_number) * cell_height if number else cell_height
-            height_issue_date = len(lines_issue_date) * cell_height if issue_date else cell_height
-            height_expiry_date = len(lines_expiry_date) * cell_height if expiry_date else cell_height
+                # Calcular la altura de cada celda
+                height_course_name = len(lines_course_name) * cell_height if course_name else cell_height
+                height_country = len(lines_country) * cell_height if country else cell_height
+                height_number = len(lines_number) * cell_height if number else cell_height
+                height_issue_date = len(lines_issue_date) * cell_height if issue_date else cell_height
+                height_expiry_date = len(lines_expiry_date) * cell_height if expiry_date else cell_height
 
-            # Ajustar las alturas para que todas sean iguales a la mayor
-            adjusted_height = max(height_course_name, height_country, height_number, height_issue_date, height_expiry_date)
+                # Ajustar las alturas para que todas sean iguales a la mayor
+                adjusted_height = max(height_course_name, height_country, height_number, height_issue_date, height_expiry_date)
 
-            # Verificar si es necesario un salto de página
-            if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
-                pdf.add_page()
+                # Verificar si es necesario un salto de página
+                if pdf.get_y() + adjusted_height > pdf.page_break_trigger:
+                    pdf.add_page()
 
-            # Posición inicial de `x` e `y` para esta fila
-            x_start = pdf.get_x()
-            y_start = pdf.get_y()
+                # Posición inicial de `x` e `y` para esta fila
+                x_start = pdf.get_x()
+                y_start = pdf.get_y()
 
-            # Dibujar la columna de cursos con color
-            # Color azul claro
-            pdf.set_xy(x_start, y_start)
-            pdf.cell(anchuras[0], adjusted_height, border=1, fill=True)
-            draw_text_in_cell(pdf, x_start, y_start, anchuras[0], adjusted_height, course_name)
+                # Dibujar la columna de cursos con color
+                # Color azul claro
+                pdf.set_xy(x_start, y_start)
+                pdf.cell(anchuras[0], adjusted_height, border=1, fill=True)
+                draw_text_in_cell(pdf, x_start, y_start, anchuras[0], adjusted_height, course_name)
 
-            # Dibujar las demás columnas sin color
-        # Color blanco (sin relleno)
-            pdf.set_xy(x_start + anchuras[0], y_start)
-            pdf.cell(anchuras[1], adjusted_height, border=1)
-            draw_text_in_cell(pdf, x_start + anchuras[0], y_start, anchuras[1], adjusted_height, country)
+                # Dibujar las demás columnas sin color
+            # Color blanco (sin relleno)
+                pdf.set_xy(x_start + anchuras[0], y_start)
+                pdf.cell(anchuras[1], adjusted_height, border=1)
+                draw_text_in_cell(pdf, x_start + anchuras[0], y_start, anchuras[1], adjusted_height, country)
 
-            pdf.set_xy(x_start + anchuras[0] + anchuras[1], y_start)
-            pdf.cell(anchuras[2], adjusted_height, border=1)
-            draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1], y_start, anchuras[2], adjusted_height, number)
+                pdf.set_xy(x_start + anchuras[0] + anchuras[1], y_start)
+                pdf.cell(anchuras[2], adjusted_height, border=1)
+                draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1], y_start, anchuras[2], adjusted_height, number)
 
-            pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2], y_start)
-            pdf.cell(anchuras[3], adjusted_height, border=1)
-            draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2], y_start, anchuras[3], adjusted_height, issue_date)
+                pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2], y_start)
+                pdf.cell(anchuras[3], adjusted_height, border=1)
+                draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2], y_start, anchuras[3], adjusted_height, issue_date)
 
-            pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_start)
-            pdf.cell(anchuras[4], adjusted_height, border=1)
-            draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_start, anchuras[4], adjusted_height, expiry_date)
+                pdf.set_xy(x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_start)
+                pdf.cell(anchuras[4], adjusted_height, border=1)
+                draw_text_in_cell(pdf, x_start + anchuras[0] + anchuras[1] + anchuras[2] + anchuras[3], y_start, anchuras[4], adjusted_height, expiry_date)
 
-            pdf.ln()
+                pdf.ln()
