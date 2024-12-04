@@ -345,12 +345,15 @@ class FitterSeafarers():
 
         # Iterar sobre los datos para encontrar el porcentaje más alto
         for data in others_lang:
-            percentage = data.get("PercentageSpeak", {})  # Obtener el porcentaje o 0 si no está presente
+            # Obtener el valor del porcentaje, ajustando si es un diccionario
+            percentage = data.get("PercentageSpeak", 0)  # Reemplazar con 0 si no está definido
+            if isinstance(percentage, dict):  # Si es un diccionario, extraer el valor correcto
+                percentage = percentage.get("value", 0)  # Ajusta "value" según el formato de tus datos
             if percentage > highest_percentage:
                 highest_percentage = percentage
-    
-        pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill= True)
-        
+
+        # Agregar la información al PDF
+        pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill=True)
         pdf.cell(w=30, h=7, txt=str(highest_percentage) + "%", border=1, align="R", ln=1)
 
         pdf.ln(5)
