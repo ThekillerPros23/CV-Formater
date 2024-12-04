@@ -354,6 +354,7 @@ class FitterSeafarers():
 
         # Agregar la información al PDF
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill=True)
+
         pdf.cell(w=30, h=7, txt=str(highest_percentage) + "%", border=1, align="R", ln=1)
 
         pdf.ln(5)
@@ -535,7 +536,7 @@ class FitterSeafarers():
 # Lista de documentos predeterminada
         documents = [
             "COC III/5",
-            "COC II/4",
+            "COC III/4",
             "B1/ B2",
             "FLAG CERTIFICATES",
             "FLAG SEAMANBOOK",

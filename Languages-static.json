@@ -1,0 +1,502 @@
+[
+    {
+        "Id": "1",
+        "Language-En": "English",
+        "Language-Es": "Inglés"
+    },
+    {
+        "Id": "2",
+        "Language-En": "Mandarin Chinese",
+        "Language-Es": "Chino mandarín"
+    },
+    {
+        "Id": "3",
+        "Language-En": "Hindi",
+        "Language-Es": "Hindi"
+    },
+    {
+        "Id": "4",
+        "Language-En": "Spanish",
+        "Language-Es": "Español"
+    },
+    {
+        "Id": "5",
+        "Language-En": "French",
+        "Language-Es": "Francés"
+    },
+    {
+        "Id": "6",
+        "Language-En": "Standard Arabic",
+        "Language-Es": "Árabe estándar"
+    },
+    {
+        "Id": "7",
+        "Language-En": "Bengali",
+        "Language-Es": "Bengalí"
+    },
+    {
+        "Id": "8",
+        "Language-En": "Russian",
+        "Language-Es": "Ruso"
+    },
+    {
+        "Id": "9",
+        "Language-En": "Portuguese",
+        "Language-Es": "Portugués"
+    },
+    {
+        "Id": "10",
+        "Language-En": "Indonesian",
+        "Language-Es": "Indonesio"
+    },
+    {
+        "Id": "11",
+        "Language-En": "Urdu",
+        "Language-Es": "Urdu"
+    },
+    {
+        "Id": "12",
+        "Language-En": "Standard German",
+        "Language-Es": "Alemán estándar"
+    },
+    {
+        "Id": "13",
+        "Language-En": "Japanese",
+        "Language-Es": "Japonés"
+    },
+    {
+        "Id": "14",
+        "Language-En": "Swahili",
+        "Language-Es": "Swahili"
+    },
+    {
+        "Id": "15",
+        "Language-En": "Marathi",
+        "Language-Es": "Marathi"
+    },
+    {
+        "Id": "16",
+        "Language-En": "Telugu",
+        "Language-Es": "Telugu"
+    },
+    {
+        "Id": "17",
+        "Language-En": "Western Punjabi",
+        "Language-Es": "Punjabi occidental"
+    },
+    {
+        "Id": "18",
+        "Language-En": "Wu Chinese",
+        "Language-Es": "Chino wu"
+    },
+    {
+        "Id": "19",
+        "Language-En": "Tamil",
+        "Language-Es": "Tamil"
+    },
+    {
+        "Id": "20",
+        "Language-En": "Turkish",
+        "Language-Es": "Turco"
+    },
+    {
+        "Id": "21",
+        "Language-En": "Korean",
+        "Language-Es": "Coreano"
+    },
+    {
+        "Id": "22",
+        "Language-En": "Vietnamese",
+        "Language-Es": "Vietnamita"
+    },
+    {
+        "Id": "23",
+        "Language-En": "Yue Chinese",
+        "Language-Es": "Chino cantonés (Yue)"
+    },
+    {
+        "Id": "24",
+        "Language-En": "Javanese",
+        "Language-Es": "Javanés"
+    },
+    {
+        "Id": "25",
+        "Language-En": "Italian",
+        "Language-Es": "Italiano"
+    },
+    {
+        "Id": "26",
+        "Language-En": "Egyptian Spoken Arabic",
+        "Language-Es": "Árabe egipcio hablado"
+    },
+    {
+        "Id": "27",
+        "Language-En": "Hausa",
+        "Language-Es": "Hausa"
+    },
+    {
+        "Id": "28",
+        "Language-En": "Thai",
+        "Language-Es": "Tailandés"
+    },
+    {
+        "Id": "29",
+        "Language-En": "Gujarati",
+        "Language-Es": "Gujarati"
+    },
+    {
+        "Id": "30",
+        "Language-En": "Kannada",
+        "Language-Es": "Kannada"
+    },
+    {
+        "Id": "31",
+        "Language-En": "Iranian Persian",
+        "Language-Es": "Persa iraní"
+    },
+    {
+        "Id": "32",
+        "Language-En": "Bhojpuri",
+        "Language-Es": "Bhojpuri"
+    },
+    {
+        "Id": "33",
+        "Language-En": "Southern Min Chinese",
+        "Language-Es": "Chino min del sur"
+    },
+    {
+        "Id": "34",
+        "Language-En": "Hakka Chinese",
+        "Language-Es": "Chino hakka"
+    },
+    {
+        "Id": "35",
+        "Language-En": "Jinyu Chinese",
+        "Language-Es": "Chino jinyu"
+    },
+    {
+        "Id": "36",
+        "Language-En": "Filipino",
+        "Language-Es": "Filipino"
+    },
+    {
+        "Id": "37",
+        "Language-En": "Burmese",
+        "Language-Es": "Birmano"
+    },
+    {
+        "Id": "38",
+        "Language-En": "Polish",
+        "Language-Es": "Polaco"
+    },
+    {
+        "Id": "39",
+        "Language-En": "Yoruba",
+        "Language-Es": "Yoruba"
+    },
+    {
+        "Id": "40",
+        "Language-En": "Odia",
+        "Language-Es": "Odia"
+    },
+    {
+        "Id": "41",
+        "Language-En": "Malayalam ",
+        "Language-Es": "Malayalam"
+    },
+    {
+        "Id": "42",
+        "Language-En": "Xiang Chinese",
+        "Language-Es": "Chino xiang"
+    },
+    {
+        "Id": "43",
+        "Language-En": "Maithili",
+        "Language-Es": "Maithili"
+    },
+    {
+        "Id": "44",
+        "Language-En": "Ukrainian",
+        "Language-Es": "Ucraniano"
+    },
+    {
+        "Id": "45",
+        "Language-En": "Moroccan Spoken Arabic",
+        "Language-Es": "Árabe marroquí hablado"
+    },
+    {
+        "Id": "46",
+        "Language-En": "Eastern Punjabi",
+        "Language-Es": "Punjabi oriental"
+    },
+    {
+        "Id": "47",
+        "Language-En": "Sunda",
+        "Language-Es": "Sundanés"
+    },
+    {
+        "Id": "48",
+        "Language-En": "Algerian Spoken Arabic",
+        "Language-Es": "Árabe argelino hablado"
+    },
+    {
+        "Id": "49",
+        "Language-En": "Sundanese Spoken Arabic",
+        "Language-Es": "Árabe sudanés hablado"
+    },
+    {
+        "Id": "50",
+        "Language-En": "Nigerian Pidgin",
+        "Language-Es": "Pidgin nigeriano"
+    },
+    {
+        "Id": "51",
+        "Language-En": "Zulu",
+        "Language-Es": "Zulú"
+    },
+    {
+        "Id": "52",
+        "Language-En": "Igbo",
+        "Language-Es": "Igbo"
+    },
+    {
+        "Id": "53",
+        "Language-En": "Amharic",
+        "Language-Es": "Amárico"
+    },
+    {
+        "Id": "54",
+        "Language-En": "Northern Uzbek",
+        "Language-Es": "Uzbeko del norte"
+    },
+    {
+        "Id": "55",
+        "Language-En": "Sindhi",
+        "Language-Es": "Sindhi"
+    },
+    {
+        "Id": "56",
+        "Language-En": "North Levantine Spoken Arabic",
+        "Language-Es": "Árabe del norte levantino hablado"
+    },
+    {
+        "Id": "57",
+        "Language-En": "Nepali",
+        "Language-Es": "Nepalí"
+    },
+    {
+        "Id": "58",
+        "Language-En": "Romanian",
+        "Language-Es": "Rumano"
+    },
+    {
+        "Id": "59",
+        "Language-En": "Tagalog",
+        "Language-Es": "Tagalo"
+    },
+    {
+        "Id": "60",
+        "Language-En": "Dutch",
+        "Language-Es": "Neerlandés"
+    },
+    {
+        "Id": "61",
+        "Language-En": "Sa'idi Spoken Arabic",
+        "Language-Es": "Árabe sa'idi hablado"
+    },
+    {
+        "Id": "62",
+        "Language-En": "Gan Chinese",
+        "Language-Es": "Chino gan"
+    },
+    {
+        "Id": "63",
+        "Language-En": "Northern Pashto",
+        "Language-Es": "Pashto del norte"
+    },
+    {
+        "Id": "64",
+        "Language-En": "Magahi",
+        "Language-Es": "Magahi"
+    },
+    {
+        "Id": "65",
+        "Language-En": "Saraiki",
+        "Language-Es": "Saraiki"
+    },
+    {
+        "Id": "66",
+        "Language-En": "Xhosa",
+        "Language-Es": "Xhosa"
+    },
+    {
+        "Id": "67",
+        "Language-En": "Malay",
+        "Language-Es": "Malayo"
+    },
+    {
+        "Id": "68",
+        "Language-En": "Khmer",
+        "Language-Es": "Jemer"
+    },
+    {
+        "Id": "69",
+        "Language-En": "Afrikaans",
+        "Language-Es": "Afrikaans"
+    },
+    {
+        "Id": "70",
+        "Language-En": "Sinhala",
+        "Language-Es": "Cingalés"
+    },
+    {
+        "Id": "71",
+        "Language-En": "Somali",
+        "Language-Es": "Somalí"
+    },
+    {
+        "Id": "72",
+        "Language-En": "Chhattisgarhi",
+        "Language-Es": "Chhattisgarhi"
+    },
+    {
+        "Id": "73",
+        "Language-En": "Cebuano",
+        "Language-Es": "Cebuano"
+    },
+    {
+        "Id": "74",
+        "Language-En": "Mesopotamian Spoken Arabic",
+        "Language-Es": "Árabe mesopotámico hablado"
+    },
+    {
+        "Id": "75",
+        "Language-En": "Assamese",
+        "Language-Es": "Asamés"
+    },
+    {
+        "Id": "76",
+        "Language-En": "Northeastern Thai",
+        "Language-Es": "Tailandés nororiental"
+    },
+    {
+        "Id": "77",
+        "Language-En": "Northern Kurdish",
+        "Language-Es": "Kurdo del norte"
+    },
+    {
+        "Id": "78",
+        "Language-En": "Hijazi Spoken Arabic",
+        "Language-Es": "Árabe hijazi hablado"
+    },
+    {
+        "Id": "79",
+        "Language-En": "Nigerian Fulfulde",
+        "Language-Es": "Fulfulde nigeriano"
+    },
+    {
+        "Id": "80",
+        "Language-En": "Bavarian",
+        "Language-Es": "Bávaro"
+    },
+    {
+        "Id": "81",
+        "Language-En": "Bamanankan",
+        "Language-Es": "Bamanankan"
+    },
+    {
+        "Id": "82",
+        "Language-En": "South Azerbaijani",
+        "Language-Es": "Azerbaiyano del sur"
+    },
+    {
+        "Id": "83",
+        "Language-En": "Northern Sotho",
+        "Language-Es": "Sotho del norte"
+    },
+    {
+        "Id": "84",
+        "Language-En": "Setswana",
+        "Language-Es": "Setswana"
+    },
+    {
+        "Id": "85",
+        "Language-En": "Souther Sotho",
+        "Language-Es": "Sotho del sur"
+    },
+    {
+        "Id": "86",
+        "Language-En": "Czech",
+        "Language-Es": "Checo"
+    },
+    {
+        "Id": "87",
+        "Language-En": "Greek",
+        "Language-Es": "Griego"
+    },
+    {
+        "Id": "88",
+        "Language-En": "Chittagonian",
+        "Language-Es": "Chittagoniano"
+    },
+    {
+        "Id": "89",
+        "Language-En": "Kazakh",
+        "Language-Es": "Kazajo"
+    },
+    {
+        "Id": "90",
+        "Language-En": "Swedish",
+        "Language-Es": "Sueco"
+    },
+    {
+        "Id": "91",
+        "Language-En": "Deccan",
+        "Language-Es": "Deccan"
+    },
+    {
+        "Id": "92",
+        "Language-En": "Hungarian",
+        "Language-Es": "Húngaro"
+    },
+    {
+        "Id": "93",
+        "Language-En": "Jula",
+        "Language-Es": "Jula"
+    },
+    {
+        "Id": "94",
+        "Language-En": "Sadri",
+        "Language-Es": "Sadri"
+    },
+    {
+        "Id": "95",
+        "Language-En": "Kinyarwanda",
+        "Language-Es": "Kinyarwanda"
+    },
+    {
+        "Id": "96",
+        "Language-En": "Cameroonian Pidgin",
+        "Language-Es": "Pidgin camerunés"
+    },
+    {
+        "Id": "97",
+        "Language-En": "Sylheti",
+        "Language-Es": "Sylheti"
+    },
+    {
+        "Id": "98",
+        "Language-En": "South Levantine Spoken Arabic",
+        "Language-Es": "Árabe del sur levantino hablado"
+    },
+    {
+        "Id": "99",
+        "Language-En": "Tunisian Spoken Arabic",
+        "Language-Es": "Árabe tunecino hablado"
+    },
+    {
+        "Id": "100",
+        "Language-En": "Sanaani Spoken Arabic",
+        "Language-Es": "Árabe sanaani hablado"
+    }
+]
