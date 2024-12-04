@@ -337,16 +337,14 @@ class CookSeafarers():
         
         pdf.cell(w=30, h=7, txt="LANGUAGES", border=1, align="C",fill=True)
         
-        pdf.cell(w=30, h=7, txt="ENGLISH", border=1, align="L",fill=True)
+        pdf.cell(w=20, h=7, txt="ENGLISH", border=1, align="L",fill=True)
         english = database.marine_lang_engl(uid)
         pdf.cell(w=20, h=7, txt=str(english) + "%", border=1, align="R")
         
-        pdf.cell(w=30, h=7, txt="SPANISH", border=1, align="L", fill=True)
+        pdf.cell(w=20, h=7, txt="SPANISH", border=1, align="L", fill=True)
         spanish = database.marine_lang_span(uid) or ""
-        pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
+        pdf.cell(w=20, h=7, txt=str(spanish) + "%", border=1, align="R")
 
-        
-        
         others_lang = database.marine_lang_other(uid) or []
         highest_percentage = 0  # Valor inicial para comparar
 
@@ -361,6 +359,7 @@ class CookSeafarers():
 
         # Agregar la información al PDF
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill=True)
+        pdf.cell(w=30, h=7, txt="", border=1, align="R",fill=True)
         pdf.cell(w=30, h=7, txt=str(highest_percentage) + "%", border=1, align="R", ln=1)
 
         pdf.ln(5)
