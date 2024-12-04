@@ -19,6 +19,7 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
 class Skills():
     def ab_os(self, pdf, database, uid):
         skill = database.marine_skills(uid)
+        print(skill)
         ancho_columna_1 = 130  # Ancho de la primera columna
         ancho_columna_2 = 30   # Ancho de las columnas "YES" y "NO"
         altura_linea = 6       # Altura de cada línea de texto
@@ -59,7 +60,7 @@ class Skills():
     "Have you ever been nominated employee of the month.",
     "Can effectively perform with less or without supervision."
         ]
-
+        
         # Procesa cada texto en la primera columna
         for idx, texto in enumerate(textos, start=1):
             # Determinar si la fila debe tener fondo

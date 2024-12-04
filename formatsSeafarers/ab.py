@@ -338,11 +338,18 @@ class Ab_OsSeafarers():
         spanish = database.marine_lang_span(uid) or ""
         pdf.cell(w=30, h=7, txt=str(spanish) + "%", border=1, align="R")
 
+        others_lang = database.marine_lang_other(uid) or []
+        highest_percentage = 0  # Valor inicial para comparar
 
-
+        # Iterar sobre los datos para encontrar el porcentaje más alto
+        for data in others_lang:
+            percentage = data.get("PercentageSpeak", {})  # Obtener el porcentaje o 0 si no está presente
+            if percentage > highest_percentage:
+                highest_percentage = percentage
+    
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill= True)
         
-        pdf.cell(w=30, h=7, txt="%", border=1, align="R", ln=1)
+        pdf.cell(w=30, h=7, txt=str(highest_percentage) + "%", border=1, align="R", ln=1)
 
         pdf.ln(5)
         pdf.set_font('calibri','',9)

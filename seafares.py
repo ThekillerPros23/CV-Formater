@@ -86,6 +86,13 @@ class FirebaseDataSeafarers():
         doc_data = self.get_document_by_uid(id)
         return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("ENGLISH", {}).get("PercentageSpeak", "") if doc_data else {}
 
+
+    def marine_lang_other(self,id):
+        doc_data = self.get_document_by_uid(id)
+        return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("other")
+
+
+
     def marine_lang_span(self, id):
         doc_data = self.get_document_by_uid(id)
         return doc_data.get("seafarerData", {}).get("seafarerProfile", {}).get("lang", {}).get("default", {}).get("SPANISH", {}).get("PercentageSpeak", "")  if doc_data else {}
@@ -121,3 +128,4 @@ class FirebaseDataSeafarers():
     def marine_position(self,id):
         doc_data = self.get_document_by_uid(id)
         return doc_data.get("seafarerData", {}).get("position", {}) if doc_data else {}
+    
