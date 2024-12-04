@@ -13,6 +13,7 @@ import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
 from education.archivo import *
+from other_languages.other import * 
 
 
 number = Number()
@@ -340,22 +341,44 @@ class HotelStaffSeafarers():
         spanish = database.marine_lang_span(uid) or ""
         pdf.cell(w=20, h=7, txt=str(spanish) + "%", border=1, align="R")
 
+        other = Other()
+        other_languages = other.other()  # Diccionario de todos los ID y nombres de lenguajes
         others_lang = database.marine_lang_other(uid) or []
-        highest_percentage = 0  # Valor inicial para comparar
+        highest_percentage = ""  # Inicializar como cadena vacía
+        selected_language = ""  # Para almacenar el lenguaje con el porcentaje más alto
 
-        # Iterar sobre los datos para encontrar el porcentaje más alto
-        for data in others_lang:
-            # Obtener el valor del porcentaje, ajustando si es un diccionario
-            percentage = data.get("PercentageSpeak", 0)  # Reemplazar con 0 si no está definido
-            if isinstance(percentage, dict):  # Si es un diccionario, extraer el valor correcto
-                percentage = percentage.get("value", 0)  # Ajusta "value" según el formato de tus datos
-            if percentage > highest_percentage:
-                highest_percentage = percentage
+        # Verificar si hay datos en `others_lang`
+        if len(others_lang) == 1:
+            # Si hay un solo dato, tomar directamente su lenguaje y porcentaje
+            data = others_lang[0]
+            language_id = data.get("Language", "Unknown")
+            selected_language = other_languages.get(int(language_id), "Unknown")  # Obtener el nombre del lenguaje
+            percentage = data.get("PercentageSpeak", "")
+
+            # Manejar el caso si el porcentaje está anidado en un diccionario
+            if isinstance(percentage, dict):
+                percentage = percentage.get("value", "")
+
+            highest_percentage = percentage
+        else:
+            # Si hay más de un dato, buscar el lenguaje con el porcentaje más alto
+            for data in others_lang:
+                language_id = data.get("Language", "Unknown")
+                percentage = data.get("PercentageSpeak", "")
+
+                # Manejar el caso si el porcentaje está anidado en un diccionario
+                if isinstance(percentage, dict):
+                    percentage = percentage.get("value", "")
+
+                # Comparar y almacenar el lenguaje y porcentaje más alto si es válido
+                if percentage and (highest_percentage == "" or percentage > highest_percentage):
+                    highest_percentage = percentage
+                    selected_language = other_languages.get(int(language_id), "Unknown")  # Obtener el nombre del lenguaje
 
         # Agregar la información al PDF
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill=True)
-        pdf.cell(w=30, h=7, txt="", border=1, align="R",fill=True)
-        pdf.cell(w=30, h=7, txt=str(highest_percentage) + "%", border=1, align="R", ln=1)
+        pdf.cell(w=30, h=7, txt=selected_language, border=1, align="L", fill=True)  # Lenguaje con porcentaje más alto o único
+        pdf.cell(w=30, h=7, txt=(str(highest_percentage) + "%") if highest_percentage else "%", border=1, align="R", ln=1)
 
 
         pdf.ln(5)
