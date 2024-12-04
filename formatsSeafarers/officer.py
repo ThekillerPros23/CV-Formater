@@ -127,101 +127,95 @@ class OfficerSeafarers():
         pdf.set_xy(0, 30)
         pdf.set_font('calibri', '', 22)
         pdf.cell(0, 10, 'SEAFARER APPLICATION FORM', align='C')
-
+        
+        
+        
         pdf.set_xy(70, 40)  # Ajustar la posición para el siguiente texto
         pdf.set_font('calibri', '', 14)
         pdf.cell(20, 10, 'POSITION APPLYING FOR RANK: ' )
         pdf.set_font('calibri', 'BU', 14)
-        pdf.set_xy(135, 40)
+        
+        
+        pdf.set_xy(70, 50)
         position = database.marine_position(uid)
         position_name = position[0].get('name', "") if position else ""
-        pdf.cell(6,10, position_name)
+
+        # Centrar dinámicamente la posición en X para position_name
+        text_width = pdf.get_string_width(position_name)
+        pdf.set_xy((210 - text_width) / 2, 50)
+        pdf.cell(0, 5, position_name)
 
         image = database.marine_image_seafarers(uid)
         imagen = descargar_imagen_firebase(image)
         guardar_imagen_para_fpdf(imagen, "imagen_descargada.png")
-       # Agregar imagen al PDF con tamaño ajustado
+        # Agregar imagen al PDF con tamaño ajustado
         pdf.set_xy(30, 60)
-        pdf.image("imagen_descargada.png", x=20, y=60, w=50, h=50)
+        pdf.image("imagen_descargada.png", x=20, y=70, w=50, h=50)
 
-        pdf.set_xy(20, 50)
+        pdf.set_xy(20, 58)
         pdf.set_font('calibri', '', 12)
         pdf.cell(55, 10, '1. PERSONAL INFORMATION')
 
-        pdf.set_font('calibri', '', 9) 
-        pdf.set_xy(80, 55)
+        pdf.set_font('calibri', '', 9)
+        pdf.set_xy(80, 66)
 
         # Definir anchos para alineación
         cell_width = 50
         big_cell_width = 100
         height = 7
-        pdf.set_font('calibri', '', 9) 
-        # Encabezado para Nombres
+        pdf.set_font('calibri', '', 9)
 
+        # Encabezado para Nombres
         fullnames = database.marine_firstname_seafarers(uid)
         fullLastname = database.marine_lastname_seafarers(uid)
-        # Obtener un solo nombre y apellido de la base de datos
-
-        # Altura de la celda
-        height = 7
 
         # Dividir el nombre en primer y segundo nombre si existe
-        nombres = fullnames.split(' ', 1)  # Divide en el primer espacio
-        primer_nombre = nombres[0]  # Primer nombre
-        segundo_nombre = nombres[1] if len(nombres) > 1 else ''  # Segundo nombre (si existe)
+        nombres = fullnames.split(' ', 1)
+        primer_nombre = nombres[0]
+        segundo_nombre = nombres[1] if len(nombres) > 1 else ''
 
         # Dividir los apellidos en primer y segundo apellido si existe
-        apellidos = fullLastname.split(' ', 1)  # Divide en el primer espacio
-        primer_apellido = apellidos[0]  # Primer apellido
-        segundo_apellido = apellidos[1] if len(apellidos) > 1 else ''  # Segundo apellido (si existe)
+        apellidos = fullLastname.split(' ', 1)
+        primer_apellido = apellidos[0]
+        segundo_apellido = apellidos[1] if len(apellidos) > 1 else ''
 
-            # Nombre y apellidos
-        pdf.cell(w=40, h=height, txt='NAME', border=1, align='L', fill=True)  # Etiqueta de "NAME"
-        pdf.cell(w=40, h=height, txt=primer_nombre, border=1, align='C')  # Primer nombre
-        pdf.cell(w=40, h=height, txt=segundo_nombre, border=1, align='C', ln=1)  # Segundo nombre (si existe)
-        pdf.set_font('calibri', '', 9)
+        # Nombre y apellidos
+        pdf.cell(w=40, h=height, txt='NAME', border=1, align='L', fill=True)
+        pdf.cell(w=40, h=height, txt=primer_nombre, border=1, align='C')
+        pdf.cell(w=40, h=height, txt=segundo_nombre, border=1, align='C', ln=1)
 
-        # Dibujar la celda de "SURNAMES" con primer y segundo apellido
-        pdf.set_xy(80, 62)  # Ajustar la posición para los apellidos
-        pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L', fill=True)  # Etiqueta de "SURNAMES"
-        pdf.cell(w=40, h=height, txt=primer_apellido, border=1, align='C')  # Primer apellido
-        pdf.cell(w=40, h=height, txt=segundo_apellido, border=1, align='C', ln=1)  # Segundo apellido (si existe)
-        pdf.set_font('calibri', '', 9)
+        pdf.set_xy(80, 73)
+        pdf.cell(w=40, h=height, txt='SURNAMES', border=1, align='L', fill=True)
+        pdf.cell(w=40, h=height, txt=primer_apellido, border=1, align='C')
+        pdf.cell(w=40, h=height, txt=segundo_apellido, border=1, align='C', ln=1)
 
         # Fecha de nacimiento
-        pdf.set_xy(80, 69)
+        pdf.set_xy(80, 80)
         pdf.multi_cell(w=40, h=6.5, txt='DATE OF BIRTH\n(MM-DD-YYY)', border=1, align='L', fill=True)
-    
-        date = database.marine_dateOfBirthSeafarers(uid) or ""
 
-        # Formatear la fecha en caso de que esté en un formato diferente
+        date = database.marine_dateOfBirthSeafarers(uid) or ""
         if date:
             try:
-                # Intentar convertir la fecha al formato MM-DD-YYYY
                 formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%m-%d-%Y")
             except ValueError:
-                # Si la fecha no está en el formato esperado, mantén el valor original o muestra un mensaje
                 formatted_date = date
         else:
             formatted_date = ""
 
-        # Usar el valor formateado en el PDF
-        pdf.set_xy(120, 69)
+        pdf.set_xy(120, 80)
         pdf.cell(w=80, h=13, txt=formatted_date, border=1, align='C', ln=1)
 
         # Número de identificación
-        pdf.set_xy(80, 82)
+        pdf.set_xy(80, 93)
         pdf.multi_cell(w=40, h=14, txt='IDENTIFICATION NUMBER', border=1, align='L', fill=True)
         identification_data = database.marine_identification(uid) or []
 
-        # Busca primero "Identification (ID, NID, etc.)", si no existe, busca "Passport"
         identification_number = next(
             (doc['data']['documentNumber'] for doc in identification_data
             if doc.get('data', {}).get('documentName', {}).get('name') == "Identification (ID, NID, etc.)"),
             None
         )
 
-        # Si no se encontró identificación, intenta con "Passport"
         if identification_number is None:
             identification_number = next(
                 (doc['data']['documentNumber'] for doc in identification_data
@@ -229,17 +223,18 @@ class OfficerSeafarers():
                 ""
             )
 
-        pdf.set_xy(120, 82)
-        pdf.cell(w=80, h=9, txt=identification_number, border=1, align='C', ln=1)
+        pdf.set_xy(120, 93)
+        pdf.cell(w=80, h=14, txt=identification_number, border=1, align='C', ln=1)
+
         # Nacionalidad
-        nationality = database.marine_nationality(uid)
-        pdf.set_xy(80, 91)
+        nationality = database.marine_nationality(uid) or ""
+        pdf.set_xy(80, 107)
         pdf.cell(w=40, h=height, txt='NATIONALITY', border=1, align='L', fill=True)
         pdf.cell(w=80, h=height, txt=nationality, border=1, align='C', ln=1)
 
         # Sexo y Estado Civil
         gender = database.marine_gender(uid)
-        pdf.set_xy(80, 98)
+        pdf.set_xy(80, 114)
         pdf.cell(w=40, h=7, txt='SEX', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=gender, border=1, align='C')
         marital = database.marine_marital(uid)
@@ -247,16 +242,14 @@ class OfficerSeafarers():
         pdf.cell(w=30, h=7, txt=marital, border=1, align='C', ln=1)
 
         # Altura, peso y BMI
-        pdf.set_xy(80, 105)
+        pdf.set_xy(80, 121)
         height = database.marine_height(uid)
-        # Verifica si la altura es "0' 0''" o "nan", de ser así, muestra una celda vacía
         if height == "0' 0''" or height == "nan":
             height = ""
         pdf.cell(w=25, h=7, txt='HEIGHT (Ft/in)', border=1, align='L', fill=True)
         pdf.cell(w=20, h=7, txt=height, border=1, align='C')
 
         weight = database.marine_weight(uid)
-        # Verifica si el peso es "0" o "nan", de ser así, muestra una celda vacía
         if weight == "0" or weight == "nan":
             weight = ""
         pdf.cell(w=22, h=7, txt='WEIGHT (Lb)', border=1, align='L', fill=True)
@@ -264,7 +257,6 @@ class OfficerSeafarers():
 
         pdf.cell(w=15, h=7, txt='BMI', border=1, align='L', fill=True)
         bmi = database.marine_bmi(uid)
-        # Verifica si el BMI es "0" o "nan", de ser así, muestra una celda vacía
         if str(bmi) == "0" or str(bmi) == "nan":
             bmi = ""
         pdf.cell(w=20, h=7, txt=str(bmi), border=1, align='C', ln=1)

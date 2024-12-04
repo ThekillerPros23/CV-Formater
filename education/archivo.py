@@ -107,7 +107,7 @@ class Education():
         pdf.ln(max(height_first_columns, height_large_columns, height_other_columns))
 
         education = database.marine_otherskills(uid)
-        print(education)
+        
      
         anchuras  = [60,40,30,30,30]
         # Añadir los datos

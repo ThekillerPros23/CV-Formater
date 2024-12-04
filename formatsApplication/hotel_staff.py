@@ -128,7 +128,7 @@ class HotelStaffApplication():
 
         fullnames = database.marine_firstname_seafarers(uid,version)
 
-        print(fullnames)
+     
         fullLastname = database.marine_lastname_seafarers(uid,version)
         # Obtener un solo nombre y apellido de la base de datos
 

@@ -103,7 +103,7 @@ class Onboard:
         pdf.ln(max(height_first_columns, height_other_columns))
                 # Cargar y ordenar datos
         onboard = sorted(database.marine_onboard(uid), key=lambda x: x.get('dateOn', ''), reverse=True)
-        print(onboard)
+       
         anchuras =  [25, 25, 32, 25, 18, 20, 25, 28]
         cell_height = 7
         for fila in onboard:
