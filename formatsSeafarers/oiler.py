@@ -350,8 +350,14 @@ class OilerSeafarers():
         if len(others_lang) == 1:
             # Si hay un solo dato, tomar directamente su lenguaje y porcentaje
             data = others_lang[0]
-            language_id = data.get("Language", "Unknown")
-            selected_language = other_languages.get(int(language_id), "Unknown")  # Obtener el nombre del lenguaje
+            language_id = data.get("Language", "")
+            
+            # Validar que el ID sea convertible a entero antes de buscar en el diccionario
+            if language_id.isdigit():
+                selected_language = other_languages.get(int(language_id), "")
+            else:
+                selected_language = ""
+            
             percentage = data.get("PercentageSpeak", "")
 
             # Manejar el caso si el porcentaje está anidado en un diccionario
@@ -362,17 +368,23 @@ class OilerSeafarers():
         else:
             # Si hay más de un dato, buscar el lenguaje con el porcentaje más alto
             for data in others_lang:
-                language_id = data.get("Language", "Unknown")
+                language_id = data.get("Language", "")
                 percentage = data.get("PercentageSpeak", "")
 
                 # Manejar el caso si el porcentaje está anidado en un diccionario
                 if isinstance(percentage, dict):
                     percentage = percentage.get("value", "")
 
+                # Validar que el ID sea convertible a entero antes de buscar en el diccionario
+                if language_id.isdigit():
+                    language_name = other_languages.get(int(language_id), "")
+                else:
+                    language_name = ""
+
                 # Comparar y almacenar el lenguaje y porcentaje más alto si es válido
                 if percentage and (highest_percentage == "" or percentage > highest_percentage):
                     highest_percentage = percentage
-                    selected_language = other_languages.get(int(language_id), "Unknown")  # Obtener el nombre del lenguaje
+                    selected_language = language_name
 
         # Agregar la información al PDF
         pdf.cell(w=20, h=7, txt="OTHERS", border=1, align="L", fill=True)
