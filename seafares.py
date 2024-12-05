@@ -14,6 +14,9 @@ class FirebaseDataSeafarers():
         users_ref = self.db.collection('usersData').where('uid', '==', uid).limit(1)
         docs = list(users_ref.stream())
         return docs[0].to_dict() if docs else None
+
+
+        
     def marine_image_seafarers(self, id):
         doc_data = self.get_document_by_uid(id)
         # Return photoURL if it exists; otherwise, return the fallback URL

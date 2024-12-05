@@ -107,7 +107,7 @@ class FirebaseDataApplication():
 
     def marine_lang_span(self, id, version_index):
         doc_data = self.get_document_by_uid(id, version_index)
-        return doc_data.get('applicationProfile', {}).get('lang', {}).get('SPANISH', {}).get('PercentageSpeak', "")
+        return doc_data.get('applicationProfile', {}).get('lang', {}).get("default", {}).get('SPANISH', {}).get('PercentageSpeak', "")
 
     def marine_weight(self, id, version_index):
         doc_data = self.get_document_by_uid(id, version_index)

@@ -116,7 +116,7 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
     return lineas
 
 class Ab_OsApplication():
-    def format_ab_os(self, pdf, database, uid,version):
+    def format_ab_os(self, pdf, database, uid,version,database_email):
         
         
         pdf.set_fill_color(142,170,219)
@@ -315,7 +315,7 @@ class Ab_OsApplication():
 
 
         # Segunda fila con "PHONE/CELL" y demás datos
-        email = database.marine_email(uid,version,)
+        email = database_email.marine_email(uid)
         
         pdf.cell(w=18, h=7, txt="PHONE/CELL", border=1, align="C", fill=True)
         cell = database.marine_cellphone(uid,version)
