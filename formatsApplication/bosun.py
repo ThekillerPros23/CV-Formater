@@ -21,7 +21,43 @@ country_abbreviations = number.number()
 
 
 formatted_pattern = re.compile(r"^\+\w{2} \(\+\d{1,3}\) \d+")
+def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
+    """
+    Función para escribir texto ajustado dentro de una celda, manejando palabras largas y saltos de línea.
+    """
+    pdf.set_xy(x, y)
+    pdf.set_font("calibri", size=font_size)
+    line_height = pdf.font_size + 1
+    max_lines = int(height // line_height)
 
+    # Dividir el texto en palabras o fragmentos si son demasiado largas
+    words = []
+    for word in text.split():
+        while pdf.get_string_width(word) > width - 2:  # Si la palabra es demasiado larga, dividirla
+            words.append(word[:len(word)//2])
+            word = word[len(word)//2:]
+        words.append(word)
+
+    lines = []
+    current_line = ""
+
+    for word in words:
+        test_line = current_line + " " + word if current_line else word
+        if pdf.get_string_width(test_line) <= width - 2:
+            current_line = test_line
+        else:
+            lines.append(current_line)
+            current_line = word
+        if len(lines) == max_lines:
+            break
+
+    if current_line:
+        lines.append(current_line)
+
+    # Dibujar las líneas dentro de la celda
+    for i, line in enumerate(lines):
+        if i < max_lines:
+            pdf.text(x + 1, y + 3 + i * line_height, line)
 def format_phone_number(number):
     try:
         # Verifica si el número ya está en el formato deseado
@@ -47,6 +83,7 @@ def format_phone_number(number):
     except NumberParseException:
         return "Número inválido"
 
+
 def descargar_imagen_firebase(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -59,27 +96,23 @@ def guardar_imagen_para_fpdf(imagen, nombre_archivo):
     imagen.save(nombre_archivo, format='PNG')  # O 'JPEG' si prefieres JPG
 
 
-def dividir_texto(texto, pdf, ancho_celda):
-    # Dividir el texto en palabras
-    palabras = texto.split(' ')
+def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
+    palabras = texto.split()
+    linea_actual = ""
     lineas = []
-    linea_actual = ''
-    
-    for palabra in palabras:
-        # Probar si la palabra cabe en la línea actual
-        if pdf.get_string_width(linea_actual + palabra) < ancho_celda:
-            linea_actual += palabra + ' '
-        else:
-            # Si no cabe, agregar la línea actual a la lista y comenzar una nueva
-            lineas.append(linea_actual.strip())
-            linea_actual = palabra + ' '
-    
-    # Agregar la última línea
-    if linea_actual:
-        lineas.append(linea_actual.strip())
-    
-    return lineas
 
+    for palabra in palabras:
+        prueba_linea = f"{linea_actual} {palabra}".strip()
+        if pdf.get_string_width(prueba_linea) <= ancho_maximo:
+            linea_actual = prueba_linea
+        else:
+            lineas.append(linea_actual)
+            linea_actual = palabra
+
+    if linea_actual:
+        lineas.append(linea_actual)
+
+    return lineas
 
 
 

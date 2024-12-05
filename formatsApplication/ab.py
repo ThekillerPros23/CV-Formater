@@ -22,7 +22,43 @@ country_abbreviations = number.number()
 
 
 formatted_pattern = re.compile(r"^\+\w{2} \(\+\d{1,3}\) \d+")
+def draw_text_in_cell(pdf, x, y, width, height, text, font_size=9):
+    """
+    Función para escribir texto ajustado dentro de una celda, manejando palabras largas y saltos de línea.
+    """
+    pdf.set_xy(x, y)
+    pdf.set_font("calibri", size=font_size)
+    line_height = pdf.font_size + 1
+    max_lines = int(height // line_height)
 
+    # Dividir el texto en palabras o fragmentos si son demasiado largas
+    words = []
+    for word in text.split():
+        while pdf.get_string_width(word) > width - 2:  # Si la palabra es demasiado larga, dividirla
+            words.append(word[:len(word)//2])
+            word = word[len(word)//2:]
+        words.append(word)
+
+    lines = []
+    current_line = ""
+
+    for word in words:
+        test_line = current_line + " " + word if current_line else word
+        if pdf.get_string_width(test_line) <= width - 2:
+            current_line = test_line
+        else:
+            lines.append(current_line)
+            current_line = word
+        if len(lines) == max_lines:
+            break
+
+    if current_line:
+        lines.append(current_line)
+
+    # Dibujar las líneas dentro de la celda
+    for i, line in enumerate(lines):
+        if i < max_lines:
+            pdf.text(x + 1, y + 3 + i * line_height, line)
 def format_phone_number(number):
     try:
         # Verifica si el número ya está en el formato deseado
@@ -78,7 +114,6 @@ def ajustar_texto_a_altura(texto, ancho_maximo, pdf):
         lineas.append(linea_actual)
 
     return lineas
-
 
 class Ab_OsApplication():
     def format_ab_os(self, pdf, database, uid,version):
@@ -473,6 +508,7 @@ class Ab_OsApplication():
 
         
         pdf.ln(20)
+       
         pdf.cell(0, 10, txt='4. PERSONAL DOCUMENTATION / SEAFARER DOCUMENTATION', align='L',ln=1)
 
 
@@ -568,7 +604,7 @@ class Ab_OsApplication():
                 
                 # Comparar el nombre actual de `documents` con el nombre en `personalDocuments`
                 if doc_name == document_name.upper():
-                    country = document.get('data', {}).get('country', {}).get('value', '')
+                    country = document.get('data', {}).get('countryName', {}).get('value', '')
                     document_number = document.get('data', {}).get('documentNumber', '')
                     issued_at = document.get('data', {}).get('placeIssue', '')
 
