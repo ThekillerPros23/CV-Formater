@@ -10,7 +10,7 @@ from onshoreApplication.onshore import *
 import phonenumbers
 from phonenumbers import PhoneNumberFormat, NumberParseException
 import re
-
+from other_languages.other import *
 from educationApplication.archivo import *
 from trainingApplication.cook import *
 from number import *
