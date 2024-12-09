@@ -5,13 +5,13 @@ import firebase_admin
 class FirebaseDataSeafarers():
     
     def __init__(self):
-        self.cred = credentials.Certificate('dev-portal-logistic-firebase-adminsdk-mtvp2-bbadfb4ad5.json')
+        self.cred = credentials.Certificate('ormyplay-fa556-firebase-adminsdk-7nbmr-72a577afdb.json')
         self.app = firebase_admin.initialize_app(self.cred, name='seafarers')
         self.db = firestore.client(self.app)
     
     def get_document_by_uid(self, uid):
         # Filtra el documento por UID directamente en la consulta
-        users_ref = self.db.collection('usersData').where('uid', '==', uid).limit(1)
+        users_ref = self.db.collection('userData').where('uid', '==', uid).limit(1)
         docs = list(users_ref.stream())
         return docs[0].to_dict() if docs else None
 
