@@ -7,8 +7,8 @@ load_dotenv()
 class FirebaseDataSeafarers():
     
     def __init__(self):
-        cred_json = os.getenv(Firebase_Json)
-        self.cred = credentials.Certificate()
+        cred_json = os.getenv("Firebase_Json")
+        self.cred = credentials.Certificate(cred_json)
         self.app = firebase_admin.initialize_app(self.cred, name='seafarers')
         self.db = firestore.client(self.app)
     

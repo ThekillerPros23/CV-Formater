@@ -1,11 +1,14 @@
 from firebase_admin import firestore
 from firebase_admin import credentials
 import firebase_admin
-
+import os
+from dotenv import *
+load_dotenv()
 class FirebaseDataApplication():
     
     def __init__(self):
-        self.cred = credentials.Certificate('dev-portal-logistic-firebase-adminsdk-mtvp2-bbadfb4ad5.json')
+        cred_json = os.getenv("Firebase_Json")
+        self.cred = credentials.Certificate(cred_json)
         self.app = firebase_admin.initialize_app(self.cred, name='application')
         self.db = firestore.client(self.app)
     
