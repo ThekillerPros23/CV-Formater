@@ -5,4 +5,4 @@ flask
 firebase-admin
 pillow
 requests
-dotenv
+python-dotenv
