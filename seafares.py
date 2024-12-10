@@ -1,11 +1,14 @@
 from firebase_admin import firestore
 from firebase_admin import credentials
 import firebase_admin
-
+from dotenv import * 
+import os
+load_dotenv()
 class FirebaseDataSeafarers():
     
     def __init__(self):
-        self.cred = credentials.Certificate('ormyplay-fa556-firebase-adminsdk-7nbmr-72a577afdb.json')
+        cred_json = os.getenv(Firebase_Json)
+        self.cred = credentials.Certificate()
         self.app = firebase_admin.initialize_app(self.cred, name='seafarers')
         self.db = firestore.client(self.app)
     
